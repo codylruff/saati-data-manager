@@ -2,7 +2,7 @@ Attribute VB_Name = "Developer"
 Option Explicit
 
 Public Const GitBashExe As String = "C:\Users\cruff\AppData\Local\Programs\Git\git-bash.exe"
-Public Const GitRepo As String = " C:\Users\cruff\source\DataManager\DataManager"
+Public Const GitRepo As String = "C:\Users\cruff\source\DataManager\DataManager"
 
 Public bIsVS As Boolean
 Public bDebugMessages As Boolean
@@ -59,7 +59,7 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
         "Creating a New Version...", _
         False)
         
-    directory = GitRepo
+    directory = GitRepo & "\"
     
     lngCounter = lngCounter + 1
     Call modProgress.ShowProgress( _
@@ -68,8 +68,6 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
         "Saving...", _
         False, _
         "Spec Manager")
-
-    ThisWorkbook.Save
     
     count = 0
     
@@ -79,10 +77,6 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
         lngNumberOfTasks, _
         "Creating Directory...", _
         False)
-
-    If Dir(directory, vbDirectory) = "" Then
-        MkDir directory
-    End If
     
     lngCounter = lngCounter + 1
     Call modProgress.ShowProgress( _
@@ -97,22 +91,15 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
             Select Case VBComponent.Type
                 Case ClassModule
                     extension = ".cls"
-                    Path = directory & "\Class Modules\" & VBComponent.name & extension
-                    If Dir(directory & "\Class Modules", vbDirectory) = "" Then
-                        MkDir directory & "\Class Modules"
-                    End If
+                    Path = directory & "Class Modules\" & VBComponent.name & extension
                 Case Form
                     extension = ".frm"
-                    Path = directory & "\User Forms\" & VBComponent.name & extension
-                    If Dir(directory & "\User Forms", vbDirectory) = "" Then
-                        MkDir directory & "\User Forms"
-                    End If
+                    Path = directory & "User Forms\" & VBComponent.name & extension
+                    
                 Case Module
                     extension = ".bas"
-                    Path = directory & "\Modules\" & VBComponent.name & extension
-                    If Dir(directory & "\Modules", vbDirectory) = "" Then
-                        MkDir directory & "\Modules"
-                    End If
+                    Path = directory & "Modules\" & VBComponent.name & extension
+                    
                 Case Else
                     extension = ".txt"
             End Select
@@ -124,7 +111,7 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
             Call VBComponent.Export(Path)
             
             If Err.Number <> 0 Then
-                Call MsgBox("Failed to export " & VBComponent.name & " to " & Path, vbCritical)
+                Debug.Print "Failed to export " & VBComponent.name & " to " & Path
             Else
                 count = count + 1
                 Debug.Print "Exported " & Left$(VBComponent.name & ":" & Space(Padding), Padding) & Path
@@ -145,3 +132,4 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
         DebugBox "Successfully exported " & CStr(count) & " VBA files to " & directory
     
 End Sub
+
