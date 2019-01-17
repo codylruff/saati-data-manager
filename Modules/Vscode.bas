@@ -1,52 +1,22 @@
-Attribute VB_Name = "Developer"
+Attribute VB_Name = "Vscode"
 Option Explicit
 
-Public Const GitBashExe As String = "C:\Users\cruff\AppData\Local\Programs\Git\git-bash.exe"
-Public Const GitRepo As String = "C:\Users\cruff\source\DataManager\DataManager"
-
-Public bIsVS As Boolean
-Public bDebugMessages As Boolean
-Public bIsTesting As Boolean
-
-Public Sub IsTesting(TurnOn As Boolean)
-' Switches to the local database when for debug/testing if IsTesting(True)
-    If TurnOn Then
-        bIsTesting = True
-    Else
-        bIsTesting = False
-    End If
-    
-End Sub
-
-Public Sub DebugBox(sText As String)
-
-    If bDebugMessages Then MsgBox _
-        Prompt:=sText, _
-        Title:="Debug Message"
-    
-End Sub
-
 Sub VSExport()
-
-    ExportAll True, True
-    
+    ExportAll
 End Sub
 
-Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
-
+Sub ExportAll()
     Const Module = 1
     Const ClassModule = 2
     Const Form = 3
     Const Document = 100
     Const Padding = 24
-    
+
     Dim VBComponent As Object
     Dim count As Integer
     Dim Path As String
     Dim directory As String
     Dim extension As String
-    Dim VerNum As String
-    Dim NewVersion As String
     Dim lngCounter As Long
     Dim lngNumberOfTasks As Long
 
@@ -128,8 +98,6 @@ Sub ExportAll(IsVS As Boolean, IsTest As Boolean, Optional VCTable As String)
         lngNumberOfTasks, _
         "Finishing...", _
         False)
-        
-        DebugBox "Successfully exported " & CStr(count) & " VBA files to " & directory
     
 End Sub
 

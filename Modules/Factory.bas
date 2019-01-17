@@ -1,12 +1,17 @@
 Attribute VB_Name = "Factory"
 Option Explicit
-
+'---------------------------- 
+' Object factory functions
+' serve as pseduo class
+' constructors.
+'----------------------------
 Function CreateConsoleBox(frm As UserForm) As ConsoleBox
     Dim Console As ConsoleBox
     Set Console = New ConsoleBox
     Set Console.FormId = frm
     Set CreateConsoleBox = Console
 End Function
+
 Function CreateWarp(Specification As WarpingSpecification, NumberOfBobbins As Integer, _
                      PackageWeightlbs As Double, WarpLength As Double) As Warp
     Dim w As Warp

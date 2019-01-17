@@ -1,9 +1,8 @@
-Attribute VB_Name = "DataHistory"
+Attribute VB_Name = "DataAccess"
 Option Explicit
-'=================================
-'NOTES: This module contains all
-'data base subs/funcs.
-'=================================
+'===================================
+'DESCRIPTION: Data Access Functions
+'===================================
 
 Function ExecuteSQLite3Select(SQLstmt As String) As DatabaseRecord
     Dim RetVal As Long
