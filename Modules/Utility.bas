@@ -1,7 +1,7 @@
 Attribute VB_Name = "Utility"
 Option Explicit
 '=================================
-' DESCRIPTION: Util Module holds 
+' DESCRIPTION: Util Module holds
 '              misc functions.
 '=================================
 Public Function CheckForEmpties(frm) As Boolean
@@ -102,9 +102,9 @@ Public Sub ClearForm(frm)
 End Sub
 
 Public Sub ConfigControl()
-'Initializes the password form for config access.    
-    If Environ("UserName") <> "CRuff" Then 
-        formPassword.Show        
+'Initializes the password form for config access.
+    If Environ("UserName") <> "CRuff" Then
+        formPassword.Show
     Else
         Application.DisplayAlerts = True
         shtDeveloper.Visible = xlSheetVisible
@@ -135,5 +135,5 @@ Public Sub CloseConfig()
     shtDeveloper.Visible = xlSheetVeryHidden
     Application.VBE.MainWindow.Visible = False
     Application.DisplayAlerts = False
-    GoToMain 
+    GoToMain
 End Sub

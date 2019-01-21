@@ -42,6 +42,16 @@ End Property
 '----------
 ' METHODS
 '----------
+Public Sub PrintObject(obj As Object)
+' Print object to console
+    Dim dict As Dictionary
+    ' Clear the console
+    FormId.txtConsole.Text = ""
+    Set dict = obj.IPrint_PrettyProperties
+    For Each key In dict
+        PrintLine key, dict(key)
+    Next key
+End Sub
 Public Sub PrintLine(ParamArray var() As Variant)
     Const Padding = 25
     Dim i As Integer

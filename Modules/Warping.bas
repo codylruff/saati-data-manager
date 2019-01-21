@@ -23,9 +23,8 @@ Function Main(frm As UserForm) As Long
         Set w = Factory.CreateWarp( _
         spec, .txtNumberOfBobbins, .txtPackageWeightlbs, .txtWarpLength)
     End With
-    For Each key In spec.PrettyProperties
-        Console.PrintLine key, spec.PrettyProperties(key)
-    Next key
+    ' Print object to console
+    Console.PrintObject spec
     ' Variable parameters
     Console.PrintLine "Package Length [yds]", CStr(Round(w.PackageLengthYds, 2))
     Console.PrintLine "Number of Sections [-]", CStr(Round(w.NumberOfSections, 2))
@@ -111,7 +110,7 @@ Function RetrieveWarpingSpecification(MaterialNumber As String) As WarpingSpecif
         .K1 = record.Fields("K1")
         .K2 = record.Fields("K2")
         .SetProperties
-        .SetPrettyProperties
+        .IPrint_SetPrettyProperties
     End With
     
     Set RetrieveWarpingSpecification = warpSpec
@@ -132,7 +131,7 @@ Public Sub AddNewSpec(MaterialNumber As String, MaterialDescription As String)
 ' Add a new spec to the database
     Dim spec As WarpingSpecification
 
-    Set spec = CreateWarpingSpecification(MaterialNumber, MaterialDescription)
+    Set spec = Factory.CreateWarpingSpecification(MaterialNumber, MaterialDescription)
     spec.SetDefaultProperties
     spec.SaveSpecification
 End Sub

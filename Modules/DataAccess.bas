@@ -3,7 +3,6 @@ Option Explicit
 '===================================
 'DESCRIPTION: Data Access Functions
 '===================================
-
 Function ExecuteSQLite3Select(SQLstmt As String) As DatabaseRecord
     Dim RetVal As Long
     Dim recordsAffected As Long

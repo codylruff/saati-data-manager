@@ -114,5 +114,4 @@ Sub CenterUserForm(ByRef WhichForm As Object)
     'Center the form
     WhichForm.Left = Application.Left + (Application.Width / 2) - (WhichForm.Width / 2)
     WhichForm.Top = Application.Top + (Application.Height / 2) - (WhichForm.Height / 2)
-    
 End Sub

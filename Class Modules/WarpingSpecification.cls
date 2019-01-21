@@ -11,12 +11,15 @@ Attribute VB_Exposed = False
 'CLASS DESCRIPTION:
 ' Specification for sectional warper
 '====================================
+'------------
+'INTERFACES
+'------------
+Implements IPrint
+'------------------------------------
 'Factory Module Constructor function:
+'------------------------------------
 'Function CreateWarpingSpecification(MaterialNumber As String, MaterialDescription As String, _
-'                        FinalWidthCm As Double, EndsPerInch As Double, Dtex As Double, _
-'                        IsSWrapped As Boolean, SpringColor As String, _
-'                        WarpingSpeed As Double, CrossWinding As Double, DentsPerCm As Double, _
-'                        EndsPerDent As Double) As WarpingSpecification
+'                         DentsPerCm As Double,EndsPerDent As Double) As WarpingSpecification
 '----------------
 'CONSTANTS
 '----------------
@@ -45,8 +48,8 @@ Private StyleSpec_              As StyleSpecification
 '------------
 ' COLLECTIONS
 '------------
-Private Properties_             As Object
-Private PrettyProperties_       As Object
+Private Properties_                    As Object
+Private IPrint_PrettyProperties_       As Object
 '------------
 ' PROPERTIES
 '------------
@@ -104,10 +107,10 @@ Public Property Get styleSpec() As StyleSpecification
     Set styleSpec = StyleSpec_
 End Property
 ' Properties
-Public Property Get PrettyProperties() As Object
-    Set PrettyProperties = PrettyProperties_
+Public Property Get IPrint_PrettyProperties() As Object
+    Set IPrint_PrettyProperties = IPrint_PrettyProperties_
 End Property
-Public Property Set PrettyProperties(dict As Object)
+Public Property Set IPrint_PrettyProperties(dict As Object)
     dict.Add key:="Style", item:=Style
     dict.Add key:="Material Number", item:=MaterialNumber
     dict.Add key:="Material Description", item:=MaterialDescription
@@ -115,7 +118,11 @@ Public Property Set PrettyProperties(dict As Object)
     dict.Add key:="Yarn Code", item:=YarnCode
     dict.Add key:="Final Width [cm]", item:=FinalWidthCm
     dict.Add key:="Number Of Ends", item:=NumberOfEnds
-    dict.Add key:="S Wrap On", item:=IsSWrapped
+    If IsSWrapped = True Then
+        dict.Add key:="S Wrap On/Off", item:="ON"
+    Else
+        dict.Add key:="S Wrap On/Off", item:="OFF"
+    End If
     dict.Add key:="Spring Color", item:=SpringColor
     dict.Add key:="Warping Speed [m/min]", item:=WarpingSpeed
     dict.Add key:="Beaming Speed [m/min]", item:=BeamingSpeed
@@ -125,7 +132,7 @@ Public Property Set PrettyProperties(dict As Object)
     dict.Add key:="Dent/cm", item:=DentsPerCm
     dict.Add key:="End/Dent", item:=EndsPerDent
     dict.Add key:="Beam Width", item:=BeamWidth
-    Set PrettyProperties_ = dict
+    Set IPrint_PrettyProperties_ = dict
 End Property
 ' Properties
 Public Property Get Properties() As Object
@@ -266,6 +273,7 @@ End Property
 '---------
 Public Sub SetDefaultProperties()
 ' Bases property values on theoretical calcualtions
+    Dim tmp As Double
     If Right(MaterialDescription, 2) = "CM" Then
         FinalWidthCm = CDbl(Left(Right(MaterialDescription, 5), 3))
     ElseIf Right(MaterialDescription, 1) = """" Then
@@ -273,21 +281,26 @@ Public Sub SetDefaultProperties()
     Else
         Exit Sub
     End If
+    tmp = Round(FinalWidthCm * EndsPerInch / 2.54, 0)
+    If tmp Mod 2 = 0 Then
+        NumberOfEnds = tmp
+    Else
+        NumberOfEnds = tmp + 1
+    End If
     If Dtex >= 3000 Then IsSWrapped = True
-    NumberOfEnds = FinalWidthCm * EndsPerInch
     If Dtex <= 3000 Then
         BeamWidth = ((FinalWidthCm * 10#) - 3#) / 10#
     Else
         BeamWidth = ((FinalWidthCm * 10#) - 8#) / 10#
     End If
-    BeamingTension = Round(NumberOfEnds * WarpingTension * K2 / 100#, 0)
-    WarpingTension = Round(Dtex * K1, 0)
     If YarnSupplier = "Dupont" Then
         K1 = 0.25
     Else
         K1 = 0.15
     End If
     K2 = K1 + 1#
+    WarpingTension = Round(Dtex * K1, 0)
+    BeamingTension = Round(NumberOfEnds * WarpingTension * K2 / 100#, 0)
     WarpingSpeed = 300 ' meters / min
     If Dtex >= HighDtex Then
         BeamingSpeed = 80 ' meters / min
@@ -300,8 +313,8 @@ End Sub
 Public Sub SetProperties()
     Set Properties = CreateObject("Scripting.Dictionary")
 End Sub
-Public Sub SetPrettyProperties()
-    Set PrettyProperties = CreateObject("Scripting.Dictionary")
+Public Sub IPrint_SetPrettyProperties()
+    Set IPrint_PrettyProperties = CreateObject("Scripting.Dictionary")
 End Sub
 Public Sub SaveSpecification()
 ' Adds a new specification to the database

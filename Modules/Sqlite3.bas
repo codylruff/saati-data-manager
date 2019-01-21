@@ -3,7 +3,6 @@ Option Explicit
 
 ' Notes:
 ' Microsoft uses UTF-16, little endian byte order.
-
 Private Const JULIANDAY_OFFSET As Double = 2415018.5
 
 ' Returned from SQLite3Initialize

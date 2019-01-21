@@ -1,6 +1,6 @@
 Attribute VB_Name = "Factory"
 Option Explicit
-'---------------------------- 
+'----------------------------
 ' Object factory functions
 ' serve as pseduo class
 ' constructors.
