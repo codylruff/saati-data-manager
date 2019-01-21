@@ -42,14 +42,13 @@ End Property
 '----------
 ' METHODS
 '----------
-Public Sub PrintObject(obj As Object)
+Public Sub PrintObject(iprint_ As IPrint)
 ' Print object to console
-    Dim dict As Dictionary
     ' Clear the console
     FormId.txtConsole.Text = ""
-    Set dict = obj.IPrint_PrettyProperties
-    For Each key In dict
-        PrintLine key, dict(key)
+    For Each key In iprint_.PrettyProperties
+        PrintLine key, _
+                  iprint_.PrettyProperties(key)
     Next key
 End Sub
 Public Sub PrintLine(ParamArray var() As Variant)
