@@ -34,5 +34,4 @@ End Property
 ' METHODS
 '----------
 Public Sub SetPrettyProperties()
-    Set PrettyProperties = CreateObject("Scripting.Dictionary")
 End Sub

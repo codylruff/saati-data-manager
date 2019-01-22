@@ -17,11 +17,11 @@ Attribute VB_Exposed = False
 '----------------
 'CLASS VARIABLES
 '----------------
-Private FormId_ As MSForms.UserForm
+Private FormId_             As MSForms.UserForm
 '------------
 ' COLLECTIONS
 '------------
-Private OutputHistory_ As Collection
+Private OutputHistory_      As Collection
 '------------
 ' PROPERTIES
 '------------

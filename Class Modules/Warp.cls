@@ -25,7 +25,7 @@ Const MinimumPackageLengthyds = 10936
 Private Specification_          As WarpingSpecification
 Private NumberOfBobbins_        As Double
 Private PackageWeightlbs_       As Double
-Private WarpLengthYds_             As Double
+Private WarpLengthYds_          As Double
 '----------------
 ' COLLECTIONS
 '----------------

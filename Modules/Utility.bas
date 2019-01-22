@@ -47,25 +47,12 @@ Public Sub CreateZipFile(folderToZipPath As Variant, _
     On Error GoTo 0
 End Sub
 
-Public Sub GoToMain()
-'Opens the main menu form.
-    Application.Visible = False
-    UnloadAllForms
-    formMainMenu.Show
-End Sub
-
 Public Sub UnloadAllForms(Optional dummyVariable As Byte)
 'Unloads all open user forms
     Dim i As Long
     For i = VBA.UserForms.count - 1 To 0 Step -1
         Unload VBA.UserForms(i)
     Next
-End Sub
-
-Public Sub ExitApp()
-'This exits the application after saving the thisworkbook.
-    ThisWorkbook.Save
-    Application.Quit
 End Sub
 
 Public Sub UpdateTable(shtName As String, tblName As String, header As String, val)
@@ -78,6 +65,7 @@ End Sub
 Public Sub Update(rng As Range, val)
 'Adds an entry at the bottom of specified column header.
     rng.End(xlDown).offset(1, 0).value = val
+        
 End Sub
 
 Public Sub Insert(rng As Range, val)
@@ -85,20 +73,15 @@ Public Sub Insert(rng As Range, val)
     rng.value = val
 End Sub
 
-Public Sub ClearForm(frm)
-'Clears the values from a user form.
-    Dim ctl As Control
-    For Each ctl In frm.Controls
-        Select Case VBA.TypeName(ctl)
-            Case "TextBox"
-                ctl.Text = ""
-            Case "CheckBox", "OptionButton", "ToggleButton"
-                ctl.value = False
-            Case "ComboBox", "ListBox"
-                ctl.ListIndex = -1
-            Case Else
-                End Select
-    Next ctl
+
+'---------------
+' COMMANDS
+'---------------
+Public Sub GoToMain()
+'Opens the main menu form.
+    Application.Visible = False
+    UnloadAllForms
+    formMainMenu.Show
 End Sub
 
 Public Sub ConfigControl()
@@ -136,4 +119,34 @@ Public Sub CloseConfig()
     Application.VBE.MainWindow.Visible = False
     Application.DisplayAlerts = False
     GoToMain
+End Sub
+
+Public Sub ExitApp()
+'This exits the application after saving the thisworkbook.
+    ThisWorkbook.Save
+    Application.Quit
+End Sub
+
+Public Sub ClearForm(frm)
+'Clears the values from a user form.
+    Dim ctl As Control
+    For Each ctl In frm.Controls
+        Select Case VBA.TypeName(ctl)
+            Case "TextBox"
+                ctl.Text = ""
+            Case "CheckBox", "OptionButton", "ToggleButton"
+                ctl.value = False
+            Case "ComboBox", "ListBox"
+                ctl.ListIndex = -1
+            Case Else
+                End Select
+    Next ctl
+End Sub
+
+Public Sub DB2W_tblWarpingSpecs()
+    DatabaseToWorksheet "tblWarpingSpecs"
+End Sub
+
+Public Sub DB2W_tblStyleSpecs()
+    DatabaseToWorksheet "tblStyleSpecs"
 End Sub

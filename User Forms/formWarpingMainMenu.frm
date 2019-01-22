@@ -14,21 +14,12 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Option Explicit
+
+Private Sub cmdSpecManagement_Click()
+    Unload Me
+    formSpecConfig.Show
+End Sub
 
 Private Sub cmdWarperSetup_Click()
     Unload Me

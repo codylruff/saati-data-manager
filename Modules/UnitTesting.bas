@@ -1,6 +1,32 @@
 Attribute VB_Name = "UnitTesting"
 Option Explicit
 
+Public Sub SQLite3Connection_Test()
+    Dim myDbHandle As Long
+    Dim myStmtHandle As Long
+    Dim RetVal As Long
+    Dim recordsAffected As Long
+    Dim InitReturn As Long
+    Dim ErrorVal As Long
+    ' Default path is ThisWorkbook.Path but can specify other path where the .dlls reside.
+    InitReturn = SQLite3Initialize
+    
+    If InitReturn <> SQLITE_INIT_OK Then
+        MsgBox "Error Initializing SQLite. Error: " & Err.LastDllError & "Contact Admin"
+        Exit Sub
+    End If
+
+    Dim stepMsg As String
+    
+    ' Open the database - getting a DbHandle back
+    RetVal = SQLite3Open(PathToSQLite3Database, myDbHandle)
+    If RetVal = SQLITE_OK Then
+        MsgBox "Connected Succesfully"
+    Else
+        MsgBox "SQLite3Open() returned: " & RetVal
+    End If
+End Sub
+
 Public Function WarpingSpecificationTest()
     Dim spec As WarpingSpecification
 

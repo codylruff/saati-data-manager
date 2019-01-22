@@ -9,6 +9,17 @@ Sub GoToMenu()
 
 End Sub
 
+Function PrintWarpingSpecification(frm As UserForm) As WarpingSpecification
+    Dim spec As WarpingSpecification
+    Dim Console As ConsoleBox
+    Set Console = Factory.CreateConsoleBox(frm)
+    ' Retrieve a specification
+    Set spec = RetrieveWarpingSpecification(frm.txtSAPcode.Text)
+    ' Print object to console
+    Console.PrintObject spec
+    Set PrintWarpingSpecification = spec
+End Function
+
 Function Main(frm As UserForm) As Long
 ' Entry point for the warping module.
     Const Padding = 25

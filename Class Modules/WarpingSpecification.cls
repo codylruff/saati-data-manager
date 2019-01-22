@@ -15,6 +15,7 @@ Attribute VB_Exposed = False
 'INTERFACES
 '------------
 Implements IPrint
+'Implements IDatabaseRecord
 '------------------------------------
 'Factory Module Constructor function:
 '------------------------------------
@@ -106,7 +107,7 @@ End Property
 Public Property Get styleSpec() As StyleSpecification
     Set styleSpec = StyleSpec_
 End Property
-' Properties
+' PrettyProperties
 Public Property Get IPrint_PrettyProperties() As Object
     Set IPrint_PrettyProperties = IPrint_PrettyProperties_
 End Property

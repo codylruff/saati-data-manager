@@ -14,28 +14,73 @@ Attribute VB_Exposed = False
 ' spec and spec history for a
 ' particular code and width.
 '=====================================
+'------------
+'INTERFACES
+'------------
+Implements IPrint
 'Factory Module Constructor function:
 'Function CreateSlittingSpecification() As SlittingSpecification
 '----------------
 'CLASS VARIABLES
 '----------------
-Private SpecPath_ As String
+Private MaterialNumber_         As String
+Private MaterialDescription_    As String
+Private SpecPath_               As String
+Private MeshThickness_          As Double
+Private AirPressure_            As Double
+Private IsPowerOn_              As Boolean
+Private CoreDiameter_           As Double
+Private CoreMaterialType_       As String
+Private BladeSize_              As String
+Private UnwindingTension_       As Double
+Private WindingTension_         As Double
+Private BladeTemperature_       As Double
 '------------
 ' COLLECTIONS
 '------------
-Private PartHistory_ As Collection
+Private Properties_             As Object
+Private PrettyProperties_       As Object
+Private PartHistory_            As Collection
 '------------
 ' PROPERTIES
 '------------
-Private MeshThickness_ As Double
-Private AirPressure_ As Double
-Private IsPowerOn_ As Boolean
-Private CoreDiameter_ As Double
-Private CoreMaterialType_ As String
-Private BladeSize_ As String
-Private UnwindingTension_ As Double
-Private WindingTension_ As Double
-Private BladeTemperature_ As Double
+' Properties
+Public Property Get Properties() As Object
+    Set Properties = Properties_
+End Property
+Public Property Set Properties(dict As Object)
+    dict.Add key:="MaterialNumber", item:=MaterialNumber
+    dict.Add key:="MaterialDescription", item:=MaterialDescription
+    Set Properties_ = dict
+End Property
+' PrettyProperties
+Public Property Get IPrint_PrettyProperties() As Object
+    Set IPrint_PrettyProperties = IPrint_PrettyProperties_
+End Property
+Public Property Set IPrint_PrettyProperties(dict As Object)
+    dict.Add key:="Material Number", item:=MaterialNumber
+    dict.Add key:="Material Description", item:=MaterialDescription
+    If IsPowerOn = True Then
+        dict.Add key:="Power On/Off", item:="ON"
+    Else
+        dict.Add key:="Power On/Off", item:="OFF"
+    End If
+    Set IPrint_PrettyProperties_ = dict
+End Property
+' Material Number
+Public Property Let MaterialNumber(value As String)
+    MaterialNumber_ = value
+End Property
+Public Property Get MaterialNumber() As String
+    MaterialNumber = MaterialNumber_
+End Property
+' Material Description
+Public Property Let MaterialDescription(value As String)
+    MaterialDescription_ = value
+End Property
+Public Property Get MaterialDescription() As String
+    MaterialDescription = MaterialDescription_
+End Property
 ' BladeTemperature
 Public Property Let BladeTemperature(value As Double)
   BladeTemperature_ = value
@@ -109,6 +154,12 @@ End Property
 '----------
 ' METHODS
 '----------
+Public Sub SetProperties()
+    Set Properties = CreateObject("Scripting.Dictionary")
+End Sub
+Public Sub IPrint_SetPrettyProperties()
+    Set IPrint_PrettyProperties = CreateObject("Scripting.Dictionary")
+End Sub
 '---------
 ' EVENTS
 '---------
