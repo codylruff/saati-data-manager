@@ -54,6 +54,62 @@ Private IPrint_PrettyProperties_       As Object
 '------------
 ' PROPERTIES
 '------------
+Private WarpDensityStart_ As Double
+Private WarpDensityMeasured_ As Double
+Private CompactionFactor_ As Double
+Private EvenerRoller_ As Boolean
+Private MeasuringPhase_ As Boolean
+Private ReedShape_ As Long
+Private YarnLeaseFeed_ As Double
+' YarnLeaseFeed
+Public Property Let YarnLeaseFeed(value As Double)
+    YarnLeaseFeed_ = value
+End Property
+Public Property Get YarnLeaseFeed() As Double
+    YarnLeaseFeed = YarnLeaseFeed_
+End Property
+' ReedShape
+Public Property Let ReedShape(value As Long)
+    ReedShape_ = value
+End Property
+Public Property Get ReedShape() As Long
+    ReedShape = ReedShape_
+End Property
+' MeasuringPhase
+Public Property Let MeasuringPhase(value As Boolean)
+    MeasuringPhase_ = value
+End Property
+Public Property Get MeasuringPhase() As Boolean
+    MeasuringPhase = MeasuringPhase_
+End Property
+' EvenerRoller
+Public Property Let EvenerRoller(value As Boolean)
+    EvenerRoller_ = value
+End Property
+Public Property Get EvenerRoller() As Boolean
+    EvenerRoller = EvenerRoller_
+End Property
+' CompactionFactor
+Public Property Let CompactionFactor(value As Double)
+    CompactionFactor_ = value
+End Property
+Public Property Get CompactionFactor() As Double
+    CompactionFactor = CompactionFactor_
+End Property
+' WarpDensityMeasured
+Public Property Let WarpDensityMeasured(value As Double)
+    WarpDensityMeasured_ = value
+End Property
+Public Property Get WarpDensityMeasured() As Double
+    WarpDensityMeasured = WarpDensityMeasured_
+End Property
+' WarpDensityStart
+Public Property Let WarpDensityStart(value As Double)
+    WarpDensityStart_ = value
+End Property
+Public Property Get WarpDensityStart() As Double
+    WarpDensityStart = WarpDensityStart_
+End Property
 ' YarnCode
 Public Property Get YarnCode() As String
     YarnCode = styleSpec.YarnCode

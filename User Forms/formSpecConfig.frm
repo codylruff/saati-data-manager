@@ -14,6 +14,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 Option Explicit
 
 Dim spec As WarpingSpecification
@@ -23,7 +24,12 @@ Private Sub cmdBack_Click()
     GoToMain
 End Sub
 
+Private Sub cmdSaveChanges_Click()
+    spec.SaveSpecification
+End Sub
+
 Private Sub cmdSubmit_Click()
+    Dim Console As ConsoleBox
     With spec
         Select Case cboSelectProperty.value
             Case "Style"
@@ -39,28 +45,28 @@ Private Sub cmdSubmit_Click()
                 MsgBox "Yarn Code is a read-only property"
                 Exit Sub
             Case "Final Width [cm]"
-            .FinalWidthCm = txtPropertyValue
+                .FinalWidthCm = txtPropertyValue
             Case "Number Of Ends"
-            .NumberOfEnds = txtPropertyValue
+                .NumberOfEnds = txtPropertyValue
             Case "Spring Color"
                 MsgBox "Spring Color is a read-only property"
                 Exit Sub
             Case "Warping Speed [m/min]"
-            .WarpingSpeed = txtPropertyValue
+                .WarpingSpeed = txtPropertyValue
             Case "Beaming Speed [m/min]"
-            .BeamingSpeed = txtPropertyValue
+                .BeamingSpeed = txtPropertyValue
             Case "WarpingTension"
-            .WarpingTension = txtPropertyValue
+                .WarpingTension = txtPropertyValue
             Case "Beaming Tension"
-            .BeamingTension = txtPropertyValue
+                .BeamingTension = txtPropertyValue
             Case "Cross Winding"
-            .CrossWinding = txtPropertyValue
+                .CrossWinding = txtPropertyValue
             Case "Dent/cm"
-            .DentsPerCm = txtPropertyValue
+                .DentsPerCm = txtPropertyValue
             Case "End/Dent"
-            .EndsPerDent = txtPropertyValue
+                .EndsPerDent = txtPropertyValue
             Case "Beam Width"
-            .BeamWidth = txtPropertyValue
+                .BeamWidth = txtPropertyValue
             Case "S Wrap On/Off"
                 If txtPropertyValue = "ON" Then
                     .IsSWrapped = True
@@ -69,6 +75,10 @@ Private Sub cmdSubmit_Click()
                 End If
             End Select
     End With
+    spec.IPrint_SetPrettyProperties
+    Set Console = Factory.CreateConsoleBox(Me)
+    ' Print object to console
+    Console.PrintObject spec
 End Sub
 
 Private Sub cmdSearch_Click()
