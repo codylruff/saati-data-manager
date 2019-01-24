@@ -15,6 +15,7 @@ Attribute VB_Exposed = False
 'INTERFACES
 '------------
 Implements IPrint
+Implements ISpec
 'Implements IDatabaseRecord
 '------------------------------------
 'Factory Module Constructor function:
@@ -49,13 +50,13 @@ Private StyleSpec_              As StyleSpecification
 '------------
 ' COLLECTIONS
 '------------
-Private Properties_                    As Object
+Private Properties_                     As Object
 Private IPrint_PrettyProperties_       As Object
 '------------
 ' PROPERTIES
 '------------
-Private WarpDensityStart_ As Double
-Private WarpDensityMeasured_ As Double
+Private WarpDensityStart_            As Double
+Private WarpDensityMeasured_         As Double
 Private CompactionFactor_ As Double
 Private EvenerRoller_ As Boolean
 Private MeasuringPhase_ As Boolean
@@ -373,16 +374,21 @@ End Sub
 Public Sub IPrint_SetPrettyProperties()
     Set IPrint_PrettyProperties = CreateObject("Scripting.Dictionary")
 End Sub
-Public Sub SaveSpecification()
+Public Sub ISpec_Commit()
+    SaveSpecification "tblWarpingSpecCommits"
+End Sub
+Public Sub ISpec_Push()
+    SaveSpecification "tblWarpingSpecs"
+End Sub
+Private Sub SaveSpecification(tblName As String)
 ' Adds a new specification to the database
     Dim key As Variant
     Dim SQLstmt As String
     Dim INSERTstmt, VALUESstmt As String
-    Dim tbl As String: tbl = "tblWarpingSpecs"
     ' Set object properties
     SetProperties
     ' Create the insert portion of the statement
-    INSERTstmt = "INSERT INTO " & tbl & " ("
+    INSERTstmt = "INSERT INTO " & tblName & " ("
     ' Create the values portion of the statement
     VALUESstmt = "VALUES ("
 

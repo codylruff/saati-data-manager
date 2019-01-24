@@ -10,11 +10,7 @@ Attribute VB_Exposed = False
 Option Explicit
 ' Interface for version control
 ' of standardized process
-' specifications
-Public Property Get MaterialNumber() As String
-End Property
-Public Property Get MaterialDescription() As String
-End Property
+' specifications such as Weaving
 Public Sub Push()
 End Sub
 Public Sub Commit()
