@@ -11,6 +11,7 @@ Attribute VB_Exposed = False
 'CLASS DESCRIPTION:
 ' Represents the spec for a specific style
 '=========================================
+Implements ISpec
 '----------------
 'CLASS VARIABLES
 '----------------
@@ -262,6 +263,12 @@ Private Sub SetProperties()
     Set Properties = CreateObject("Scripting.Dictionary")
 End Sub
 Public Sub ISpec_Commit()
+    SaveSpecification "tblStyleSpecCommits"
+End Sub
+Public Sub ISpec_Push()
+    SaveSpecification "tblStyleSpecs"
+End Sub
+Private Sub SaveSpecification()
 ' Adds a new specification to the database
     Dim key As Variant
     Dim SQLstmt As String
