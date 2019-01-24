@@ -261,7 +261,7 @@ End Property
 Private Sub SetProperties()
     Set Properties = CreateObject("Scripting.Dictionary")
 End Sub
-Public Sub SaveSpecification()
+Public Sub ISpec_Commit()
 ' Adds a new specification to the database
     Dim key As Variant
     Dim SQLstmt As String
