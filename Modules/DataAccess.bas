@@ -73,47 +73,6 @@ Function ExecuteSQLite3Select(SQLstmt As String) As DatabaseRecord
 
 End Function
 
-Function ExecuteSQLite3(SQLstmt As String) As Long
-    Dim myDbHandle As Long
-    Dim myStmtHandle As Long
-    Dim RetVal As Long
-    Dim recordsAffected As Long
-    Dim InitReturn As Long
-    Dim ErrorVal As Long
-    ' Default path is ThisWorkbook.Path but can specify other path where the .dlls reside.
-    InitReturn = SQLite3Initialize
-    
-    If InitReturn <> SQLITE_INIT_OK Then
-        MsgBox "Error Initializing SQLite. Error: " & Err.LastDllError & "Contact Admin"
-        Exit Function
-    End If
-
-    Dim stepMsg As String
-    
-    ' Open the database - getting a DbHandle back
-    RetVal = SQLite3Open(PathToSQLite3Database, myDbHandle)
-    
-    '------------------------
-    ' Execute SQLstmt
-    ' ================
-    ' Create the sql statement - getting a StmtHandle back
-    RetVal = SQLite3PrepareV2(myDbHandle, SQLstmt, myStmtHandle)
-    
-    ' Start running the statement
-    RetVal = SQLite3Step(myStmtHandle)
-    If RetVal = SQLITE_DONE Then
-        Debug.Print "SQLite3Step Done"
-        ExecuteSQLite3 = RetVal
-    Else
-        Debug.Print "SQLite3Step returned " & RetVal
-        ExecuteSQLite3 = RetVal
-    End If
-    
-    ' Finalize (delete) the statement
-    RetVal = SQLite3Finalize(myStmtHandle)
-    RetVal = SQLite3Close(myDbHandle)
-End Function
-
 Function ColumnValue(ByVal stmtHandle As Long, ByVal ZeroBasedColIndex As Long, ByVal SQLiteType As Long) As Variant
     Select Case SQLiteType
         Case SQLITE_INTEGER:
@@ -268,3 +227,75 @@ Public Sub DatabaseToWorksheet(tblName As String)
     Application.ScreenUpdating = True
     Application.DisplayAlerts = True
 End Sub
+'----------------------------------------------------
+Function ExecuteSQLite3(SQLstmt As String) As Long
+    Dim myDbHandle As Long
+    Dim myStmtHandle As Long
+    Dim RetVal As Long
+    Dim recordsAffected As Long
+    Dim InitReturn As Long
+    Dim ErrorVal As Long
+    ' Default path is ThisWorkbook.Path but can specify other path where the .dlls reside.
+    InitReturn = SQLite3Initialize
+    
+    If InitReturn <> SQLITE_INIT_OK Then
+        MsgBox "Error Initializing SQLite. Error: " & Err.LastDllError & "Contact Admin"
+        Exit Function
+    End If
+
+    Dim stepMsg As String
+    
+    ' Open the database - getting a DbHandle back
+    RetVal = SQLite3Open(PathToSQLite3Database, myDbHandle)
+    
+    '------------------------
+    ' Execute SQLstmt
+    ' ================
+    ' Create the sql statement - getting a StmtHandle back
+    RetVal = SQLite3PrepareV2(myDbHandle, SQLstmt, myStmtHandle)
+    
+    ' Start running the statement
+    RetVal = SQLite3Step(myStmtHandle)
+    If RetVal = SQLITE_DONE Then
+        Debug.Print "SQLite3Step Done"
+        ExecuteSQLite3 = RetVal
+    Else
+        Debug.Print "SQLite3Step returned " & RetVal
+        ExecuteSQLite3 = RetVal
+    End If
+    
+    ' Finalize (delete) the statement
+    RetVal = SQLite3Finalize(myStmtHandle)
+    RetVal = SQLite3Close(myDbHandle)
+End Function
+
+Function SqlCreateInsert(table As String, jsonText As String) As String
+    Dim parser As New JSON13
+    Dim doc As Variant
+    Set doc = parser.parse(jsonText)
+    
+    Dim key As Variant
+    Dim SQLstmt As String
+    Dim INSERTstmt, VALUESstmt As String
+    ' Set object properties
+
+    ' Create the insert portion of the statement
+    INSERTstmt = "INSERT INTO " & table & " (jsonText, "
+    ' Create the values portion of the statement
+    VALUESstmt = "VALUES ('" & jsonText & "', "
+
+    For Each key In doc
+        INSERTstmt = INSERTstmt & key & ", "
+        VALUESstmt = VALUESstmt & "'" & doc.getString(key) & "', "
+    Next key
+
+    INSERTstmt = INSERTstmt & "Time_Stamp) "
+    VALUESstmt = VALUESstmt & "'" & Now() & "')"
+
+    ' Create SQL statement from object
+    SQLstmt = INSERTstmt & vbNewLine & VALUESstmt
+    Debug.Print SQLstmt
+    RetVal = ExecuteSQLite3(SQLstmt)
+    If Not RetVal = SQLITE_DONE Then Err.Raise Number:=1
+
+End Function

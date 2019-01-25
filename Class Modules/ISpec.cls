@@ -11,7 +11,17 @@ Option Explicit
 ' Interface for version control
 ' of standardized process
 ' specifications such as Weaving
+Public Property Get Properties() As Object
+End Property
+Public Property Get IsDefaultSpec() As Boolean
+End Property
 Public Sub Push()
 End Sub
 Public Sub Commit()
+End Sub
+Private Sub SetProperties()
+End Sub
+Public Sub SetDefaultProperties()
+End Sub
+Private Sub SaveSpecification()
 End Sub

@@ -11,10 +11,11 @@ Attribute VB_Exposed = False
 'CLASS DESCRIPTION:
 ' Represents the spec for a specific style
 '=========================================
+'------------
+'INTERFACES
+'------------
 Implements ISpec
-'----------------
-'CLASS VARIABLES
-'----------------
+Implements IJson
 '----------------
 'CLASS VARIABLES
 '----------------
@@ -42,19 +43,32 @@ Private Twisting_                   As Double
 Private YarnColor_                  As String
 Private Notes_                      As String
 Private YarnMerge_                  As String
-Private Properties_                 As Object
-
+Private ISpec_IsDefaultSpec_        As Boolean
+Private IJson_JsonString_           As String
 '------------
 ' COLLECTIONS
 '------------
+Private ISpec_Properties_           As Object
 '------------
 ' PROPERTIES
 '------------
-' Properties
-Public Property Get Properties() As Object
-    Set Properties = Properties_
+' IJson_JsonString
+Public Property Let IJson_JsonString(value As String)
+    IJson_JsonString_ = value
 End Property
-Public Property Set Properties(dict As Object)
+Public Property Get IJson_JsonString() As String
+    If IJson_JsonString_ <> "" Then
+        IJson_JsonString = IJson_JsonString_
+    Else
+        IJson_JsonString_ = IJson_ConvertToJson
+        IJson_JsonString = IJson_JsonString_
+    End If
+End Property
+' ISpec_Properties
+Public Property Get ISpec_Properties() As Object
+    Set ISpec_Properties = ISpec_Properties_
+End Property
+Public Property Set ISpec_Properties(dict As Object)
     dict.Add key:="Dtex", item:=Dtex
     dict.Add key:="Style", item:=Style
     dict.Add key:="WeaveType", item:=WeaveType
@@ -79,7 +93,7 @@ Public Property Set Properties(dict As Object)
     dict.Add key:="YarnColor", item:=YarnColor
     dict.Add key:="Notes", item:=Notes
     dict.Add key:="YarnMerge", item:=YarnMerge
-    Set Properties_ = dict
+    Set ISpec_Properties_ = dict
 End Property
 ' MinFillCount
 Public Property Let MinFillCount(value As Double)
@@ -256,34 +270,51 @@ End Property
 Public Property Get Dtex() As Double
     Dtex = Dtex_
 End Property
+' ISpec_IsDefaultSpec
+Public Property Let ISpec_IsDefaultSpec(value As Boolean)
+    ISpec_IsDefaultSpec_ = value
+End Property
+Public Property Get ISpec_IsDefaultSpec() As Boolean
+    ISpec_IsDefaultSpec = ISpec_IsDefaultSpec_
+End Property
 '----------
 ' METHODS
 '----------
-Private Sub SetProperties()
-    Set Properties = CreateObject("Scripting.Dictionary")
+Public Sub IJson_MapToObject(json_string As String)
+    IJson_JsonString = json_string
+    Set ISpec_Properties = JsonConverter.ParseJson(json_string)
+End Sub
+Public Function IJson_ConvertToJson(Optional Whitespace As Integer = 2, Optional Indentation As Long = 1) As String
+    IJson_ConvertToJson = JsonConverter.ConvertToJson(IJson_JsonProperties,Whitespace, Indentation)
+End Function
+Public Sub ISpec_SetDefaultProperties()
+    ' Pass
+End Sub
+Private Sub ISpec_SetProperties()
+    Set ISpec_Properties = CreateObject("Scripting.Dictionary")
 End Sub
 Public Sub ISpec_Commit()
-    SaveSpecification "tblStyleSpecCommits"
+    ISpec_SaveSpecification "tblStyleSpecCommits"
 End Sub
 Public Sub ISpec_Push()
-    SaveSpecification "tblStyleSpecs"
+    ISpec_SaveSpecification "tblStyleSpecs"
 End Sub
-Private Sub SaveSpecification()
+Private Sub ISpec_SaveSpecification()
 ' Adds a new specification to the database
     Dim key As Variant
     Dim SQLstmt As String
     Dim INSERTstmt, VALUESstmt As String
     Dim tbl As String: tbl = "tblStyleSpecs"
     ' Set object properties
-    SetProperties
+    ISpec_SetProperties
     ' Create the insert portion of the statement
     INSERTstmt = "INSERT INTO " & tbl & " ("
     ' Create the values portion of the statement
     VALUESstmt = "VALUES ("
 
-    For Each key In Properties
+    For Each key In ISpec_Properties
         INSERTstmt = INSERTstmt & key & ", "
-        VALUESstmt = VALUESstmt & "'" & Properties(key) & "', "
+        VALUESstmt = VALUESstmt & "'" & ISpec_Properties(key) & "', "
     Next key
 
     INSERTstmt = INSERTstmt & "Time_Stamp) "
@@ -294,13 +325,4 @@ Private Sub SaveSpecification()
     Debug.Print SQLstmt
     RetVal = ExecuteSQLite3(SQLstmt)
     If Not RetVal = SQLITE_DONE Then Err.Raise Number:=1
-End Sub
-'---------
-' EVENTS
-'---------
-' Constructor
-Private Sub Class_Initialize()
-End Sub
-' Deconstructor
-Private Sub Class_Terminate()
 End Sub
