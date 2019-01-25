@@ -8,16 +8,27 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-Public Fields As Dictionary
+'-------------
+' INTERFACES
+'-------------
+'----------------
+'CLASS VARIABLES
+'----------------
+'------------
+' COLLECTIONS
+'------------
+Private IPrint_PrettyProperties_    As Object
+Public Fields                       As Dictionary
 
+'---------
+' METHODS
+'---------
 Public Sub AddValue(name As String, value As Variant)
     Fields(name) = value
 End Sub
-
 Public Sub AddField(name As String)
     Fields.Add key:=name, item:=""
 End Sub
-
 '---------
 ' Events
 '---------
