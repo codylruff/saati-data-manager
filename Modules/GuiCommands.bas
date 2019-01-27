@@ -1,11 +1,20 @@
-Attribute VB_Name = "Vscode"
+Attribute VB_Name = "GuiCommands"
 Option Explicit
+'=================================
+' DESCRIPTION: Holds commands used
+' through the GUI with exception
+' of the import function.
+'=================================
 
-Sub VSExport()
-    ExportAll
+Public Sub GoToMain()
+'Opens the main menu form.
+    Application.Visible = False
+    Utility.UnloadAllForms
+    formMainMenu.Show
 End Sub
 
-Sub ExportAll()
+Public Sub ExportAll()
+' Exports the codebase to a project folder as text files
     Const Module = 1
     Const ClassModule = 2
     Const Form = 3
@@ -101,3 +110,69 @@ Sub ExportAll()
     
 End Sub
 
+Public Sub ConfigControl()
+'Initializes the password form for config access.
+    If Environ("UserName") <> "CRuff" Then
+        formPassword.Show
+    Else
+        Application.DisplayAlerts = True
+        shtDeveloper.Visible = xlSheetVisible
+        Application.Visible = True
+        Application.VBE.MainWindow.Visible = True
+        Application.SendKeys ("^r")
+    End If
+End Sub
+
+Public Sub Open_Config(Password As String)
+'Performs a password check and opens config.
+    If Password = "@Wmp9296bm4ddw" Then
+        Application.DisplayAlerts = True
+        shtDeveloper.Visible = xlSheetVisible
+        Application.Visible = True
+        Application.VBE.MainWindow.Visible = True
+        Application.SendKeys ("^r")
+        Unload formPassword
+    Else
+        MsgBox "Access Denied", vbExclamation
+        Exit Sub
+    End If
+End Sub
+
+Public Sub CloseConfig()
+'Performs actions needed to close config.
+    ThisWorkbook.Save
+    shtDeveloper.Visible = xlSheetVeryHidden
+    Application.VBE.MainWindow.Visible = False
+    Application.DisplayAlerts = False
+    GuiCommands.GoToMain
+End Sub
+
+Public Sub ExitApp()
+'This exits the application after saving the thisworkbook.
+    ThisWorkbook.Save
+    Application.Quit
+End Sub
+
+Public Sub ClearForm(frm)
+'Clears the values from a user form.
+    Dim ctl As Control
+    For Each ctl In frm.Controls
+        Select Case VBA.TypeName(ctl)
+            Case "TextBox"
+                ctl.Text = ""
+            Case "CheckBox", "OptionButton", "ToggleButton"
+                ctl.value = False
+            Case "ComboBox", "ListBox"
+                ctl.ListIndex = -1
+            Case Else
+                End Select
+    Next ctl
+End Sub
+
+Public Sub DB2W_tblWarpingSpecs()
+    DataAccess.DatabaseToWorksheet "tblWarpingSpecs"
+End Sub
+
+Public Sub DB2W_tblStyleSpecs()
+    DataAccess.DatabaseToWorksheet "tblStyleSpecs"
+End Sub

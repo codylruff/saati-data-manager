@@ -7,21 +7,16 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '====================================
 'CLASS DESCRIPTION:
 ' Interface for Console Box printing
 '====================================
-'------------
-' COLLECTIONS
-'------------
 Private PrettyProperties_       As Object
-'------------
-' PROPERTIES
-'------------
-' Properties
+
 Public Property Get PrettyProperties() As Object
-    ' Set PrettyProperties = PrettyProperties_
 End Property
+
 Public Property Set PrettyProperties(dict As Object)
     ' Example: Where items are the properties
     '          and the keys are print labels.
@@ -30,8 +25,6 @@ Public Property Set PrettyProperties(dict As Object)
     ' dict.Add key:="Beam Width", item:=BeamWidth
     ' Set PrettyProperties_ = dict
 End Property
-'----------
-' METHODS
-'----------
+
 Public Sub SetPrettyProperties()
 End Sub

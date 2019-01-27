@@ -2,9 +2,23 @@ Attribute VB_Name = "Utility"
 Option Explicit
 '=================================
 ' DESCRIPTION: Util Module holds
-'              misc functions.
+' miscellenous helper functions.
 '=================================
-Public Function CheckForEmpties(frm) As Boolean
+Sub CreateNewSheet(shtName As String)
+' Creates a new worksheet with the given name
+    Dim exists As Boolean, i As Integer
+    With ThisWorkbook
+        For i = 1 To Worksheets.count
+            If Worksheets(i).name = shtName Then
+                exists = True
+            End If
+        Next i
+        If exists = True Then
+            .Sheets(shtName).Delete
+        End If
+        .Sheets.Add(After:=.Sheets(.Sheets.count)).name = shtName
+    End With
+Function CheckForEmpties(frm) As Boolean
 'Clears the values from a user form.
     Dim ctl As Control
     For Each ctl In frm.Controls
@@ -28,7 +42,7 @@ Public Function CheckForEmpties(frm) As Boolean
     CheckForEmpties = False
 End Function
 
-Public Sub CreateZipFile(folderToZipPath As Variant, _
+Sub CreateZipFile(folderToZipPath As Variant, _
                         zippedFileFullName As Variant)
 ' Zips files given path and filename with extension.
     Dim ShellApp As Object
@@ -47,7 +61,7 @@ Public Sub CreateZipFile(folderToZipPath As Variant, _
     On Error GoTo 0
 End Sub
 
-Public Sub UnloadAllForms(Optional dummyVariable As Byte)
+Sub UnloadAllForms(Optional dummyVariable As Byte)
 'Unloads all open user forms
     Dim i As Long
     For i = VBA.UserForms.count - 1 To 0 Step -1
@@ -55,98 +69,20 @@ Public Sub UnloadAllForms(Optional dummyVariable As Byte)
     Next
 End Sub
 
-Public Sub UpdateTable(shtName As String, tblName As String, header As String, val)
+Sub UpdateTable(shtName As String, tblName As String, header As String, val)
 'Adds an entry at the bottom of specified column header.
     Dim rng As Range
     Set rng = Sheets(shtName).Range(tblName & "[" & header & "]")
     rng.End(xlDown).offset(1, 0).value = val
 End Sub
 
-Public Sub Update(rng As Range, val)
+Sub Update(rng As Range, val)
 'Adds an entry at the bottom of specified column header.
     rng.End(xlDown).offset(1, 0).value = val
         
 End Sub
 
-Public Sub Insert(rng As Range, val)
+Sub Insert(rng As Range, val)
 'Inserts an entry into a specific named cell.
     rng.value = val
-End Sub
-
-
-'---------------
-' COMMANDS
-'---------------
-Public Sub GoToMain()
-'Opens the main menu form.
-    Application.Visible = False
-    UnloadAllForms
-    formMainMenu.Show
-End Sub
-
-Public Sub ConfigControl()
-'Initializes the password form for config access.
-    If Environ("UserName") <> "CRuff" Then
-        formPassword.Show
-    Else
-        Application.DisplayAlerts = True
-        shtDeveloper.Visible = xlSheetVisible
-        Application.Visible = True
-        Application.VBE.MainWindow.Visible = True
-        Application.SendKeys ("^r")
-    End If
-End Sub
-
-Public Sub Open_Config(Password As String)
-'Performs a password check and opens config.
-    If Password = "@Wmp9296bm4ddw" Then
-        Application.DisplayAlerts = True
-        shtDeveloper.Visible = xlSheetVisible
-        Application.Visible = True
-        Application.VBE.MainWindow.Visible = True
-        Application.SendKeys ("^r")
-        Unload formPassword
-    Else
-        MsgBox "Access Denied", vbExclamation
-        Exit Sub
-    End If
-End Sub
-
-Public Sub CloseConfig()
-'Performs actions needed to close config.
-    ThisWorkbook.Save
-    shtDeveloper.Visible = xlSheetVeryHidden
-    Application.VBE.MainWindow.Visible = False
-    Application.DisplayAlerts = False
-    GoToMain
-End Sub
-
-Public Sub ExitApp()
-'This exits the application after saving the thisworkbook.
-    ThisWorkbook.Save
-    Application.Quit
-End Sub
-
-Public Sub ClearForm(frm)
-'Clears the values from a user form.
-    Dim ctl As Control
-    For Each ctl In frm.Controls
-        Select Case VBA.TypeName(ctl)
-            Case "TextBox"
-                ctl.Text = ""
-            Case "CheckBox", "OptionButton", "ToggleButton"
-                ctl.value = False
-            Case "ComboBox", "ListBox"
-                ctl.ListIndex = -1
-            Case Else
-                End Select
-    Next ctl
-End Sub
-
-Public Sub DB2W_tblWarpingSpecs()
-    DatabaseToWorksheet "tblWarpingSpecs"
-End Sub
-
-Public Sub DB2W_tblStyleSpecs()
-    DatabaseToWorksheet "tblStyleSpecs"
 End Sub

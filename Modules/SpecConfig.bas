@@ -1,4 +1,3 @@
-Attribute VB_Name = "Slitting"
+Attribute VB_Name = "SpecConfig"
 
-‘ TODO: Move spec management
-‘       functions to this module
+' TODO: Move spec management functions to this module

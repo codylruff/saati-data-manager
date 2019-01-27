@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '====================================
 'CLASS DESCRIPTION:
 ' Specification for sectional warper
@@ -15,7 +16,6 @@ Attribute VB_Exposed = False
 'INTERFACES
 '------------
 Implements IPrint
-'Implements IDatabaseRecord
 '------------------------------------
 'Factory Module Constructor function:
 '------------------------------------
@@ -46,124 +46,19 @@ Private WarpingTension_         As Double
 Private K1_                     As Double
 Private K2_                     As Double
 Private StyleSpec_              As StyleSpecification
-'------------
+Private WarpDensityStart_       As Double
+Private WarpDensityMeasured_    As Double
+Private CompactionFactor_       As Double
+Private EvenerRoller_           As Boolean
+Private MeasuringPhase_         As Boolean
+Private ReedShape_              As Long
+Private YarnLeaseFeed_          As Double
+'-------------
 ' COLLECTIONS
-'------------
-Private Properties_                    As Object
-Private IPrint_PrettyProperties_       As Object
-'------------
-' PROPERTIES
-'------------
-Private WarpDensityStart_ As Double
-Private WarpDensityMeasured_ As Double
-Private CompactionFactor_ As Double
-Private EvenerRoller_ As Boolean
-Private MeasuringPhase_ As Boolean
-Private ReedShape_ As Long
-Private YarnLeaseFeed_ As Double
-' YarnLeaseFeed
-Public Property Let YarnLeaseFeed(value As Double)
-    YarnLeaseFeed_ = value
-End Property
-Public Property Get YarnLeaseFeed() As Double
-    YarnLeaseFeed = YarnLeaseFeed_
-End Property
-' ReedShape
-Public Property Let ReedShape(value As Long)
-    ReedShape_ = value
-End Property
-Public Property Get ReedShape() As Long
-    ReedShape = ReedShape_
-End Property
-' MeasuringPhase
-Public Property Let MeasuringPhase(value As Boolean)
-    MeasuringPhase_ = value
-End Property
-Public Property Get MeasuringPhase() As Boolean
-    MeasuringPhase = MeasuringPhase_
-End Property
-' EvenerRoller
-Public Property Let EvenerRoller(value As Boolean)
-    EvenerRoller_ = value
-End Property
-Public Property Get EvenerRoller() As Boolean
-    EvenerRoller = EvenerRoller_
-End Property
-' CompactionFactor
-Public Property Let CompactionFactor(value As Double)
-    CompactionFactor_ = value
-End Property
-Public Property Get CompactionFactor() As Double
-    CompactionFactor = CompactionFactor_
-End Property
-' WarpDensityMeasured
-Public Property Let WarpDensityMeasured(value As Double)
-    WarpDensityMeasured_ = value
-End Property
-Public Property Get WarpDensityMeasured() As Double
-    WarpDensityMeasured = WarpDensityMeasured_
-End Property
-' WarpDensityStart
-Public Property Let WarpDensityStart(value As Double)
-    WarpDensityStart_ = value
-End Property
-Public Property Get WarpDensityStart() As Double
-    WarpDensityStart = WarpDensityStart_
-End Property
-' YarnCode
-Public Property Get YarnCode() As String
-    YarnCode = styleSpec.YarnCode
-End Property
-' K2
-Public Property Let K2(value As Double)
-    K2_ = value
-End Property
-Public Property Get K2() As Double
-    K2 = K2_
-End Property
-' K1
-Public Property Let K1(value As Double)
-    K1_ = value
-End Property
-Public Property Get K1() As Double
-    K1 = K1_
-End Property
-' WarpingTension
-Public Property Let WarpingTension(value As Double)
-    WarpingTension_ = value
-End Property
-Public Property Get WarpingTension() As Double
-    WarpingTension = WarpingTension_
-End Property
-' BeamingTension
-Public Property Let BeamingTension(value As Double)
-    BeamingTension_ = value
-End Property
-Public Property Get BeamingTension() As Double
-    BeamingTension = BeamingTension_
-End Property
-' BeamWidth
-Public Property Let BeamWidth(value As Double)
-    BeamWidth_ = value
-End Property
-Public Property Get BeamWidth() As Double
-    BeamWidth = BeamWidth_
-End Property
-' NumberOfEnds
-Public Property Let NumberOfEnds(value As Double)
-    NumberOfEnds_ = value
-End Property
-Public Property Get NumberOfEnds() As Double
-    NumberOfEnds = NumberOfEnds_
-End Property
-' StyleSpec
-Public Property Set styleSpec(value As StyleSpecification)
-    Set StyleSpec_ = value
-End Property
-Public Property Get styleSpec() As StyleSpecification
-    Set styleSpec = StyleSpec_
-End Property
-' PrettyProperties
+'-------------
+Private Properties_              As Object
+Private IPrint_PrettyProperties_ As Object
+' IPrint_PrettyProperties
 Public Property Get IPrint_PrettyProperties() As Object
     Set IPrint_PrettyProperties = IPrint_PrettyProperties_
 End Property
@@ -218,38 +113,89 @@ Public Property Set Properties(dict As Object)
     dict.Add key:="Dtex", item:=Dtex
     Set Properties_ = dict
 End Property
+'----------------
+' AUTO-PROPERTIES
+'----------------
+' YarnLeaseFeed
+Public Property Let YarnLeaseFeed(value As Double): YarnLeaseFeed_ = value: End Property
+Public Property Get YarnLeaseFeed() As Double: YarnLeaseFeed = YarnLeaseFeed_: End Property
+' ReedShape
+Public Property Let ReedShape(value As Long): ReedShape_ = value: End Property
+Public Property Get ReedShape() As Long: ReedShape = ReedShape_: End Property
+' MeasuringPhase
+Public Property Let MeasuringPhase(value As Boolean): MeasuringPhase_ = value: End Property
+Public Property Get MeasuringPhase() As Boolean: MeasuringPhase = MeasuringPhase_: End Property
+' EvenerRoller
+Public Property Let EvenerRoller(value As Boolean): EvenerRoller_ = value: End Property
+Public Property Get EvenerRoller() As Boolean: EvenerRoller = EvenerRoller_: End Property
+' CompactionFactor
+Public Property Let CompactionFactor(value As Double): CompactionFactor_ = value: End Property
+Public Property Get CompactionFactor() As Double: CompactionFactor = CompactionFactor_: End Property
+' WarpDensityMeasured
+Public Property Let WarpDensityMeasured(value As Double): WarpDensityMeasured_ = value: End Property
+Public Property Get WarpDensityMeasured() As Double: WarpDensityMeasured = WarpDensityMeasured_: End Property
+' WarpDensityStart
+Public Property Let WarpDensityStart(value As Double): WarpDensityStart_ = value: End Property
+Public Property Get WarpDensityStart() As Double: WarpDensityStart = WarpDensityStart_: End Property
+' YarnCode
+Public Property Get YarnCode() As String: YarnCode = styleSpec.YarnCode: End Property
+' K2
+Public Property Let K2(value As Double): K2_ = value: End Property
+Public Property Get K2() As Double: K2 = K2_: End Property
+' K1
+Public Property Let K1(value As Double): K1_ = value: End Property
+Public Property Get K1() As Double: K1 = K1_: End Property
+' WarpingTension
+Public Property Let WarpingTension(value As Double): WarpingTension_ = value: End Property
+Public Property Get WarpingTension() As Double: WarpingTension = WarpingTension_: End Property
+' BeamingTension
+Public Property Let BeamingTension(value As Double): BeamingTension_ = value: End Property
+Public Property Get BeamingTension() As Double: BeamingTension = BeamingTension_: End Property
+' BeamWidth
+Public Property Let BeamWidth(value As Double): BeamWidth_ = value: End Property
+Public Property Get BeamWidth() As Double: BeamWidth = BeamWidth_: End Property
+' NumberOfEnds
+Public Property Let NumberOfEnds(value As Double): NumberOfEnds_ = value: End Property
+Public Property Get NumberOfEnds() As Double: NumberOfEnds = NumberOfEnds_: End Property
+' StyleSpec
+Public Property Set styleSpec(value As StyleSpecification): Set StyleSpec_ = value: End Property
+Public Property Get styleSpec() As StyleSpecification: Set styleSpec = StyleSpec_: End Property
 ' Style
-Public Property Get Style() As Long
-    Style = styleSpec.Style
-End Property
+Public Property Get Style() As Long: Style = styleSpec.Style: End Property
 ' EndsPerDent
-Public Property Let EndsPerDent(value As Double)
-    EndsPerDent_ = value
-End Property
-Public Property Get EndsPerDent() As Double
-    EndsPerDent = EndsPerDent_
-End Property
+Public Property Let EndsPerDent(value As Double): EndsPerDent_ = value: End Property
+Public Property Get EndsPerDent() As Double: EndsPerDent = EndsPerDent_: End Property
 ' DentsPerCm
-Public Property Let DentsPerCm(value As Double)
-    DentsPerCm_ = value
-End Property
-Public Property Get DentsPerCm() As Double
-    DentsPerCm = DentsPerCm_
-End Property
+Public Property Let DentsPerCm(value As Double): DentsPerCm_ = value: End Property
+Public Property Get DentsPerCm() As Double: DentsPerCm = DentsPerCm_: End Property
 ' CrossWinding
-Public Property Let CrossWinding(value As Double)
-    CrossWinding_ = value
-End Property
-Public Property Get CrossWinding() As Double
-    CrossWinding = CrossWinding_
-End Property
+Public Property Let CrossWinding(value As Double): CrossWinding_ = value: End Property
+Public Property Get CrossWinding() As Double: CrossWinding = CrossWinding_: End Property
 ' BeamingSpeed
-Public Property Let BeamingSpeed(value As Double)
-    BeamingSpeed_ = value
-End Property
-Public Property Get BeamingSpeed() As Double
-    BeamingSpeed = BeamingSpeed_
-End Property
+Public Property Let BeamingSpeed(value As Double): BeamingSpeed_ = value: End Property
+Public Property Get BeamingSpeed() As Double: BeamingSpeed = BeamingSpeed_: End Property
+' WarpingSpeed
+Public Property Let WarpingSpeed(value As Double): WarpingSpeed_ = value: End Property
+Public Property Get WarpingSpeed() As Double: WarpingSpeed = WarpingSpeed_: End Property
+' Material Number
+Public Property Let MaterialNumber(value As String): MaterialNumber_ = value: End Property
+Public Property Get MaterialNumber() As String: MaterialNumber = MaterialNumber_: End Property
+' Material Description
+Public Property Let MaterialDescription(value As String): MaterialDescription_ = value: End Property
+Public Property Get MaterialDescription() As String: MaterialDescription = MaterialDescription_: End Property
+' Final Width in cm
+Public Property Let FinalWidthCm(value As Double): FinalWidthCm_ = value: End Property
+Public Property Get FinalWidthCm() As Double: FinalWidthCm = FinalWidthCm_: End Property
+' Ends Per Inch
+Public Property Get EndsPerInch() As Double: EndsPerInch = styleSpec.MeanWarpCount: End Property
+' Linear Density in Dtex or g / 10000 m
+Public Property Get Dtex() As Double: Dtex = styleSpec.Dtex: End Property
+' S Wrapping
+Public Property Let IsSWrapped(value As Boolean): IsSWrapped_ = value: End Property
+Public Property Get IsSWrapped() As Boolean: IsSWrapped = IsSWrapped_: End Property
+'------------
+' PROPERTIES
+'------------
 ' Yarn Supplier
 Public Property Get YarnSupplier() As String
     Select Case Mid(MaterialNumber, 2, 2)
@@ -271,13 +217,6 @@ Public Property Get YarnSupplier() As String
             YarnSupplier = "Unknown"
     End Select
 End Property
-' WarpingSpeed
-Public Property Let WarpingSpeed(value As Double)
-    WarpingSpeed_ = value
-End Property
-Public Property Get WarpingSpeed() As Double
-    WarpingSpeed = WarpingSpeed_
-End Property
 ' Spring Color
 Public Property Get SpringColor() As String
     Select Case True
@@ -288,42 +227,6 @@ Public Property Get SpringColor() As String
         Case Else
             SpringColor = "Yellow"
     End Select
-End Property
-' Material Number
-Public Property Let MaterialNumber(value As String)
-    MaterialNumber_ = value
-End Property
-Public Property Get MaterialNumber() As String
-    MaterialNumber = MaterialNumber_
-End Property
-' Material Description
-Public Property Let MaterialDescription(value As String)
-    MaterialDescription_ = value
-End Property
-Public Property Get MaterialDescription() As String
-    MaterialDescription = MaterialDescription_
-End Property
-' Final Width in cm
-Public Property Let FinalWidthCm(value As Double)
-    FinalWidthCm_ = value
-End Property
-Public Property Get FinalWidthCm() As Double
-    FinalWidthCm = FinalWidthCm_
-End Property
-' Ends Per Inch
-Public Property Get EndsPerInch() As Double
-    EndsPerInch = styleSpec.MeanWarpCount
-End Property
-' Linear Density in Dtex or g / 10000 m
-Public Property Get Dtex() As Double
-    Dtex = styleSpec.Dtex
-End Property
-' S Wrapping
-Public Property Let IsSWrapped(value As Boolean)
-    IsSWrapped_ = value
-End Property
-Public Property Get IsSWrapped() As Boolean
-    IsSWrapped = IsSWrapped_
 End Property
 '---------
 ' METHODS
@@ -398,5 +301,4 @@ Public Sub SaveSpecification()
     SQLstmt = INSERTstmt & vbNewLine & VALUESstmt
     Debug.Print SQLstmt
     RetVal = ExecuteSQLite3(SQLstmt)
-    If Not RetVal = SQLITE_DONE Then Err.Raise Number:=1
 End Sub

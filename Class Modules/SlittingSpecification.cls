@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '=====================================
 'CLASS DESCRIPTION:
 ' Current only valid for Heat Slitting
@@ -18,11 +19,7 @@ Attribute VB_Exposed = False
 'INTERFACES
 '------------
 Implements IPrint
-'Factory Module Constructor function:
-'Function CreateSlittingSpecification() As SlittingSpecification
-'----------------
-'CLASS VARIABLES
-'----------------
+
 Private MaterialNumber_         As String
 Private MaterialDescription_    As String
 Private SpecPath_               As String
@@ -41,9 +38,6 @@ Private BladeTemperature_       As Double
 Private Properties_             As Object
 Private PrettyProperties_       As Object
 Private PartHistory_            As Collection
-'------------
-' PROPERTIES
-'------------
 ' Properties
 Public Property Get Properties() As Object
     Set Properties = Properties_
@@ -67,6 +61,9 @@ Public Property Set IPrint_PrettyProperties(dict As Object)
     End If
     Set IPrint_PrettyProperties_ = dict
 End Property
+'------------
+' PROPERTIES
+'------------
 ' Material Number
 Public Property Let MaterialNumber(value As String)
     MaterialNumber_ = value
@@ -159,13 +156,4 @@ Public Sub SetProperties()
 End Sub
 Public Sub IPrint_SetPrettyProperties()
     Set IPrint_PrettyProperties = CreateObject("Scripting.Dictionary")
-End Sub
-'---------
-' EVENTS
-'---------
-' Constructor
-Private Sub Class_Initialize()
-End Sub
-' Deconstructor
-Private Sub Class_Terminate()
 End Sub

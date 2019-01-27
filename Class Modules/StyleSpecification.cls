@@ -7,13 +7,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '=========================================
 'CLASS DESCRIPTION:
 ' Represents the spec for a specific style
 '=========================================
-'----------------
-'CLASS VARIABLES
-'----------------
 '----------------
 'CLASS VARIABLES
 '----------------
@@ -41,14 +39,11 @@ Private Twisting_                   As Double
 Private YarnColor_                  As String
 Private Notes_                      As String
 Private YarnMerge_                  As String
-Private Properties_                 As Object
 
 '------------
 ' COLLECTIONS
 '------------
-'------------
-' PROPERTIES
-'------------
+Private Properties_                 As Object
 ' Properties
 Public Property Get Properties() As Object
     Set Properties = Properties_
@@ -80,181 +75,84 @@ Public Property Set Properties(dict As Object)
     dict.Add key:="YarnMerge", item:=YarnMerge
     Set Properties_ = dict
 End Property
+'------------
+' AUTO-PROPERTIES
+'------------
 ' MinFillCount
-Public Property Let MinFillCount(value As Double)
-    MinFillCount_ = value
-End Property
-Public Property Get MinFillCount() As Double
-    MinFillCount = MinFillCount_
-End Property
+Public Property Let MinFillCount(value As Double): MinFillCount_ = value: End Property
+Public Property Get MinFillCount() As Double: MinFillCount = MinFillCount_: End Property
 ' YarnMerge
-Public Property Let YarnMerge(value As String)
-    YarnMerge_ = value
-End Property
-Public Property Get YarnMerge() As String
-    YarnMerge = YarnMerge_
-End Property
+Public Property Let YarnMerge(value As String): YarnMerge_ = value: End Property
+Public Property Get YarnMerge() As String: YarnMerge = YarnMerge_: End Property
 ' Notes
-Public Property Let Notes(value As String)
-    Notes_ = value
-End Property
-Public Property Get Notes() As String
-    Notes = Notes_
-End Property
+Public Property Let Notes(value As String): Notes_ = value: End Property
+Public Property Get Notes() As String: Notes = Notes_: End Property
 ' Twisting
-Public Property Let Twisting(value As Double)
-    Twisting_ = value
-End Property
-Public Property Get Twisting() As Double
-    Twisting = Twisting_
-End Property
+Public Property Let Twisting(value As Double): Twisting_ = value: End Property
+Public Property Get Twisting() As Double: Twisting = Twisting_: End Property
 ' YarnColor
-Public Property Let YarnColor(value As String)
-    YarnColor_ = value
-End Property
-Public Property Get YarnColor() As String
-    YarnColor = YarnColor_
-End Property
+Public Property Let YarnColor(value As String): YarnColor_ = value: End Property
+Public Property Get YarnColor() As String: YarnColor = YarnColor_: End Property
 ' MoistureRegain
-Public Property Let MoistureRegain(value As Double)
-    MoistureRegain_ = value
-End Property
-Public Property Get MoistureRegain() As Double
-    MoistureRegain = MoistureRegain_
-End Property
+Public Property Let MoistureRegain(value As Double): MoistureRegain_ = value: End Property
+Public Property Get MoistureRegain() As Double: MoistureRegain = MoistureRegain_: End Property
 ' YarnCode
-Public Property Let YarnCode(value As String)
-    YarnCode_ = value
-End Property
-Public Property Get YarnCode() As String
-    YarnCode = YarnCode_
-End Property
+Public Property Let YarnCode(value As String): YarnCode_ = value: End Property
+Public Property Get YarnCode() As String: YarnCode = YarnCode_: End Property
 ' YarnFinish
-Public Property Let YarnFinish(value As String)
-    YarnFinish_ = value
-End Property
-Public Property Get YarnFinish() As String
-    YarnFinish = YarnFinish_
-End Property
+Public Property Let YarnFinish(value As String): YarnFinish_ = value: End Property
+Public Property Get YarnFinish() As String: YarnFinish = YarnFinish_: End Property
 ' MaxConditionedWeight
-Public Property Let MaxConditionedWeight(value As Double)
-    MaxConditionedWeight_ = value
-End Property
-Public Property Get MaxConditionedWeight() As Double
-    MaxConditionedWeight = MaxConditionedWeight_
-End Property
+Public Property Let MaxConditionedWeight(value As Double): MaxConditionedWeight_ = value: End Property
+Public Property Get MaxConditionedWeight() As Double: MaxConditionedWeight = MaxConditionedWeight_: End Property
 ' MinConditionedWeight
-Public Property Let MinConditionedWeight(value As Double)
-    MinConditionedWeight_ = value
-End Property
-Public Property Get MinConditionedWeight() As Double
-    MinConditionedWeight = MinConditionedWeight_
-End Property
+Public Property Let MinConditionedWeight(value As Double): MinConditionedWeight_ = value: End Property
+Public Property Get MinConditionedWeight() As Double: MinConditionedWeight = MinConditionedWeight_: End Property
 ' MeanConditionedWeight
-Public Property Let MeanConditionedWeight(value As Double)
-    MeanConditionedWeight_ = value
-End Property
-Public Property Get MeanConditionedWeight() As Double
-    MeanConditionedWeight = MeanConditionedWeight_
-End Property
+Public Property Let MeanConditionedWeight(value As Double): MeanConditionedWeight_ = value: End Property
+Public Property Get MeanConditionedWeight() As Double: MeanConditionedWeight = MeanConditionedWeight_: End Property
 ' MaxDryWeight
-Public Property Let MaxDryWeight(value As Double)
-    MaxDryWeight_ = value
-End Property
-Public Property Get MaxDryWeight() As Double
-    MaxDryWeight = MaxDryWeight_
-End Property
+Public Property Let MaxDryWeight(value As Double): MaxDryWeight_ = value: End Property
+Public Property Get MaxDryWeight() As Double: MaxDryWeight = MaxDryWeight_: End Property
 ' MinDryWeight
-Public Property Let MinDryWeight(value As Double)
-    MinDryWeight_ = value
-End Property
-Public Property Get MinDryWeight() As Double
-    MinDryWeight = MinDryWeight_
-End Property
+Public Property Let MinDryWeight(value As Double): MinDryWeight_ = value: End Property
+Public Property Get MinDryWeight() As Double: MinDryWeight = MinDryWeight_: End Property
 ' MeanDryWeight
-Public Property Let MeanDryWeight(value As Double)
-    MeanDryWeight_ = value
-End Property
-Public Property Get MeanDryWeight() As Double
-    MeanDryWeight = MeanDryWeight_
-End Property
+Public Property Let MeanDryWeight(value As Double): MeanDryWeight_ = value: End Property
+Public Property Get MeanDryWeight() As Double: MeanDryWeight = MeanDryWeight_: End Property
 ' MaxFillCount
-Public Property Let MaxFillCount(value As Double)
-    MaxFillCount_ = value
-End Property
-Public Property Get MaxFillCount() As Double
-    MaxFillCount = MaxFillCount_
-End Property
+Public Property Let MaxFillCount(value As Double): MaxFillCount_ = value: End Property
+Public Property Get MaxFillCount() As Double: MaxFillCount = MaxFillCount_: End Property
 ' MinWarpCount
-Public Property Let MinWarpCount(value As Double)
-    MinWarpCount_ = value
-End Property
-Public Property Get MinWarpCount() As Double
-    MinWarpCount = MinWarpCount_
-End Property
+Public Property Let MinWarpCount(value As Double): MinWarpCount_ = value: End Property
+Public Property Get MinWarpCount() As Double: MinWarpCount = MinWarpCount_: End Property
 ' MaxWarpCount
-Public Property Let MaxWarpCount(value As Double)
-    MaxWarpCount_ = value
-End Property
-Public Property Get MaxWarpCount() As Double
-    MaxWarpCount = MaxWarpCount_
-End Property
+Public Property Let MaxWarpCount(value As Double): MaxWarpCount_ = value: End Property
+Public Property Get MaxWarpCount() As Double: MaxWarpCount = MaxWarpCount_: End Property
 ' MeanFillCount
-Public Property Let MeanFillCount(value As Double)
-    MeanFillCount_ = value
-End Property
-Public Property Get MeanFillCount() As Double
-    MeanFillCount = MeanFillCount_
-End Property
+Public Property Let MeanFillCount(value As Double): MeanFillCount_ = value: End Property
+Public Property Get MeanFillCount() As Double: MeanFillCount = MeanFillCount_: End Property
 ' MeanWarpCount
-Public Property Let MeanWarpCount(value As Double)
-    MeanWarpCount_ = value
-End Property
-Public Property Get MeanWarpCount() As Double
-    MeanWarpCount = MeanWarpCount_
-End Property
+Public Property Let MeanWarpCount(value As Double): MeanWarpCount_ = value: End Property
+Public Property Get MeanWarpCount() As Double: MeanWarpCount = MeanWarpCount_: End Property
 ' Denier
-Public Property Let Denier(value As Double)
-    Denier_ = value
-End Property
-Public Property Get Denier() As Double
-    Denier = Denier_
-End Property
+Public Property Let Denier(value As Double): Denier_ = value: End Property
+Public Property Get Denier() As Double: Denier = Denier_: End Property
 ' YarnType
-Public Property Let YarnType(value As String)
-    YarnType_ = value
-End Property
-Public Property Get YarnType() As String
-    YarnType = YarnType_
-End Property
+Public Property Let YarnType(value As String): YarnType_ = value: End Property
+Public Property Get YarnType() As String: YarnType = YarnType_: End Property
 ' WeaveType
-Public Property Let WeaveType(value As String)
-    WeaveType_ = value
-End Property
-Public Property Get WeaveType() As String
-    WeaveType = WeaveType_
-End Property
+Public Property Let WeaveType(value As String): WeaveType_ = value: End Property
+Public Property Get WeaveType() As String: WeaveType = WeaveType_: End Property
 ' Style
-Public Property Let Style(value As Long)
-    Style_ = value
-End Property
-Public Property Get Style() As Long
-    Style = Style_
-End Property
+Public Property Let Style(value As Long): Style_ = value: End Property
+Public Property Get Style() As Long: Style = Style_: End Property
 ' Ends Per Inch
-Public Property Let EndsPerInch(value As Double)
-    EndsPerInch_ = value
-End Property
-Public Property Get EndsPerInch() As Double
-    EndsPerInch = EndsPerInch_
-End Property
+Public Property Let EndsPerInch(value As Double): EndsPerInch_ = value: End Property
+Public Property Get EndsPerInch() As Double: EndsPerInch = EndsPerInch_: End Property
 ' Linear Density in Dtex or g / 10000 m
-Public Property Let Dtex(value As Double)
-    Dtex_ = value
-End Property
-Public Property Get Dtex() As Double
-    Dtex = Dtex_
-End Property
+Public Property Let Dtex(value As Double): Dtex_ = value: End Property
+Public Property Get Dtex() As Double: Dtex = Dtex_: End Property
 '----------
 ' METHODS
 '----------
@@ -286,14 +184,4 @@ Public Sub SaveSpecification()
     SQLstmt = INSERTstmt & vbNewLine & VALUESstmt
     Debug.Print SQLstmt
     RetVal = ExecuteSQLite3(SQLstmt)
-    If Not RetVal = SQLITE_DONE Then Err.Raise Number:=1
-End Sub
-'---------
-' EVENTS
-'---------
-' Constructor
-Private Sub Class_Initialize()
-End Sub
-' Deconstructor
-Private Sub Class_Terminate()
 End Sub

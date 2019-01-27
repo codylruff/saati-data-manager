@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '====================================
 'CLASS DESCRIPTION:
 ' Represents a specific warp order.
@@ -15,20 +16,32 @@ Attribute VB_Exposed = False
 'Function CreateWarp(Specification As WarpingSpecification, NumberOfBobbins As Integer, _
 '                     PackageWeightlbs As Double, WarpLengthYds As Double) As Warp
 '----------------
-'CONSTANTS
+' CONSTANTS
 '----------------
 Const MinimumPackageLengthyds = 10936
 '----------------
 'CLASS VARIABLES
 '----------------
-
 Private Specification_          As WarpingSpecification
 Private NumberOfBobbins_        As Double
 Private PackageWeightlbs_       As Double
 Private WarpLengthYds_          As Double
+
 '----------------
-' COLLECTIONS
+' AUTO-PROPERTIES
 '----------------
+' WarpLengthYds
+Public Property Let WarpLengthYds(value As Double): WarpLengthYds_ = value: End Property
+Public Property Get WarpLengthYds() As Double: WarpLengthYds = WarpLengthYds_: End Property
+' PackageWeightlbs
+Public Property Let PackageWeightlbs(value As Double): PackageWeightlbs_ = value: End Property
+Public Property Get PackageWeightlbs() As Double: PackageWeightlbs = PackageWeightlbs_: End Property
+' NumberOfBobbins
+Public Property Let NumberOfBobbins(value As Double): NumberOfBobbins_ = value: End Property
+Public Property Get NumberOfBobbins() As Double: NumberOfBobbins = NumberOfBobbins_: End Property
+' Specification
+Public Property Set Specification(value As WarpingSpecification): Set Specification_ = value: End Property
+Public Property Get Specification() As WarpingSpecification: Set Specification = Specification_: End Property
 '----------------
 ' PROPERTIES
 '----------------
@@ -40,13 +53,6 @@ Public Property Get IsMinimumPackageLength() As Boolean
     Else
         IsMinimumPackageLength = False
     End If
-End Property
-' WarpLengthYds
-Public Property Let WarpLengthYds(value As Double)
-    WarpLengthYds_ = value
-End Property
-Public Property Get WarpLengthYds() As Double
-    WarpLengthYds = WarpLengthYds_
 End Property
 ' Residual Length yards
 Public Property Get ResidualLengthYds() As Double
@@ -65,36 +71,3 @@ Public Property Get NumberOfSections() As Double
         NumberOfSections = .EndsPerInch * .FinalWidthCm / 2.54 / NumberOfBobbins
     End With
 End Property
-' PackageWeightlbs
-Public Property Let PackageWeightlbs(value As Double)
-    PackageWeightlbs_ = value
-End Property
-Public Property Get PackageWeightlbs() As Double
-    PackageWeightlbs = PackageWeightlbs_
-End Property
-' NumberOfBobbins
-Public Property Let NumberOfBobbins(value As Double)
-    NumberOfBobbins_ = value
-End Property
-Public Property Get NumberOfBobbins() As Double
-    NumberOfBobbins = NumberOfBobbins_
-End Property
-' Specification
-Public Property Set Specification(value As WarpingSpecification)
-    Set Specification_ = value
-End Property
-Public Property Get Specification() As WarpingSpecification
-    Set Specification = Specification_
-End Property
-'----------------
-' METHODS
-'----------------
-'----------------
-' EVENTS
-'----------------
-' Constructor
-Private Sub Class_Initialize()
-End Sub
-' Deconstructor
-Private Sub Class_Terminate()
-End Sub

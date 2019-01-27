@@ -11,11 +11,11 @@ Option Explicit
 ' Interface for version control
 ' of standardized process
 ' specifications
-Public Property Get MaterialNumber() As String
-End Property
-Public Property Get MaterialDescription() As String
-End Property
+Public Property Get MaterialNumber() As String: End Property
+Public Property Get MaterialDescription() As String: End Property
+
 Public Sub Push()
 End Sub
+
 Public Sub Commit()
 End Sub
