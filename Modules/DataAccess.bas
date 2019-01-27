@@ -4,34 +4,32 @@ Option Explicit
 'DESCRIPTION: Data Access Module
 '===================================
 
-Function ExecuteSQLite3Select(SQLstmt As String) As DatabaseRecord
+Function ExecuteSQLSelect(db As IDatabase, path As String, SQLstmt As String) As DatabaseRecord
 ' Returns an table like array
-    Dim sqlite: Set sqlite = New SQLiteDatabase
     Dim record: Set record = New DatabaseRecord
-    sqlite.openDb SQLITE_PATH
-    sqlite.selectQry SQLstmt
-    record.data = sqlite.data
-    record.header = sqlite.header
-    ExecuteSQLite3Select = sqlite.data
+    db.openDb path
+    db.selectQry SQLstmt
+    record.data = db.data
+    record.header = db.header
+    ExecuteSQLSelect = db.data
 End Function
 
-Sub ExecuteSQLite3(SQLstmt As String)
+Sub ExecuteSQL(db As IDatabase, path As String, SQLstmt As String)
 ' Performs update or insert querys returns error on select.
-    Dim sqlite: Set sqlite = New SQLiteDatabase
     If Left(SQLstmt,6) = "SELECT" Then
         Debug.Print("Use ExecuteSQLite3Select() for SELECT query")
         Exit Sub
     Else
-        sqlite.openDb(SQLITE_PATH)
-        sqlite.execute(SQLstmt)
+        db.openDb(path)
+        db.execute(SQLstmt)
     End If
 End Sub
 
-Sub DatabaseToWorksheet(tblName As String)
+Sub DatabaseToWorksheet(db As IDatabase, path As String, tblName As String)
 ' Copies a database table into a worksheet
     Dim shtName As String
     Dim ws As Worksheet
-    Dim record: Set record = SQLite3Select("SELECT * FROM " & tblName)
+    Dim record: Set record = ExecuteSQLSelect(db, path, "SELECT * FROM " & tblName)
     ' Disables unpleasent ui effects
     Application.ScreenUpdating = False
     Application.DisplayAlerts = False
@@ -47,3 +45,4 @@ Sub DatabaseToWorksheet(tblName As String)
     Application.ScreenUpdating = True
     Application.DisplayAlerts = True
 End Sub
+

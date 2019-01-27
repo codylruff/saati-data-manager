@@ -17,28 +17,17 @@ Attribute VB_Exposed = False
 '----------------
 'CLASS VARIABLES
 '----------------
-Private FormId_             As MSForms.UserForm
+Private FormId_         As MSForms.UserForm
+Private OutputHistory_  As Collection
 '------------
-' COLLECTIONS
-'------------
-Private OutputHistory_      As Collection
-'------------
-' PROPERTIES
+' AUTO-PROPERTIES
 '------------
 ' OutputHistory
-Public Property Set OutputHistory(value As Collection)
-    Set OutputHistory_ = value
-End Property
-Public Property Get OutputHistory() As Collection
-    Set OutputHistory = OutputHistory_
-End Property
+Public Property Set OutputHistory(value As Collection): Set OutputHistory_ = value: End Property
+Public Property Get OutputHistory() As Collection: Set OutputHistory = OutputHistory_: End Property
 ' FormId
-Public Property Set FormId(value As MSForms.UserForm)
-    Set FormId_ = value
-End Property
-Public Property Get FormId() As MSForms.UserForm
-    Set FormId = FormId_
-End Property
+Public Property Set FormId(value As MSForms.UserForm): Set FormId_ = value: End Property
+Public Property Get FormId() As MSForms.UserForm: Set FormId = FormId_: End Property
 '----------
 ' METHODS
 '----------

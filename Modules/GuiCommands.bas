@@ -170,9 +170,11 @@ Public Sub ClearForm(frm)
 End Sub
 
 Public Sub DB2W_tblWarpingSpecs()
-    DataAccess.DatabaseToWorksheet "tblWarpingSpecs"
+' Dumps warping specs to a new worksheet
+    DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblWarpingSpecs"
 End Sub
 
 Public Sub DB2W_tblStyleSpecs()
-    DataAccess.DatabaseToWorksheet "tblStyleSpecs"
+' Dumps style specs to a new worksheet
+    DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblStyleSpecs"
 End Sub

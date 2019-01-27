@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+Implements IDatabase
 '----------------------------------
 Private m_header As Variant
 Private m_data As Variant
@@ -199,13 +200,13 @@ Public Property Get dbPath() As Variant:  dbPath = m_dbPath: End Property
 Private Property Let dbPath(ByVal vNewValue As Variant): m_dbPath = vNewValue: End Property
 '================================================================
 ' public properties
-Public Property Get header() As Variant: header = m_header: End Property
-Public Property Get data() As Variant: data = m_data: End Property 
+Public Property Get IDatabase_header() As Variant: IDatabase_header = m_header: End Property
+Public Property Get IDatabase_data() As Variant: IDatabase_data = m_data: End Property 
 Public Property Get qtyRows() As Long: qtyRows = m_qtyRows: End Property
 Public Property Get qtyColumns() As Long: qtyColumns = m_qtyColumns: End Property
 '================================================================
 ' opens a database
-Public Sub openDb(sqliPath As String)
+Public Sub IDatabase_openDb(sqliPath As String)
   '---------------------------------
   If sqliPath = "" Or Len(Dir(sqliPath)) = 0 Then
     Err.Raise 1, "Database not found", "Please select a valid file address"
@@ -216,14 +217,14 @@ Public Sub openDb(sqliPath As String)
 End Sub
 
 ' Execute sql statement
-Public Sub execute(ssql As String)
+Public Sub IDatabase_execute(ssql As String)
   Dim myStmtHandle As Long
   '----------------------------------------------'
   Call initQuery(executa, myStmtHandle, Me.dbPath, ssql)     'manda o comando execute
 End Sub
 
 ' Execute select statement
-Public Sub selectQry(ssql As String)
+Public Sub IDatabase_selectQry(ssql As String)
   Dim myStmtHandle As Long
   '----------------------------------------------'
   Call initQuery(getRows, myStmtHandle, Me.dbPath, "select count(*) from (" & ssql & ")") 'get rows

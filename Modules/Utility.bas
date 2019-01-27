@@ -18,6 +18,8 @@ Sub CreateNewSheet(shtName As String)
         End If
         .Sheets.Add(After:=.Sheets(.Sheets.count)).name = shtName
     End With
+End Sub
+
 Function CheckForEmpties(frm) As Boolean
 'Clears the values from a user form.
     Dim ctl As Control

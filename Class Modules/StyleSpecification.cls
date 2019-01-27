@@ -182,6 +182,6 @@ Public Sub SaveSpecification()
 
     ' Create SQL statement from object
     SQLstmt = INSERTstmt & vbNewLine & VALUESstmt
-    Debug.Print SQLstmt
-    RetVal = ExecuteSQLite3(SQLstmt)
+    'Debug.Print SQLstmt
+    ExecuteSQL Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt
 End Sub

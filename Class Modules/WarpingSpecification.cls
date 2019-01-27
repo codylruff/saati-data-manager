@@ -28,36 +28,36 @@ Const HighDtex = 3000
 '----------------
 'CLASS VARIABLES
 '----------------
-Private MaterialNumber_         As String
-Private MaterialDescription_    As String
-Private FinalWidthCm_           As Double
-Private EndsPerInch_            As Double
-Private Dtex_                   As Double
-Private WarpingSpeed_           As Double
-Private BeamingSpeed_           As Double
-Private CrossWinding_           As Double
-Private DentsPerCm_             As Double
-Private EndsPerDent_            As Double
-Private IsSWrapped_             As Boolean
-Private NumberOfEnds_           As Double
-Private BeamWidth_              As Double
-Private BeamingTension_         As Double
-Private WarpingTension_         As Double
-Private K1_                     As Double
-Private K2_                     As Double
-Private StyleSpec_              As StyleSpecification
-Private WarpDensityStart_       As Double
-Private WarpDensityMeasured_    As Double
-Private CompactionFactor_       As Double
-Private EvenerRoller_           As Boolean
-Private MeasuringPhase_         As Boolean
-Private ReedShape_              As Long
-Private YarnLeaseFeed_          As Double
+Private MaterialNumber_             As String
+Private MaterialDescription_        As String
+Private FinalWidthCm_               As Double
+Private EndsPerInch_                As Double
+Private Dtex_                       As Double
+Private WarpingSpeed_               As Double
+Private BeamingSpeed_               As Double
+Private CrossWinding_               As Double
+Private DentsPerCm_                 As Double
+Private EndsPerDent_                As Double
+Private IsSWrapped_                 As Boolean
+Private NumberOfEnds_               As Double
+Private BeamWidth_                  As Double
+Private BeamingTension_             As Double
+Private WarpingTension_             As Double
+Private K1_                         As Double
+Private K2_                         As Double
+Private StyleSpec_                  As StyleSpecification
+Private WarpDensityStart_           As Double
+Private WarpDensityMeasured_        As Double
+Private CompactionFactor_           As Double
+Private EvenerRoller_               As Boolean
+Private MeasuringPhase_             As Boolean
+Private ReedShape_                  As Long
+Private YarnLeaseFeed_              As Double
+Private Properties_                 As Object
+Private IPrint_PrettyProperties_    As Object
 '-------------
 ' COLLECTIONS
 '-------------
-Private Properties_              As Object
-Private IPrint_PrettyProperties_ As Object
 ' IPrint_PrettyProperties
 Public Property Get IPrint_PrettyProperties() As Object
     Set IPrint_PrettyProperties = IPrint_PrettyProperties_
@@ -253,11 +253,7 @@ Public Sub SetDefaultProperties()
     Else
         BeamWidth = ((FinalWidthCm * 10#) - 8#) / 10#
     End If
-    If YarnSupplier = "Dupont" Then
-        K1 = 0.25
-    Else
-        K1 = 0.15
-    End If
+    K1 = IIf(YarnSupplier = "Dupont", 0.25, 0.15)
     K2 = K1 + 1#
     WarpingTension = Round(Dtex * K1, 0)
     BeamingTension = Round(NumberOfEnds * WarpingTension * K2 / 100#, 0)
@@ -297,8 +293,8 @@ Public Sub SaveSpecification()
     INSERTstmt = INSERTstmt & "Time_Stamp) "
     VALUESstmt = VALUESstmt & "'" & Now() & "')"
 
-    ' Create SQL statement from object
+    ' Create SQL statement from objects
     SQLstmt = INSERTstmt & vbNewLine & VALUESstmt
-    Debug.Print SQLstmt
-    RetVal = ExecuteSQLite3(SQLstmt)
+    'Debug.Print SQLstmt
+    ExecuteSQL Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt
 End Sub

@@ -5,17 +5,23 @@ Option Explicit
 ' serve as pseduo class
 ' constructors.
 '----------------------------
+Function CreateSQLiteDb() As SQLiteDatabase
+' Creates a SQLite Database object
+    Dim sqlite: Set sqlite = New SQLiteDatabase
+    Set CreateSQLiteDb = sqlite
+End Function
+
 Function CreateConsoleBox(frm As UserForm) As ConsoleBox
-    Dim Console As ConsoleBox
-    Set Console = New ConsoleBox
+' Creates a console box object
+    Dim Console: Set Console = New ConsoleBox
     Set Console.FormId = frm
     Set CreateConsoleBox = Console
 End Function
 
 Function CreateWarp(Specification As WarpingSpecification, NumberOfBobbins As Integer, _
                      PackageWeightlbs As Double, WarpLength As Double) As Warp
-    Dim w As Warp
-    Set w = New Warp
+' Creates a warp object
+    Dim w: Set w = New Warp
     ' Create object
     Set w.Specification = Specification
     With w
@@ -29,11 +35,10 @@ End Function
 
 Function CreateWarpingSpecification(MaterialNumber As String, MaterialDescription As String, _
                      Optional DentsPerCm As Double = 0, Optional EndsPerDent As Double = 0) As WarpingSpecification
-
-    Dim spec As WarpingSpecification
+' Creates a Warping Specification object
+    Dim spec: Set spec = New WarpingSpecification
     Dim Sty As Long
     Dim styleSpec As StyleSpecification
-    Set spec = New WarpingSpecification
     Sty = CLng(Mid(MaterialNumber, 6, 3))
     Debug.Print Sty
     Set styleSpec = RetrieveStyleSpecification(Sty)
