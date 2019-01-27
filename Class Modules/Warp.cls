@@ -48,11 +48,7 @@ Public Property Get Specification() As WarpingSpecification: Set Specification =
 ' Is Minimum Package Length
 Public Property Get IsMinimumPackageLength() As Boolean
     ' Allows for less changes in weaving
-    If ResidualLengthYds > MinimumPackageLengthyds Then
-        IsMinimumPackageLength = True
-    Else
-        IsMinimumPackageLength = False
-    End If
+    IsMinimumPackageLength = IIf(ResidualLengthYds > MinimumPackageLengthyds,True,False)
 End Property
 ' Residual Length yards
 Public Property Get ResidualLengthYds() As Double
