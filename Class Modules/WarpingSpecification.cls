@@ -55,6 +55,7 @@ Private ReedShape_                  As Long
 Private YarnLeaseFeed_              As Double
 Private Properties_                 As Object
 Private IPrint_PrettyProperties_    As Object
+Private JsonString_                 As String
 '-------------
 ' COLLECTIONS
 '-------------
@@ -111,6 +112,8 @@ Public Property Set Properties(dict As Object)
     dict.Add key:="K2", item:=K2
     dict.Add key:="BeamingTension", item:=BeamingTension
     dict.Add key:="Dtex", item:=Dtex
+    JsonString_ = JsonConverter.ConvertToJson(dict)
+    dict.Add key:="jsonText", item:=JsonString_
     Set Properties_ = dict
 End Property
 '----------------
@@ -231,6 +234,26 @@ End Property
 '---------
 ' METHODS
 '---------
+Public Sub JsonToObject(jsonText As String)
+    Dim dict: Set dict = JsonConverter.ParseJson(jsonText)
+    With Me    
+        .MaterialNumber = dict.item("MaterialNumber")
+        .MaterialDescription = dict.item("MaterialDescription")
+        .FinalWidthCm = dict.item("FinalWidthCm")
+        .WarpingSpeed = dict.item("WarpingSpeed")
+        .BeamingSpeed = dict.item("BeamingSpeed")
+        .CrossWinding = dict.item("CrossWinding")
+        .DentsPerCm = dict.item("DentsPerCm")
+        .EndsPerDent = dict.item("EndsPerDent")
+        .IsSWrapped = dict.item("IsSWrapped")
+        .NumberOfEnds = dict.item("NumberOfEnds")
+        .BeamWidth = dict.item("BeamWidth")
+        .BeamingTension = dict.item("BeamingTension")
+        .WarpingTension = dict.item("WarpingTension")
+        .K1 = dict.item("K1")
+        .K2 = dict.item("K2")
+    End With
+End Sub
 Public Sub SetDefaultProperties()
 ' Bases property values on theoretical calcualtions
     Dim tmp As Double

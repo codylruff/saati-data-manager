@@ -5,10 +5,10 @@ Option Explicit
 ' serve as pseduo class
 ' constructors.
 '----------------------------
-Function CreateSQLiteDb() As SQLiteDatabase
+Function CreateSQLiteDatabase() As SQLiteDatabase
 ' Creates a SQLite Database object
     Dim sqlite: Set sqlite = New SQLiteDatabase
-    Set CreateSQLiteDb = sqlite
+    Set CreateSQLiteDatabase = sqlite
 End Function
 
 Function CreateConsoleBox(frm As UserForm) As ConsoleBox

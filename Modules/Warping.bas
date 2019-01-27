@@ -51,9 +51,10 @@ Function RetrieveStyleSpecification(Style As Long) As StyleSpecification
     Set styleSpec = New StyleSpecification
     Set record = New DatabaseRecord
     SQLstmt = "SELECT * FROM tblStyleSpecs " & _
-              "WHERE Style = " & Style & ";"
+              "WHERE Style = " & Style
     Debug.Print SQLstmt
-    Set record = ExecuteSQLite3Select(SQLstmt)
+    Set record = ExecuteSQLSelect(Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt)
+    record.SetDictionary
     With styleSpec
         .Dtex = record.Fields("Dtex")
         .Style = record.Fields("Style")
@@ -100,10 +101,10 @@ Function RetrieveWarpingSpecification(MaterialNumber As String) As WarpingSpecif
     Set record = New DatabaseRecord
 
     SQLstmt = "SELECT * FROM tblWarpingSpecs " & _
-              "WHERE MaterialNumber = """ & MaterialNumber & """;"
+              "WHERE MaterialNumber = """ & MaterialNumber & """"
     Debug.Print SQLstmt
-    Set record = ExecuteSQLite3Select(SQLstmt)
-
+    Set record = ExecuteSQLSelect(Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt)
+    record.SetDictionary
     With warpSpec
         .MaterialNumber = record.Fields("MaterialNumber")
         .MaterialDescription = record.Fields("MaterialDescription")

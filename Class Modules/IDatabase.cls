@@ -16,14 +16,14 @@ Option Explicit
 Public Property Get header() As Variant: End Property ' Array representing column headers
 Public Property Get data() As Variant: End Property ' Array representing data from table
 
-Public Sub openDb()
+Public Sub openDb(sqliPath As String)
 ' opens a database
 End Sub
 
-Public Sub execute()
+Public Sub execute(ssql As String)
 ' Execute sql statement
 End Sub
 
-Public Sub selectQry()
+Public Sub selectQry(ssql As String)
 ' Execute select statement
 End Sub

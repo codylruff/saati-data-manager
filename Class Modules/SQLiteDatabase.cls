@@ -312,7 +312,22 @@ Private Function getRowsCount(ByVal stmtHandle As Long) As Long
   colType = SQLite3ColumnType(ystmtHandle, 0)
   getRowsCount = ColumnValue(ystmtHandle, 0, colType) 'return
 End Function
-'
+
+Function TypeName(ByVal SQLiteType As Long) As String
+    Select Case SQLiteType
+        Case SQLITE_INTEGER:
+            TypeName = "INTEGER"
+        Case SQLITE_FLOAT:
+            TypeName = "FLOAT"
+        Case SQLITE_TEXT:
+            TypeName = "TEXT"
+        Case SQLITE_BLOB:
+            TypeName = "BLOB"
+        Case SQLITE_NULL:
+            TypeName = "NULL"
+    End Select
+End Function
+
 Private Function ColumnValue(ByVal stmtHandle As Long, ByVal ZeroBasedColIndex As Long, ByVal SQLiteType As Long) As Variant
     Select Case SQLiteType
         Case SQLITE_INTEGER:

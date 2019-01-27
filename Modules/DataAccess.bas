@@ -11,7 +11,7 @@ Function ExecuteSQLSelect(db As IDatabase, path As String, SQLstmt As String) As
     db.selectQry SQLstmt
     record.data = db.data
     record.header = db.header
-    ExecuteSQLSelect = db.data
+    Set ExecuteSQLSelect = record
 End Function
 
 Sub ExecuteSQL(db As IDatabase, path As String, SQLstmt As String)
