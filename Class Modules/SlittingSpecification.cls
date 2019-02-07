@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+'@Folder("Classes")
 '======================================
 ' CLASS DESCRIPTION:
 ' Current only valid for Heat Slitting
@@ -19,6 +20,7 @@ Option Explicit
 'INTERFACES
 '------------
 Implements IPrint
+Implements ISpec
 
 Private MaterialNumber_         As String
 Private MaterialDescription_    As String
@@ -39,12 +41,12 @@ Private Properties_             As Object
 Private PrettyProperties_       As Object
 Private PartHistory_            As Collection
 ' Properties
-Public Property Get Properties() As Object
-    Set Properties = Properties_
+Public Property Get ISpec_Properties() As Object
+    Set ISpec_Properties = Properties_
 End Property
-Public Property Set Properties(dict As Object)
-    dict.Add key:="MaterialNumber", item:=MaterialNumber
-    dict.Add key:="MaterialDescription", item:=MaterialDescription
+Public Property Set ISpec_Properties(dict As Object)
+    dict.Add key:="MaterialNumber", Item:=MaterialNumber
+    dict.Add key:="MaterialDescription", Item:=MaterialDescription
     Set Properties_ = dict
 End Property
 ' PrettyProperties
@@ -52,12 +54,12 @@ Public Property Get IPrint_PrettyProperties() As Object
     Set IPrint_PrettyProperties = IPrint_PrettyProperties_
 End Property
 Public Property Set IPrint_PrettyProperties(dict As Object)
-    dict.Add key:="Material Number", item:=MaterialNumber
-    dict.Add key:="Material Description", item:=MaterialDescription
+    dict.Add key:="Material Number", Item:=MaterialNumber
+    dict.Add key:="Material Description", Item:=MaterialDescription
     If IsPowerOn = True Then
-        dict.Add key:="Power On/Off", item:="ON"
+        dict.Add key:="Power On/Off", Item:="ON"
     Else
-        dict.Add key:="Power On/Off", item:="OFF"
+        dict.Add key:="Power On/Off", Item:="OFF"
     End If
     Set IPrint_PrettyProperties_ = dict
 End Property
@@ -109,3 +111,20 @@ End Sub
 Public Sub IPrint_SetPrettyProperties()
     Set IPrint_PrettyProperties = CreateObject("Scripting.Dictionary")
 End Sub
+
+Private Property Get ISpec_SpecType() As String
+    Err.Raise 5 'TODO implement interface member
+End Property
+
+Private Property Get ISpec_StyleSpec() As StyleSpecification
+    Err.Raise 5 'TODO implement interface member
+End Property
+
+Private Sub ISpec_JsonToObject(ByRef jsonText As String)
+    Err.Raise 5 'TODO implement interface member
+End Sub
+
+Private Sub ISpec_SetDefaultProperties()
+    Err.Raise 5 'TODO implement interface member
+End Sub
+

@@ -51,13 +51,13 @@ Public Sub select_Test()
     Dim i, j As Long
     Set record = ExecuteSQLSelect(Factory.CreateSQLiteDatabase, SQLITE_PATH, "SELECT * FROM tblWarpingSpecs WHERE spec_id = 15")
     If record.rows = 1 Then
-        For i=LBound(record.data) To record.columns
-            Debug.Print record.header(1,i), record.data(1,i)
+        For i = LBound(record.data) To record.columns
+            Debug.Print record.header(1, i), record.data(1, i)
         Next i
     Else
-        For i=LBound(record.data) To record.columns
-            For j=LBound(record.data) To record.rows
-                Debug.Print record.header(1,j), record.data(i,j)
+        For i = LBound(record.data) To record.columns
+            For j = LBound(record.data) To record.rows
+                Debug.Print record.header(1, j), record.data(i, j)
             Next j
         Next i
     End If

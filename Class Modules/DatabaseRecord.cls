@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-
+'@Folder("Classes")
 Private m_header    As Variant
 Private m_data      As Variant
 Public Fields       As Dictionary
@@ -45,17 +45,17 @@ Private Function NumberOfArrayDimensions() As Integer
 End Function
 
 Public Function SetDictionary()
-' Returns a dictionary representation of this object
+' Sets Fields dictionary to a representation of this object
     Dim dict: Set dict = New Dictionary
     Dim i, j As Long
     If Me.rows = 1 Then
-        For i=LBound(Me.data) To Me.columns
-            dict.Add key:=Me.header(1,i), item:=Me.data(1,i)
+        For i = LBound(Me.data) To Me.columns
+            dict.Add key:=Me.header(1, i), Item:=Me.data(1, i)
         Next i
     Else
-        For i=LBound(Me.data) To Me.columns
-            For j=LBound(Me.data) To Me.rows
-                dict.Add key:=Me.header(1,j), item:=Me.data(i,j)
+        For i = LBound(Me.data) To Me.columns
+            For j = LBound(Me.data) To Me.rows
+                dict.Add key:=Me.header(1, j), Item:=Me.data(i, j)
             Next j
         Next i
     End If

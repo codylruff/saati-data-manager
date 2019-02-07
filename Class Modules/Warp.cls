@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+'@Folder("Classes")
 '====================================
 'CLASS DESCRIPTION:
 ' Represents a specific warp order.
@@ -48,7 +49,7 @@ Public Property Get Specification() As WarpingSpecification: Set Specification =
 ' Is Minimum Package Length
 Public Property Get IsMinimumPackageLength() As Boolean
     ' Allows for less changes in weaving
-    IsMinimumPackageLength = IIf(ResidualLengthYds > MinimumPackageLengthyds,True,False)
+    IsMinimumPackageLength = IIf(ResidualLengthYds > MinimumPackageLengthyds, True, False)
 End Property
 ' Residual Length yards
 Public Property Get ResidualLengthYds() As Double

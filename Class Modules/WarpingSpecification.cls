@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+'@Folder("Classes")
 '====================================
 'CLASS DESCRIPTION:
 ' Specification for sectional warper
@@ -16,6 +17,7 @@ Option Explicit
 'INTERFACES
 '------------
 Implements IPrint
+Implements ISpec
 '------------------------------------
 'Factory Module Constructor function:
 '------------------------------------
@@ -46,6 +48,7 @@ Private WarpingTension_             As Double
 Private K1_                         As Double
 Private K2_                         As Double
 Private StyleSpec_                  As StyleSpecification
+Private Style_                      As Long
 Private WarpDensityStart_           As Double
 Private WarpDensityMeasured_        As Double
 Private CompactionFactor_           As Double
@@ -64,61 +67,69 @@ Public Property Get IPrint_PrettyProperties() As Object
     Set IPrint_PrettyProperties = IPrint_PrettyProperties_
 End Property
 Public Property Set IPrint_PrettyProperties(dict As Object)
-    dict.Add key:="Style", item:=Style
-    dict.Add key:="Material Number", item:=MaterialNumber
-    dict.Add key:="Material Description", item:=MaterialDescription
-    dict.Add key:="Yarn Type", item:=YarnSupplier
-    dict.Add key:="Yarn Code", item:=YarnCode
-    dict.Add key:="Final Width [cm]", item:=FinalWidthCm
-    dict.Add key:="Number Of Ends", item:=NumberOfEnds
-    If IsSWrapped = True Then
-        dict.Add key:="S Wrap On/Off", item:="ON"
-    Else
-        dict.Add key:="S Wrap On/Off", item:="OFF"
-    End If
-    dict.Add key:="Spring Color", item:=SpringColor
-    dict.Add key:="Warping Speed [m/min]", item:=WarpingSpeed
-    dict.Add key:="Beaming Speed [m/min]", item:=BeamingSpeed
-    dict.Add key:="WarpingTension", item:=WarpingTension
-    dict.Add key:="Beaming Tension", item:=BeamingTension
-    dict.Add key:="Cross Winding", item:=CrossWinding
-    dict.Add key:="Dent/cm", item:=DentsPerCm
-    dict.Add key:="End/Dent", item:=EndsPerDent
-    dict.Add key:="Beam Width", item:=BeamWidth
+    Dim key As Variant
+    ' dict.Add key:="Style", item:=Style
+    ' dict.Add key:="Material Number", item:=MaterialNumber
+    ' dict.Add key:="Material Description", item:=MaterialDescription
+    ' dict.Add key:="Yarn Type", item:=YarnSupplier
+    ' dict.Add key:="Yarn Code", item:=YarnCode
+    ' dict.Add key:="Final Width [cm]", item:=FinalWidthCm
+    ' dict.Add key:="Number Of Ends", item:=NumberOfEnds
+    ' If IsSWrapped = True Then
+    '     dict.Add key:="S Wrap On/Off", item:="ON"
+    ' Else
+    '     dict.Add key:="S Wrap On/Off", item:="OFF"
+    ' End If
+    ' dict.Add key:="Spring Color", item:=SpringColor
+    ' dict.Add key:="Warping Speed [m/min]", item:=WarpingSpeed
+    ' dict.Add key:="Beaming Speed [m/min]", item:=BeamingSpeed
+    ' dict.Add key:="WarpingTension", item:=WarpingTension
+    ' dict.Add key:="Beaming Tension", item:=BeamingTension
+    ' dict.Add key:="Cross Winding", item:=CrossWinding
+    ' dict.Add key:="Dent/cm", item:=DentsPerCm
+    ' dict.Add key:="End/Dent", item:=EndsPerDent
+    ' dict.Add key:="Beam Width", item:=BeamWidth
+    For Each key In ISpec_Properties.keys
+        dict.Add key:=Utility.SplitCamelCase(CStr(key)), Item:=ISpec_Properties.Item(key)
+    Next key
     Set IPrint_PrettyProperties_ = dict
 End Property
 ' Properties
-Public Property Get Properties() As Object
-    Set Properties = Properties_
+Public Property Get ISpec_Properties() As Object
+    Set ISpec_Properties = Properties_
 End Property
-Public Property Set Properties(dict As Object)
-    dict.Add key:="MaterialNumber", item:=MaterialNumber
-    dict.Add key:="MaterialDescription", item:=MaterialDescription
-    dict.Add key:="FinalWidthCm", item:=FinalWidthCm
-    dict.Add key:="NumberOfEnds", item:=NumberOfEnds
-    dict.Add key:="IsSWrapped", item:=IsSWrapped
-    dict.Add key:="SpringColor", item:=SpringColor
-    dict.Add key:="WarpingSpeed", item:=WarpingSpeed
-    dict.Add key:="BeamingSpeed", item:=BeamingSpeed
-    dict.Add key:="CrossWinding", item:=CrossWinding
-    dict.Add key:="DentsPerCm", item:=DentsPerCm
-    dict.Add key:="EndsPerDent", item:=EndsPerDent
-    dict.Add key:="Style", item:=Style
-    dict.Add key:="BeamWidth", item:=BeamWidth
-    dict.Add key:="YarnSupplier", item:=YarnSupplier
-    dict.Add key:="YarnCode", item:=YarnCode
-    dict.Add key:="K1", item:=K1
-    dict.Add key:="WarpingTension", item:=WarpingTension
-    dict.Add key:="K2", item:=K2
-    dict.Add key:="BeamingTension", item:=BeamingTension
-    dict.Add key:="Dtex", item:=Dtex
+Public Property Set ISpec_Properties(dict As Object)
+    dict.Add key:="MaterialNumber", Item:=MaterialNumber
+    dict.Add key:="MaterialDescription", Item:=MaterialDescription
+    dict.Add key:="FinalWidthCm", Item:=FinalWidthCm
+    dict.Add key:="NumberOfEnds", Item:=NumberOfEnds
+    dict.Add key:="IsSWrapped", Item:=IsSWrapped
+    dict.Add key:="SpringColor", Item:=SpringColor
+    dict.Add key:="WarpingSpeed", Item:=WarpingSpeed
+    dict.Add key:="BeamingSpeed", Item:=BeamingSpeed
+    dict.Add key:="CrossWinding", Item:=CrossWinding
+    dict.Add key:="DentsPerCm", Item:=DentsPerCm
+    dict.Add key:="EndsPerDent", Item:=EndsPerDent
+    dict.Add key:="Style", Item:=Style
+    dict.Add key:="BeamWidth", Item:=BeamWidth
+    dict.Add key:="YarnSupplier", Item:=YarnSupplier
+    dict.Add key:="YarnCode", Item:=YarnCode
+    dict.Add key:="K1", Item:=K1
+    dict.Add key:="WarpingTension", Item:=WarpingTension
+    dict.Add key:="K2", Item:=K2
+    dict.Add key:="BeamingTension", Item:=BeamingTension
+    dict.Add key:="Dtex", Item:=Dtex
     JsonString_ = JsonConverter.ConvertToJson(dict)
-    dict.Add key:="jsonText", item:=JsonString_
+    dict.Add key:="jsonText", Item:=JsonString_
     Set Properties_ = dict
 End Property
 '----------------
 ' AUTO-PROPERTIES
 '----------------
+' Database table
+Public Property Get ISpec_TableName() As String: ISpec_TableName = "warping_specifications": End Property
+' Specification Type
+Public Property Get ISpec_SpecType() As String: ISpec_SpecType = "warping": End Property
 ' YarnLeaseFeed
 Public Property Let YarnLeaseFeed(value As Double): YarnLeaseFeed_ = value: End Property
 Public Property Get YarnLeaseFeed() As Double: YarnLeaseFeed = YarnLeaseFeed_: End Property
@@ -141,7 +152,7 @@ Public Property Get WarpDensityMeasured() As Double: WarpDensityMeasured = WarpD
 Public Property Let WarpDensityStart(value As Double): WarpDensityStart_ = value: End Property
 Public Property Get WarpDensityStart() As Double: WarpDensityStart = WarpDensityStart_: End Property
 ' YarnCode
-Public Property Get YarnCode() As String: YarnCode = styleSpec.YarnCode: End Property
+Public Property Get YarnCode() As String: YarnCode = StyleSpec.YarnCode: End Property
 ' K2
 Public Property Let K2(value As Double): K2_ = value: End Property
 Public Property Get K2() As Double: K2 = K2_: End Property
@@ -161,10 +172,11 @@ Public Property Get BeamWidth() As Double: BeamWidth = BeamWidth_: End Property
 Public Property Let NumberOfEnds(value As Double): NumberOfEnds_ = value: End Property
 Public Property Get NumberOfEnds() As Double: NumberOfEnds = NumberOfEnds_: End Property
 ' StyleSpec
-Public Property Set styleSpec(value As StyleSpecification): Set StyleSpec_ = value: End Property
-Public Property Get styleSpec() As StyleSpecification: Set styleSpec = StyleSpec_: End Property
+Public Property Set StyleSpec(value As StyleSpecification): Set StyleSpec_ = value: End Property
+Public Property Get StyleSpec() As StyleSpecification: Set StyleSpec = StyleSpec_: End Property
 ' Style
-Public Property Get Style() As Long: Style = styleSpec.Style: End Property
+Public Property Get Style() As Long: Style = Style_: End Property
+Public Property Let Style() As Long: Style_ = value: End Property
 ' EndsPerDent
 Public Property Let EndsPerDent(value As Double): EndsPerDent_ = value: End Property
 Public Property Get EndsPerDent() As Double: EndsPerDent = EndsPerDent_: End Property
@@ -190,9 +202,10 @@ Public Property Get MaterialDescription() As String: MaterialDescription = Mater
 Public Property Let FinalWidthCm(value As Double): FinalWidthCm_ = value: End Property
 Public Property Get FinalWidthCm() As Double: FinalWidthCm = FinalWidthCm_: End Property
 ' Ends Per Inch
-Public Property Get EndsPerInch() As Double: EndsPerInch = styleSpec.MeanWarpCount: End Property
+Public Property Get EndsPerInch() As Double: EndsPerInch = StyleSpec.MeanWarpCount: End Property
 ' Linear Density in Dtex or g / 10000 m
-Public Property Get Dtex() As Double: Dtex = styleSpec.Dtex: End Property
+Public Property Let Dtex() As Double: Dtex_ = value: End Property
+Public Property Get Dtex() As Double: Dtex = Dtex_: End Property
 ' S Wrapping
 Public Property Let IsSWrapped(value As Boolean): IsSWrapped_ = value: End Property
 Public Property Get IsSWrapped() As Boolean: IsSWrapped = IsSWrapped_: End Property
@@ -234,28 +247,34 @@ End Property
 '---------
 ' METHODS
 '---------
-Public Sub JsonToObject(jsonText As String)
+Public Sub ISpec_JsonToObject(jsonText As String)
+' Convert a json string to a warp spec
     Dim dict: Set dict = JsonConverter.ParseJson(jsonText)
-    With Me    
-        .MaterialNumber = dict.item("MaterialNumber")
-        .MaterialDescription = dict.item("MaterialDescription")
-        .FinalWidthCm = dict.item("FinalWidthCm")
-        .WarpingSpeed = dict.item("WarpingSpeed")
-        .BeamingSpeed = dict.item("BeamingSpeed")
-        .CrossWinding = dict.item("CrossWinding")
-        .DentsPerCm = dict.item("DentsPerCm")
-        .EndsPerDent = dict.item("EndsPerDent")
-        .IsSWrapped = dict.item("IsSWrapped")
-        .NumberOfEnds = dict.item("NumberOfEnds")
-        .BeamWidth = dict.item("BeamWidth")
-        .BeamingTension = dict.item("BeamingTension")
-        .WarpingTension = dict.item("WarpingTension")
-        .K1 = dict.item("K1")
-        .K2 = dict.item("K2")
+    On Error Resume Next
+    With Me
+        .MaterialNumber = dict.Item("MaterialNumber")
+        .MaterialDescription = dict.Item("MaterialDescription")
+        .FinalWidthCm = dict.Item("FinalWidthCm")
+        .WarpingSpeed = dict.Item("WarpingSpeed")
+        .BeamingSpeed = dict.Item("BeamingSpeed")
+        .CrossWinding = dict.Item("CrossWinding")
+        .DentsPerCm = dict.Item("DentsPerCm")
+        .EndsPerDent = dict.Item("EndsPerDent")
+        .IsSWrapped = dict.Item("IsSWrapped")
+        .NumberOfEnds = dict.Item("NumberOfEnds")
+        .BeamWidth = dict.Item("BeamWidth")
+        .BeamingTension = dict.Item("BeamingTension")
+        .WarpingTension = dict.Item("WarpingTension")
+        .K1 = dict.Item("K1")
+        .K2 = dict.Item("K2")
     End With
+    Me.SetProperties
 End Sub
-Public Sub SetDefaultProperties()
+
+Public Sub ISpec_SetDefaultProperties()
 ' Bases property values on theoretical calcualtions
+    Style = StyleSpec.Style
+    Dtex = StyleSpec.Dtex
     Dim tmp As Double
     If Right(MaterialDescription, 2) = "CM" Then
         FinalWidthCm = CDbl(Left(Right(MaterialDescription, 5), 3))
@@ -289,12 +308,15 @@ Public Sub SetDefaultProperties()
         CrossWinding = 5
     End If
 End Sub
+
 Public Sub SetProperties()
-    Set Properties = CreateObject("Scripting.Dictionary")
+    Set ISpec_Properties = CreateObject("Scripting.Dictionary")
 End Sub
+
 Public Sub IPrint_SetPrettyProperties()
     Set IPrint_PrettyProperties = CreateObject("Scripting.Dictionary")
 End Sub
+
 Public Sub SaveSpecification()
 ' Adds a new specification to the database
     Dim key As Variant
@@ -302,15 +324,17 @@ Public Sub SaveSpecification()
     Dim INSERTstmt, VALUESstmt As String
     Dim tbl As String: tbl = "tblWarpingSpecs"
     ' Set object properties
+    Style = StyleSpec.Style
+    Dtex = StyleSpec.Dtex
     SetProperties
     ' Create the insert portion of the statement
     INSERTstmt = "INSERT INTO " & tbl & " ("
     ' Create the values portion of the statement
     VALUESstmt = "VALUES ("
 
-    For Each key In Properties
+    For Each key In ISpec_Properties
         INSERTstmt = INSERTstmt & key & ", "
-        VALUESstmt = VALUESstmt & "'" & Properties(key) & "', "
+        VALUESstmt = VALUESstmt & "'" & ISpec_Properties(key) & "', "
     Next key
 
     INSERTstmt = INSERTstmt & "Time_Stamp) "

@@ -1,5 +1,6 @@
 Attribute VB_Name = "Warping"
 Option Explicit
+'@Folder("Modules")
 
 Sub GoToMenu()
     
@@ -46,16 +47,17 @@ Function RetrieveStyleSpecification(Style As Long) As StyleSpecification
 ' Retrieves a style spec from the database
     Dim SQLstmt As String
     Dim record As DatabaseRecord
-    Dim styleSpec As StyleSpecification
+    Dim StyleSpec As StyleSpecification
     
-    Set styleSpec = New StyleSpecification
+    Set StyleSpec = New StyleSpecification
     Set record = New DatabaseRecord
     SQLstmt = "SELECT * FROM tblStyleSpecs " & _
               "WHERE Style = " & Style
     Debug.Print SQLstmt
-    Set record = ExecuteSQLSelect(Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt)
+    Set record = ExecuteSQLSelect(Factory.CreateSQLiteDatabase, _
+    "W:\App Development\Data Manager\Protection_Quality_Control.db3", SQLstmt)
     record.SetDictionary
-    With styleSpec
+    With StyleSpec
         .Dtex = record.Fields("Dtex")
         .Style = record.Fields("Style")
         .WeaveType = record.Fields("WeaveType")
@@ -82,7 +84,7 @@ Function RetrieveStyleSpecification(Style As Long) As StyleSpecification
         .YarnMerge = record.Fields("YarnMerge")
     End With
 
-    Set RetrieveStyleSpecification = styleSpec
+    Set RetrieveStyleSpecification = StyleSpec
 
 End Function
 
@@ -93,11 +95,11 @@ Function RetrieveWarpingSpecification(MaterialNumber As String) As WarpingSpecif
     Dim field As Variant
     Dim key As Variant
     Dim warpSpec As WarpingSpecification
-    Dim styleSpec As StyleSpecification
+    Dim StyleSpec As StyleSpecification
     
     Set warpSpec = New WarpingSpecification
-    Set styleSpec = RetrieveStyleSpecification(Mid(MaterialNumber, 6, 3))
-    Set warpSpec.styleSpec = styleSpec
+    Set StyleSpec = RetrieveStyleSpecification(Mid(MaterialNumber, 6, 3))
+    Set warpSpec.StyleSpec = StyleSpec
     Set record = New DatabaseRecord
 
     SQLstmt = "SELECT * FROM tblWarpingSpecs " & _
@@ -129,39 +131,3 @@ Function RetrieveWarpingSpecification(MaterialNumber As String) As WarpingSpecif
 
 End Function
 
-Public Sub UpdateCurrentSpec()
-' Updates a current spec in database with modifcations
-    Dim SQLstmt As String
-    Dim RetVal As Long
-    ' Create SQL statement from object
-    SQLstmt = ""
-    RetVal = ExecuteSQLite3(SQLstmt)
-    If Not RetVal = SQLITE_DONE Then Err.Raise Number:=1
-End Sub
-
-Public Sub AddNewSpec(MaterialNumber As String, MaterialDescription As String)
-' Add a new spec to the database
-    Dim spec As WarpingSpecification
-
-    Set spec = Factory.CreateWarpingSpecification(MaterialNumber, MaterialDescription)
-    spec.SetDefaultProperties
-    spec.SaveSpecification
-End Sub
-
-Private Sub MassLoadSpecifications()
-' One time use to mass upload specs to the database
-    Dim i As Integer
-    Dim code As Range
-    Dim Description As Range
-    Dim ws As Worksheet
-
-    Set ws = Sheets("Materials")
-    
-    For i = 2 To 80
-        Set code = ws.Cells(i, 1)
-        Debug.Print code.value
-        Set Description = ws.Cells(i, 2)
-        AddNewSpec code.value, Description.value
-    Next i
-
-End Sub

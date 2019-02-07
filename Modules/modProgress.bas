@@ -1,6 +1,6 @@
 Attribute VB_Name = "modProgress"
 Option Explicit ' Always a good idea to use this
-
+'@Folder("Modules")
 '========================================================================
 'ShowProgress : Macro that displays a progress bar. It needs 'ufProgress'
 'to operate.
@@ -88,7 +88,7 @@ Function isFormOpen(ByVal FormName As String) As Boolean
     'Loop through all the open forms
     For Each ufForm In VBA.UserForms
         'Check the form names
-        If ufForm.name = FormName Then
+        If ufForm.Name = FormName Then
             'if the form is open, set the function value to True
             isFormOpen = True
             'and exit the loop

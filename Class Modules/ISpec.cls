@@ -8,14 +8,24 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+'@Folder("Interfaces")
 ' Interface for version control
 ' of standardized process
 ' specifications
-Public Property Get MaterialNumber() As String: End Property
-Public Property Get MaterialDescription() As String: End Property
+Public Property Get TableName() As String: End Property
+Public Property Get Properties() As Object: End Property
+Public Property Get SpecType() As String: End Property
+Public Property Get ParentSpec() As ISpec: End Property
+' Public Property Get MaterialDescription() As String: End Property
+' Public Property Get StyleSpec() As StyleSpecification: End Property
+' Public Sub Push()
+' End Sub
 
-Public Sub Push()
+' Public Sub Commit()
+' End Sub
+
+Public Sub JsonToObject(jsonText As String)
 End Sub
 
-Public Sub Commit()
+Public Sub SetDefaultProperties()
 End Sub

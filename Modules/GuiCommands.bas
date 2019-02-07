@@ -1,5 +1,7 @@
 Attribute VB_Name = "GuiCommands"
 Option Explicit
+'@Folder("Modules")
+
 '=================================
 ' DESCRIPTION: Holds commands used
 ' through the GUI with exception
@@ -23,7 +25,7 @@ Public Sub ExportAll()
 
     Dim VBComponent As Object
     Dim count As Integer
-    Dim Path As String
+    Dim path As String
     Dim directory As String
     Dim extension As String
     Dim lngCounter As Long
@@ -70,14 +72,14 @@ Public Sub ExportAll()
             Select Case VBComponent.Type
                 Case ClassModule
                     extension = ".cls"
-                    Path = directory & "Class Modules\" & VBComponent.name & extension
+                    path = directory & "Class Modules\" & VBComponent.Name & extension
                 Case Form
                     extension = ".frm"
-                    Path = directory & "User Forms\" & VBComponent.name & extension
+                    path = directory & "User Forms\" & VBComponent.Name & extension
                     
                 Case Module
                     extension = ".bas"
-                    Path = directory & "Modules\" & VBComponent.name & extension
+                    path = directory & "Modules\" & VBComponent.Name & extension
                     
                 Case Else
                     extension = ".txt"
@@ -87,13 +89,13 @@ Public Sub ExportAll()
             Err.Clear
             
             
-            Call VBComponent.Export(Path)
+            Call VBComponent.Export(path)
             
             If Err.Number <> 0 Then
-                Debug.Print "Failed to export " & VBComponent.name & " to " & Path
+                Debug.Print "Failed to export " & VBComponent.Name & " to " & path
             Else
                 count = count + 1
-                Debug.Print "Exported " & Left$(VBComponent.name & ":" & Space(Padding), Padding) & Path
+                Debug.Print "Exported " & Left$(VBComponent.Name & ":" & Space(Padding), Padding) & path
             End If
 
             On Error GoTo 0
@@ -159,7 +161,7 @@ Public Sub ClearForm(frm)
     For Each ctl In frm.Controls
         Select Case VBA.TypeName(ctl)
             Case "TextBox"
-                ctl.Text = ""
+                ctl.Text = vbNullString
             Case "CheckBox", "OptionButton", "ToggleButton"
                 ctl.value = False
             Case "ComboBox", "ListBox"
@@ -178,3 +180,4 @@ Public Sub DB2W_tblStyleSpecs()
 ' Dumps style specs to a new worksheet
     DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblStyleSpecs"
 End Sub
+

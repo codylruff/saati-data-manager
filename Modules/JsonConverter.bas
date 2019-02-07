@@ -44,6 +44,7 @@ Attribute VB_Name = "JsonConverter"
 ' SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ' ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ '
 Option Explicit
+'@Folder("Modules")
 
 ' === VBA-UTC Headers
 #If Mac Then
@@ -174,7 +175,7 @@ Public Function ParseJson(ByVal JsonString As String) As Object
     json_Index = 1
 
     ' Remove vbCr, vbLf, and vbTab from json_String
-    JsonString = VBA.Replace(VBA.Replace(VBA.Replace(JsonString, VBA.vbCr, ""), VBA.vbLf, ""), VBA.vbTab, "")
+    JsonString = VBA.Replace(VBA.Replace(VBA.Replace(JsonString, VBA.vbCr, vbNullString), VBA.vbLf, vbNullString), VBA.vbTab, vbNullString)
 
     json_SkipSpaces JsonString, json_Index
     Select Case VBA.Mid$(JsonString, json_Index, 1)
@@ -293,7 +294,7 @@ Public Function ConvertToJson(ByVal JsonValue As Variant, Optional ByVal Whitesp
                         json_Converted = ConvertToJson(JsonValue(json_Index, json_Index2D), Whitespace, json_CurrentIndentation + 2)
 
                         ' For Arrays/Collections, undefined (Empty/Nothing) is treated as null
-                        If json_Converted = "" Then
+                        If json_Converted = vbNullString Then
                             ' (nest to only check if converted = "")
                             If json_IsUndefined(JsonValue(json_Index, json_Index2D)) Then
                                 json_Converted = "null"
@@ -318,7 +319,7 @@ Public Function ConvertToJson(ByVal JsonValue As Variant, Optional ByVal Whitesp
                     json_Converted = ConvertToJson(JsonValue(json_Index), Whitespace, json_CurrentIndentation + 1)
 
                     ' For Arrays/Collections, undefined (Empty/Nothing) is treated as null
-                    If json_Converted = "" Then
+                    If json_Converted = vbNullString Then
                         ' (nest to only check if converted = "")
                         If json_IsUndefined(JsonValue(json_Index)) Then
                             json_Converted = "null"
@@ -363,10 +364,10 @@ Public Function ConvertToJson(ByVal JsonValue As Variant, Optional ByVal Whitesp
         ' Dictionary
         If VBA.TypeName(JsonValue) = "Dictionary" Then
             json_BufferAppend json_Buffer, "{", json_BufferPosition, json_BufferLength
-            For Each json_Key In JsonValue.Keys
+            For Each json_Key In JsonValue.keys
                 ' For Objects, undefined (Empty/Nothing) is not added to object
                 json_Converted = ConvertToJson(JsonValue(json_Key), Whitespace, json_CurrentIndentation + 1)
-                If json_Converted = "" Then
+                If json_Converted = vbNullString Then
                     json_SkipItem = json_IsUndefined(JsonValue(json_Key))
                 Else
                     json_SkipItem = False
@@ -414,7 +415,7 @@ Public Function ConvertToJson(ByVal JsonValue As Variant, Optional ByVal Whitesp
                 json_Converted = ConvertToJson(json_Value, Whitespace, json_CurrentIndentation + 1)
 
                 ' For Arrays/Collections, undefined (Empty/Nothing) is treated as null
-                If json_Converted = "" Then
+                If json_Converted = vbNullString Then
                     ' (nest to only check if converted = "")
                     If json_IsUndefined(json_Value) Then
                         json_Converted = "null"
@@ -587,7 +588,7 @@ Private Function json_ParseString(json_String As String, ByRef json_Index As Lon
                 ' Unicode character escape (e.g. \u00a9 = Copyright)
                 json_Index = json_Index + 1
                 json_Code = VBA.Mid$(json_String, json_Index, 4)
-                json_BufferAppend json_Buffer, VBA.ChrW(VBA.Val("&h" + json_Code)), json_BufferPosition, json_BufferLength
+                json_BufferAppend json_Buffer, VBA.ChrW(VBA.val("&h" + json_Code)), json_BufferPosition, json_BufferLength
                 json_Index = json_Index + 4
             End Select
         Case json_Quote
@@ -627,7 +628,7 @@ Private Function json_ParseNumber(json_String As String, ByRef json_Index As Lon
                 json_ParseNumber = json_Value
             Else
                 ' VBA.Val does not use regional settings, so guard for comma is not needed
-                json_ParseNumber = VBA.Val(json_Value)
+                json_ParseNumber = VBA.val(json_Value)
             End If
             Exit Function
         End If
@@ -966,7 +967,7 @@ Public Function ParseIso(utc_IsoString As String) As Date
 
     If UBound(utc_Parts) > 0 Then
         If VBA.InStr(utc_Parts(1), "Z") Then
-            utc_TimeParts = VBA.Split(VBA.Replace(utc_Parts(1), "Z", ""), ":")
+            utc_TimeParts = VBA.Split(VBA.Replace(utc_Parts(1), "Z", vbNullString), ":")
         Else
             utc_OffsetIndex = VBA.InStr(1, utc_Parts(1), "+")
             If utc_OffsetIndex = 0 Then
@@ -986,7 +987,7 @@ Public Function ParseIso(utc_IsoString As String) As Date
                     utc_Offset = TimeSerial(VBA.CInt(utc_OffsetParts(0)), VBA.CInt(utc_OffsetParts(1)), 0)
                 Case 2
                     ' VBA.Val does not use regional settings, use for seconds to avoid decimal/comma issues
-                    utc_Offset = TimeSerial(VBA.CInt(utc_OffsetParts(0)), VBA.CInt(utc_OffsetParts(1)), Int(VBA.Val(utc_OffsetParts(2))))
+                    utc_Offset = TimeSerial(VBA.CInt(utc_OffsetParts(0)), VBA.CInt(utc_OffsetParts(1)), Int(VBA.val(utc_OffsetParts(2))))
                 End Select
 
                 If utc_NegativeOffset Then: utc_Offset = -utc_Offset
@@ -1002,7 +1003,7 @@ Public Function ParseIso(utc_IsoString As String) As Date
             ParseIso = ParseIso + VBA.TimeSerial(VBA.CInt(utc_TimeParts(0)), VBA.CInt(utc_TimeParts(1)), 0)
         Case 2
             ' VBA.Val does not use regional settings, use for seconds to avoid decimal/comma issues
-            ParseIso = ParseIso + VBA.TimeSerial(VBA.CInt(utc_TimeParts(0)), VBA.CInt(utc_TimeParts(1)), Int(VBA.Val(utc_TimeParts(2))))
+            ParseIso = ParseIso + VBA.TimeSerial(VBA.CInt(utc_TimeParts(0)), VBA.CInt(utc_TimeParts(1)), Int(VBA.val(utc_TimeParts(2))))
         End Select
 
         ParseIso = ParseUtc(ParseIso)
@@ -1121,3 +1122,4 @@ Private Function utc_SystemTimeToDate(utc_Value As utc_SYSTEMTIME) As Date
 End Function
 
 #End If
+

@@ -8,10 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+'@Folder("Classes")
 '=========================================
 'CLASS DESCRIPTION:
 ' Represents the spec for a specific style
 '=========================================
+Implements ISpec
+
 '----------------
 'CLASS VARIABLES
 '----------------
@@ -45,39 +48,43 @@ Private YarnMerge_                  As String
 '------------
 Private Properties_                 As Object
 ' Properties
-Public Property Get Properties() As Object
-    Set Properties = Properties_
+Public Property Get ISpec_Properties() As Object
+    Set ISpec_Properties = Properties_
 End Property
-Public Property Set Properties(dict As Object)
-    dict.Add key:="Dtex", item:=Dtex
-    dict.Add key:="Style", item:=Style
-    dict.Add key:="WeaveType", item:=WeaveType
-    dict.Add key:="YarnType", item:=YarnType
-    dict.Add key:="Denier", item:=Denier
-    dict.Add key:="MeanWarpCount", item:=MeanWarpCount
-    dict.Add key:="MinWarpCount", item:=MinWarpCount
-    dict.Add key:="MaxWarpCount", item:=MaxWarpCount
-    dict.Add key:="MeanFillCount", item:=MeanFillCount
-    dict.Add key:="MinFillCount", item:=MinFillCount
-    dict.Add key:="MaxFillCount", item:=MaxFillCount
-    dict.Add key:="MeanDryWeight", item:=MeanDryWeight
-    dict.Add key:="MinDryWeight", item:=MinDryWeight
-    dict.Add key:="MaxDryWeight", item:=MaxDryWeight
-    dict.Add key:="MeanConditionedWeight", item:=MeanConditionedWeight
-    dict.Add key:="MinConditionedWeight", item:=MinConditionedWeight
-    dict.Add key:="MaxConditionedWeight", item:=MaxConditionedWeight
-    dict.Add key:="YarnFinish", item:=YarnFinish
-    dict.Add key:="YarnCode", item:=YarnCode
-    dict.Add key:="MoistureRegain", item:=MoistureRegain
-    dict.Add key:="Twisting", item:=Twisting
-    dict.Add key:="YarnColor", item:=YarnColor
-    dict.Add key:="Notes", item:=Notes
-    dict.Add key:="YarnMerge", item:=YarnMerge
+Public Property Set ISpec_Properties(dict As Object)
+    dict.Add key:="Dtex", Item:=Dtex
+    dict.Add key:="Style", Item:=Style
+    dict.Add key:="WeaveType", Item:=WeaveType
+    dict.Add key:="YarnType", Item:=YarnType
+    dict.Add key:="Denier", Item:=Denier
+    dict.Add key:="MeanWarpCount", Item:=MeanWarpCount
+    dict.Add key:="MinWarpCount", Item:=MinWarpCount
+    dict.Add key:="MaxWarpCount", Item:=MaxWarpCount
+    dict.Add key:="MeanFillCount", Item:=MeanFillCount
+    dict.Add key:="MinFillCount", Item:=MinFillCount
+    dict.Add key:="MaxFillCount", Item:=MaxFillCount
+    dict.Add key:="MeanDryWeight", Item:=MeanDryWeight
+    dict.Add key:="MinDryWeight", Item:=MinDryWeight
+    dict.Add key:="MaxDryWeight", Item:=MaxDryWeight
+    dict.Add key:="MeanConditionedWeight", Item:=MeanConditionedWeight
+    dict.Add key:="MinConditionedWeight", Item:=MinConditionedWeight
+    dict.Add key:="MaxConditionedWeight", Item:=MaxConditionedWeight
+    dict.Add key:="YarnFinish", Item:=YarnFinish
+    dict.Add key:="YarnCode", Item:=YarnCode
+    dict.Add key:="MoistureRegain", Item:=MoistureRegain
+    dict.Add key:="Twisting", Item:=Twisting
+    dict.Add key:="YarnColor", Item:=YarnColor
+    dict.Add key:="Notes", Item:=Notes
+    dict.Add key:="YarnMerge", Item:=YarnMerge
     Set Properties_ = dict
 End Property
-'------------
+'-----------------
 ' AUTO-PROPERTIES
-'------------
+'-----------------
+' Database table
+Public Property Get ISpec_TableName() As String: ISpec_TableName = "style_specifications": End Property
+' Specification Type
+Public Property Get ISpec_SpecType() As String: ISpec_SpecType = "Style": End Property
 ' MinFillCount
 Public Property Let MinFillCount(value As Double): MinFillCount_ = value: End Property
 Public Property Get MinFillCount() As Double: MinFillCount = MinFillCount_: End Property
@@ -147,17 +154,14 @@ Public Property Get WeaveType() As String: WeaveType = WeaveType_: End Property
 ' Style
 Public Property Let Style(value As Long): Style_ = value: End Property
 Public Property Get Style() As Long: Style = Style_: End Property
-' Ends Per Inch
-Public Property Let EndsPerInch(value As Double): EndsPerInch_ = value: End Property
-Public Property Get EndsPerInch() As Double: EndsPerInch = EndsPerInch_: End Property
 ' Linear Density in Dtex or g / 10000 m
 Public Property Let Dtex(value As Double): Dtex_ = value: End Property
 Public Property Get Dtex() As Double: Dtex = Dtex_: End Property
 '----------
 ' METHODS
 '----------
-Private Sub SetProperties()
-    Set Properties = CreateObject("Scripting.Dictionary")
+Public Sub SetProperties()
+    Set ISpec_Properties = CreateObject("Scripting.Dictionary")
 End Sub
 Public Sub SaveSpecification()
 ' Adds a new specification to the database
@@ -172,9 +176,9 @@ Public Sub SaveSpecification()
     ' Create the values portion of the statement
     VALUESstmt = "VALUES ("
 
-    For Each key In Properties
+    For Each key In ISpec_Properties
         INSERTstmt = INSERTstmt & key & ", "
-        VALUESstmt = VALUESstmt & "'" & Properties(key) & "', "
+        VALUESstmt = VALUESstmt & "'" & ISpec_Properties(key) & "', "
     Next key
 
     INSERTstmt = INSERTstmt & "Time_Stamp) "
@@ -185,3 +189,45 @@ Public Sub SaveSpecification()
     'Debug.Print SQLstmt
     ExecuteSQL Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt
 End Sub
+
+Private Property Get ISpec_StyleSpec() As StyleSpecification
+    Err.Raise 5 'TODO implement interface member
+End Property
+
+Public Sub ISpec_JsonToObject(jsonText As String)
+    ' Convert a json string to a warp spec
+    Dim dict: Set dict = JsonConverter.ParseJson(jsonText)
+    On Error Resume Next
+    With Me
+        .Dtex = dict.Item("Dtex")
+        .Style = dict.Item("Style")
+        .WeaveType = dict.Item("WeaveType")
+        .YarnType = dict.Item("YarnType")
+        .Denier = dict.Item("Denier")
+        .MeanWarpCount = dict.Item("MeanWarpCount")
+        .MinWarpCount = dict.Item("MinWarpCount")
+        .MaxWarpCount = dict.Item("MaxWarpCount")
+        .MeanFillCount = dict.Item("MeanFillCount")
+        .MinFillCount = dict.Item("MinFillCount")
+        .MaxFillCount = dict.Item("MaxFillCount")
+        .MeanDryWeight = dict.Item("MeanDryWeight")
+        .MinDryWeight = dict.Item("MinDryWeight")
+        .MaxDryWeight = dict.Item("MaxDryWeight")
+        .MeanConditionedWeight = dict.Item("MeanConditionedWeight")
+        .MinConditionedWeight = dict.Item("MinConditionedWeight")
+        .MaxConditionedWeight = dict.Item("MaxConditionedWeight")
+        .YarnFinish = dict.Item("YarnFinish")
+        .YarnCode = dict.Item("YarnCode")
+        .MoistureRegain = dict.Item("MoistureRegain")
+        .Twisting = dict.Item("Twisting")
+        .YarnColor = dict.Item("YarnColor")
+        .Notes = dict.Item("Notes")
+        .YarnMerge = dict.Item("YarnMerge")
+    End With
+    Me.SetProperties
+End Sub
+
+Private Sub ISpec_SetDefaultProperties()
+    Err.Raise 5 'TODO implement interface member
+End Sub
+

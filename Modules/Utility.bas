@@ -1,24 +1,96 @@
 Attribute VB_Name = "Utility"
 Option Explicit
+'@Folder("Modules")
 '=================================
 ' DESCRIPTION: Util Module holds
 ' miscellenous helper functions.
 '=================================
-Sub CreateNewSheet(shtName As String)
+
+'---------------------------------------------------------------------------------------
+' Procedure : SplitCamelCase
+' Author    : Daniel Pineault, CARDA Consultants Inc.
+' Website   : http://www.cardaconsultants.com
+' Purpose   : Split/Break a Camel Case string
+' Copyright : The following may be altered and reused as you wish so long as the
+'             copyright notice is left unchanged (including Author, Website and
+'             Copyright).  It may not be sold/resold or reposted on other sites (links
+'             back to this site are allowed).
+'
+' Input Variables:
+' ~~~~~~~~~~~~~~~~
+' sString   : Camel Case string to break/split
+' sDelim    : Character to use as a spcaer, if omitted will use a space
+'
+' Usage:
+' ~~~~~~
+' ?SplitCamelCase("SplitCamelCase")
+'       Returns Split Camel Case
+' ?SplitCamelCase("SplitCamelCase", "_")
+'       Returns Split_Camel_Case
+'
+' Revision History:
+' Rev       Date(yyyy/mm/dd)        Description
+' **************************************************************************************
+' 1         2008-May-03             Initial Release
+'---------------------------------------------------------------------------------------
+Function SplitCamelCase(sString As String, Optional sDelim As String = " ") As String
+' Converts camel case to sentence case
+On Error GoTo Error_Handler
+    Dim oRegEx          As Object
+ 
+    Set oRegEx = CreateObject("vbscript.regexp")
+    With oRegEx
+        .Pattern = "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))"
+        .Global = True
+        SplitCamelCase = .Replace(sString, "$1" & sDelim)
+    End With
+ 
+Error_Handler_Exit:
+    On Error Resume Next
+    Set oRegEx = Nothing
+    Exit Function
+ 
+Error_Handler:
+    MsgBox "The following error has occured." & vbCrLf & vbCrLf & _
+            "Error Number: " & Err.Number & vbCrLf & _
+            "Error Source: SplitCamelCase" & vbCrLf & _
+            "Error Description: " & Err.Description, _
+            vbCritical, "An Error has Occured!"
+    Resume Error_Handler_Exit
+End Function
+
+Function GetLine(ParamArray var() As Variant) As String
+    Const Padding = 25
+    Dim i As Integer
+    Dim s As String
+    s = vbNullString
+    'If FormId.txtConsole = Nothing Then Exit Sub
+    For i = LBound(var) To UBound(var)
+         If (i + 1) Mod 2 = 0 Then
+             s = s & var(i)
+         Else
+             s = s & Left$(var(i) & ":" & Space(Padding), Padding)
+         End If
+    Next
+    GetLine = s & vbNewLine
+End Function
+
+Function CreateNewSheet(shtName As String) As String
 ' Creates a new worksheet with the given name
     Dim exists As Boolean, i As Integer
     With ThisWorkbook
         For i = 1 To Worksheets.count
-            If Worksheets(i).name = shtName Then
+            If Worksheets(i).Name = shtName Then
                 exists = True
             End If
         Next i
         If exists = True Then
             .Sheets(shtName).Delete
         End If
-        .Sheets.Add(After:=.Sheets(.Sheets.count)).name = shtName
+        .Sheets.Add(After:=.Sheets(.Sheets.count)).Name = shtName
     End With
-End Sub
+    CreateNewSheet = shtName
+End Function
 
 Function CheckForEmpties(frm) As Boolean
 'Clears the values from a user form.
@@ -26,14 +98,14 @@ Function CheckForEmpties(frm) As Boolean
     For Each ctl In frm.Controls
         Select Case VBA.TypeName(ctl)
             Case "TextBox"
-                If ctl.value = "" Then
+                If ctl.value = vbNullString Then
                     MsgBox "All boxes must be filed.", vbExclamation, "Input Error"
                     ctl.SetFocus
                     CheckForEmpties = True
                     Exit Function
                 End If
             Case "ComboBox"
-                If ctl.value = "" Then
+                If ctl.value = vbNullString Then
                     MsgBox "Make a selection from the drop down menu.", vbExclamation, "Input Error"
                     ctl.SetFocus
                     CheckForEmpties = True
@@ -88,3 +160,4 @@ Sub Insert(rng As Range, val)
 'Inserts an entry into a specific named cell.
     rng.value = val
 End Sub
+

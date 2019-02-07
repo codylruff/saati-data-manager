@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+'@Folder("Classes")
 Implements IDatabase
 '----------------------------------
 Private m_header As Variant
@@ -175,9 +176,9 @@ Private Declare Function sqlite3_stdcall_bind_parameter_index Lib "SQLite3_StdCa
 Private Declare Function sqlite3_stdcall_bind_null Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_null@8" (ByVal hStmt As Long, ByVal paramIndex As Long) As Long
 Private Declare Function sqlite3_stdcall_bind_blob Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_blob@20" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal pValue As Long, ByVal nBytes As Long, ByVal pfDelete As Long) As Long
 Private Declare Function sqlite3_stdcall_bind_zeroblob Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_zeroblob@12" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal nBytes As Long) As Long
-Private Declare Function sqlite3_stdcall_bind_double Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_double@16" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal Value As Double) As Long
-Private Declare Function sqlite3_stdcall_bind_int Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_int@12" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal Value As Long) As Long
-Private Declare Function sqlite3_stdcall_bind_int64 Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_int64@16" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal Value As Currency) As Long ' UNTESTED ....?
+Private Declare Function sqlite3_stdcall_bind_double Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_double@16" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal value As Double) As Long
+Private Declare Function sqlite3_stdcall_bind_int Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_int@12" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal value As Long) As Long
+Private Declare Function sqlite3_stdcall_bind_int64 Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_int64@16" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal value As Currency) As Long ' UNTESTED ....?
 Private Declare Function sqlite3_stdcall_bind_text Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_text@20" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal psValue As Long, ByVal nBytes As Long, ByVal pfDelete As Long) As Long
 Private Declare Function sqlite3_stdcall_bind_text16 Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_text16@20" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal pswValue As Long, ByVal nBytes As Long, ByVal pfDelete As Long) As Long
 Private Declare Function sqlite3_stdcall_bind_value Lib "SQLite3_StdCall" Alias "_sqlite3_stdcall_bind_value@12" (ByVal hStmt As Long, ByVal paramIndex As Long, ByVal pSqlite3Value As Long) As Long
@@ -201,14 +202,14 @@ Private Property Let dbPath(ByVal vNewValue As Variant): m_dbPath = vNewValue: E
 '================================================================
 ' public properties
 Public Property Get IDatabase_header() As Variant: IDatabase_header = m_header: End Property
-Public Property Get IDatabase_data() As Variant: IDatabase_data = m_data: End Property 
+Public Property Get IDatabase_data() As Variant: IDatabase_data = m_data: End Property
 Public Property Get qtyRows() As Long: qtyRows = m_qtyRows: End Property
 Public Property Get qtyColumns() As Long: qtyColumns = m_qtyColumns: End Property
 '================================================================
 ' opens a database
 Public Sub IDatabase_openDb(sqliPath As String)
   '---------------------------------
-  If sqliPath = "" Or Len(Dir(sqliPath)) = 0 Then
+  If sqliPath = vbNullString Or Len(Dir(sqliPath)) = 0 Then
     Err.Raise 1, "Database not found", "Please select a valid file address"
     Exit Sub
   End If
@@ -230,7 +231,7 @@ Public Sub IDatabase_selectQry(ssql As String)
   Call initQuery(getRows, myStmtHandle, Me.dbPath, "select count(*) from (" & ssql & ")") 'get rows
   Call initQuery(getColumns, myStmtHandle, Me.dbPath, ssql) 'get columns
   '----------------------------------------------'
-  Call getQryValue(myStmtHandle)  
+  Call getQryValue(myStmtHandle)
 End Sub
 
 '=====================================================================================
@@ -286,7 +287,7 @@ Private Sub getQryValue(ByVal stmtHandle As Long)
       For i = 0 To Me.qtyColumns - 1 'itera pelas colunas
         '=============================
         colName = SQLite3ColumnName(stmtHandle, i)
-        If arrheader(1, i + 1) = "" Then arrheader(1, i + 1) = colName
+        If arrheader(1, i + 1) = vbNullString Then arrheader(1, i + 1) = colName
         '=============================
         colType = SQLite3ColumnType(stmtHandle, i)
         colTypeName = TypeName(colType)
@@ -345,7 +346,7 @@ End Function
 
 Private Function SQLite3Initialize(Optional ByVal libDir As String) As Long
     ' A nice option here is to call SetDllDirectory, but that API is only available since Windows XP SP1.
-    If libDir = "" Then libDir = ThisWorkbook.Path
+    If libDir = vbNullString Then libDir = ThisWorkbook.path
     If Right(libDir, 1) <> "\" Then libDir = libDir & "\"
     
     If hSQLiteLibrary = 0 Then
@@ -501,26 +502,26 @@ End Function
 
 '=====================================================================================
 ' Statement bindings
-Private Function SQLite3BindText(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal Value As String) As Long
-    SQLite3BindText = sqlite3_stdcall_bind_text16(stmtHandle, OneBasedParamIndex, StrPtr(Value), -1, SQLITE_TRANSIENT)
+Private Function SQLite3BindText(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal value As String) As Long
+    SQLite3BindText = sqlite3_stdcall_bind_text16(stmtHandle, OneBasedParamIndex, StrPtr(value), -1, SQLITE_TRANSIENT)
 End Function
 
-Private Function SQLite3BindDouble(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal Value As Double) As Long
-    SQLite3BindDouble = sqlite3_stdcall_bind_double(stmtHandle, OneBasedParamIndex, Value)
+Private Function SQLite3BindDouble(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal value As Double) As Long
+    SQLite3BindDouble = sqlite3_stdcall_bind_double(stmtHandle, OneBasedParamIndex, value)
 End Function
 
-Private Function SQLite3BindInt32(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal Value As Long) As Long
-    SQLite3BindInt32 = sqlite3_stdcall_bind_int(stmtHandle, OneBasedParamIndex, Value)
+Private Function SQLite3BindInt32(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal value As Long) As Long
+    SQLite3BindInt32 = sqlite3_stdcall_bind_int(stmtHandle, OneBasedParamIndex, value)
 End Function
 
-Private Function SQLite3BindDate(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal Value As Date) As Long
-    SQLite3BindDate = sqlite3_stdcall_bind_double(stmtHandle, OneBasedParamIndex, ToJulianDay(Value))
+Private Function SQLite3BindDate(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByVal value As Date) As Long
+    SQLite3BindDate = sqlite3_stdcall_bind_double(stmtHandle, OneBasedParamIndex, ToJulianDay(value))
 End Function
 
-Private Function SQLite3BindBlob(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByRef Value() As Byte) As Long
+Private Function SQLite3BindBlob(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long, ByRef value() As Byte) As Long
     Dim length As Long
-    length = UBound(Value) - LBound(Value) + 1
-    SQLite3BindBlob = sqlite3_stdcall_bind_blob(stmtHandle, OneBasedParamIndex, VarPtr(Value(0)), length, SQLITE_TRANSIENT)
+    length = UBound(value) - LBound(value) + 1
+    SQLite3BindBlob = sqlite3_stdcall_bind_blob(stmtHandle, OneBasedParamIndex, VarPtr(value(0)), length, SQLITE_TRANSIENT)
 End Function
 
 Private Function SQLite3BindNull(ByVal stmtHandle As Long, ByVal OneBasedParamIndex As Long) As Long
@@ -585,7 +586,7 @@ Private Function Utf8PtrToString(ByVal pUtf8String As Long) As String
     cSize = MultiByteToWideChar(CP_UTF8, 0, pUtf8String, -1, 0, 0)
     ' cSize includes the terminating null character
     If cSize <= 1 Then
-        Utf8PtrToString = ""
+        Utf8PtrToString = vbNullString
         Exit Function
     End If
     
@@ -635,4 +636,5 @@ Private Function FromJulianDay(julianDay As Double) As Date
 End Function
 
 '/////////////////////////////////////////////////////////////
+
 

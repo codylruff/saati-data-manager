@@ -7,6 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
+'@Folder("Classes")
 '====================================
 'CLASS DESCRIPTION:
 ' Takes a user form and text box name
@@ -33,8 +35,9 @@ Public Property Get FormId() As MSForms.UserForm: Set FormId = FormId_: End Prop
 '----------
 Public Sub PrintObject(iprint_ As IPrint)
 ' Print object to console
+    Dim key As Variant
     ' Clear the console
-    FormId.txtConsole.Text = ""
+    FormId.txtConsole.Text = vbNullString
     For Each key In iprint_.PrettyProperties
         PrintLine key, _
                   iprint_.PrettyProperties(key)
@@ -44,7 +47,7 @@ Public Sub PrintLine(ParamArray var() As Variant)
     Const Padding = 25
     Dim i As Integer
     Dim s As String
-    s = ""
+    s = vbNullString
     'If FormId.txtConsole = Nothing Then Exit Sub
     For i = LBound(var) To UBound(var)
          If (i + 1) Mod 2 = 0 Then
@@ -66,3 +69,5 @@ End Sub
 ' Deconstructor
 Private Sub Class_Terminate()
 End Sub
+
+
