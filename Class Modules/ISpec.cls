@@ -13,13 +13,13 @@ Option Explicit
 ' of standardized process
 ' specifications
 Public Property Get MaterialId() As String: End Property ' sap code, style # etc...
-Public Property Get Properties() As Dictionary: End Property
+Public Property Get Properties() As Dictionary: End Property ' Must contain MaterialId
 Public Property Get SpecType() As String: End Property
 Public Property Get ParentSpec() As ISpec: End Property
 Public Property Let JsonText(value As String): End Property
 Public Property Get JsonText() As String: End Property ' If = vbNullString -> ObjectToJson()
 Public Sub JsonToObject(jsonText As String): End Sub ' Map json to the spec
-Public Sub ObjectToJson(): End Sub ' Store spec Properties dictionary as json
+Public Function ObjectToJson(): As String End Sub ' Store spec Properties dictionary as json
 Public Sub SetDefaultProperties(): End Sub ' Use create "standard" specification
 '-----------------------------------------------
 ' Table 1: "standard_specifications"
@@ -43,9 +43,8 @@ Public Sub SetDefaultProperties(): End Sub ' Use create "standard" specification
 ' Suggested Program Flow
 '------------------------------------------------
 ' Get some user input from the GUI
-' SpecManager -> DataAccess.Check("Table 2")
-' If false -> DataAcces.Check("Table 1")
-' If false -> Default spec procedure
+' SpecManager -> GetSpec()
+' If Default spec procedure -> Table 1
 ' If true -> DataAccess.Get(Table(true)
 ' Get json from Table 1/2 -> DatabaseRecord
 ' json_text = DatabaseRecord.Fields("Json_Text)

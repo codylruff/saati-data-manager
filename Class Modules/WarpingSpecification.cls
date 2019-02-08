@@ -173,9 +173,10 @@ Public Sub ISpec_JsonToObject(jsonText As String)
     Me.SetProperties
 End Sub
 
-Public Sub ISpec_ObjectToJson()
+Public Function ISpec_ObjectToJson() As String
 ' Convert this object to a json string
-    
+    ISpec_JsonText = JsonConverter.ConvertToJson(Me.ISpec_Properties)
+    ISpec_ObjectToJson = Me.ISpec_JsonText
 End Sub
 
 Public Sub ISpec_SetDefaultProperties()
