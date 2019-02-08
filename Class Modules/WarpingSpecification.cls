@@ -30,35 +30,35 @@ Const HighDtex = 3000
 '----------------
 'CLASS VARIABLES
 '----------------
-Private MaterialNumber_             As String
-Private MaterialDescription_        As String
-Private FinalWidthCm_               As Double
-Private EndsPerInch_                As Double
-Private Dtex_                       As Double
-Private WarpingSpeed_               As Double
-Private BeamingSpeed_               As Double
-Private CrossWinding_               As Double
-Private DentsPerCm_                 As Double
-Private EndsPerDent_                As Double
-Private IsSWrapped_                 As Boolean
-Private NumberOfEnds_               As Double
-Private BeamWidth_                  As Double
-Private BeamingTension_             As Double
-Private WarpingTension_             As Double
-Private K1_                         As Double
-Private K2_                         As Double
-Private StyleSpec_                  As StyleSpecification
-Private Style_                      As Long
-Private WarpDensityStart_           As Double
-Private WarpDensityMeasured_        As Double
-Private CompactionFactor_           As Double
-Private EvenerRoller_               As Boolean
-Private MeasuringPhase_             As Boolean
-Private ReedShape_                  As Long
-Private YarnLeaseFeed_              As Double
-Private Properties_                 As Object
-Private IPrint_PrettyProperties_    As Object
-Private JsonString_                 As String
+Public MaterialNumber             As String
+Public MaterialDescription        As String
+Public FinalWidthCm               As Double
+Public EndsPerInch                As Double
+Public Dtex                       As Double
+Public WarpingSpeed               As Double
+Public BeamingSpeed               As Double
+Public CrossWinding               As Double
+Public DentsPerCm                 As Double
+Public EndsPerDent                As Double
+Public IsSWrapped                 As Boolean
+Public NumberOfEnds               As Double
+Public BeamWidth                  As Double
+Public BeamingTension             As Double
+Public WarpingTension             As Double
+Public K1                         As Double
+Public K2                         As Double
+Public StyleSpec                  As StyleSpecification
+Public Style                      As Long
+Public WarpDensityStart           As Double
+Public WarpDensityMeasured        As Double
+Public CompactionFactor           As Double
+Public EvenerRoller               As Boolean
+Public MeasuringPhase             As Boolean
+Public ReedShape                  As Long
+Public YarnLeaseFeed              As Double
+Public Properties_                As Object
+Public IPrint_PrettyProperties_   As Object
+Public JsonText_                  As String
 '-------------
 ' COLLECTIONS
 '-------------
@@ -68,27 +68,6 @@ Public Property Get IPrint_PrettyProperties() As Object
 End Property
 Public Property Set IPrint_PrettyProperties(dict As Object)
     Dim key As Variant
-    ' dict.Add key:="Style", item:=Style
-    ' dict.Add key:="Material Number", item:=MaterialNumber
-    ' dict.Add key:="Material Description", item:=MaterialDescription
-    ' dict.Add key:="Yarn Type", item:=YarnSupplier
-    ' dict.Add key:="Yarn Code", item:=YarnCode
-    ' dict.Add key:="Final Width [cm]", item:=FinalWidthCm
-    ' dict.Add key:="Number Of Ends", item:=NumberOfEnds
-    ' If IsSWrapped = True Then
-    '     dict.Add key:="S Wrap On/Off", item:="ON"
-    ' Else
-    '     dict.Add key:="S Wrap On/Off", item:="OFF"
-    ' End If
-    ' dict.Add key:="Spring Color", item:=SpringColor
-    ' dict.Add key:="Warping Speed [m/min]", item:=WarpingSpeed
-    ' dict.Add key:="Beaming Speed [m/min]", item:=BeamingSpeed
-    ' dict.Add key:="WarpingTension", item:=WarpingTension
-    ' dict.Add key:="Beaming Tension", item:=BeamingTension
-    ' dict.Add key:="Cross Winding", item:=CrossWinding
-    ' dict.Add key:="Dent/cm", item:=DentsPerCm
-    ' dict.Add key:="End/Dent", item:=EndsPerDent
-    ' dict.Add key:="Beam Width", item:=BeamWidth
     For Each key In ISpec_Properties.keys
         dict.Add key:=Utility.SplitCamelCase(CStr(key)), Item:=ISpec_Properties.Item(key)
     Next key
@@ -126,89 +105,12 @@ End Property
 '----------------
 ' AUTO-PROPERTIES
 '----------------
-' Database table
-Public Property Get ISpec_TableName() As String: ISpec_TableName = "warping_specifications": End Property
 ' Specification Type
 Public Property Get ISpec_SpecType() As String: ISpec_SpecType = "warping": End Property
-' YarnLeaseFeed
-Public Property Let YarnLeaseFeed(value As Double): YarnLeaseFeed_ = value: End Property
-Public Property Get YarnLeaseFeed() As Double: YarnLeaseFeed = YarnLeaseFeed_: End Property
-' ReedShape
-Public Property Let ReedShape(value As Long): ReedShape_ = value: End Property
-Public Property Get ReedShape() As Long: ReedShape = ReedShape_: End Property
-' MeasuringPhase
-Public Property Let MeasuringPhase(value As Boolean): MeasuringPhase_ = value: End Property
-Public Property Get MeasuringPhase() As Boolean: MeasuringPhase = MeasuringPhase_: End Property
-' EvenerRoller
-Public Property Let EvenerRoller(value As Boolean): EvenerRoller_ = value: End Property
-Public Property Get EvenerRoller() As Boolean: EvenerRoller = EvenerRoller_: End Property
-' CompactionFactor
-Public Property Let CompactionFactor(value As Double): CompactionFactor_ = value: End Property
-Public Property Get CompactionFactor() As Double: CompactionFactor = CompactionFactor_: End Property
-' WarpDensityMeasured
-Public Property Let WarpDensityMeasured(value As Double): WarpDensityMeasured_ = value: End Property
-Public Property Get WarpDensityMeasured() As Double: WarpDensityMeasured = WarpDensityMeasured_: End Property
-' WarpDensityStart
-Public Property Let WarpDensityStart(value As Double): WarpDensityStart_ = value: End Property
-Public Property Get WarpDensityStart() As Double: WarpDensityStart = WarpDensityStart_: End Property
-' YarnCode
-Public Property Get YarnCode() As String: YarnCode = StyleSpec.YarnCode: End Property
-' K2
-Public Property Let K2(value As Double): K2_ = value: End Property
-Public Property Get K2() As Double: K2 = K2_: End Property
-' K1
-Public Property Let K1(value As Double): K1_ = value: End Property
-Public Property Get K1() As Double: K1 = K1_: End Property
-' WarpingTension
-Public Property Let WarpingTension(value As Double): WarpingTension_ = value: End Property
-Public Property Get WarpingTension() As Double: WarpingTension = WarpingTension_: End Property
-' BeamingTension
-Public Property Let BeamingTension(value As Double): BeamingTension_ = value: End Property
-Public Property Get BeamingTension() As Double: BeamingTension = BeamingTension_: End Property
-' BeamWidth
-Public Property Let BeamWidth(value As Double): BeamWidth_ = value: End Property
-Public Property Get BeamWidth() As Double: BeamWidth = BeamWidth_: End Property
-' NumberOfEnds
-Public Property Let NumberOfEnds(value As Double): NumberOfEnds_ = value: End Property
-Public Property Get NumberOfEnds() As Double: NumberOfEnds = NumberOfEnds_: End Property
-' StyleSpec
-Public Property Set StyleSpec(value As StyleSpecification): Set StyleSpec_ = value: End Property
-Public Property Get StyleSpec() As StyleSpecification: Set StyleSpec = StyleSpec_: End Property
-' Style
-Public Property Get Style() As Long: Style = Style_: End Property
-Public Property Let Style() As Long: Style_ = value: End Property
-' EndsPerDent
-Public Property Let EndsPerDent(value As Double): EndsPerDent_ = value: End Property
-Public Property Get EndsPerDent() As Double: EndsPerDent = EndsPerDent_: End Property
-' DentsPerCm
-Public Property Let DentsPerCm(value As Double): DentsPerCm_ = value: End Property
-Public Property Get DentsPerCm() As Double: DentsPerCm = DentsPerCm_: End Property
-' CrossWinding
-Public Property Let CrossWinding(value As Double): CrossWinding_ = value: End Property
-Public Property Get CrossWinding() As Double: CrossWinding = CrossWinding_: End Property
-' BeamingSpeed
-Public Property Let BeamingSpeed(value As Double): BeamingSpeed_ = value: End Property
-Public Property Get BeamingSpeed() As Double: BeamingSpeed = BeamingSpeed_: End Property
-' WarpingSpeed
-Public Property Let WarpingSpeed(value As Double): WarpingSpeed_ = value: End Property
-Public Property Get WarpingSpeed() As Double: WarpingSpeed = WarpingSpeed_: End Property
-' Material Number
-Public Property Let MaterialNumber(value As String): MaterialNumber_ = value: End Property
-Public Property Get MaterialNumber() As String: MaterialNumber = MaterialNumber_: End Property
-' Material Description
-Public Property Let MaterialDescription(value As String): MaterialDescription_ = value: End Property
-Public Property Get MaterialDescription() As String: MaterialDescription = MaterialDescription_: End Property
-' Final Width in cm
-Public Property Let FinalWidthCm(value As Double): FinalWidthCm_ = value: End Property
-Public Property Get FinalWidthCm() As Double: FinalWidthCm = FinalWidthCm_: End Property
-' Ends Per Inch
-Public Property Get EndsPerInch() As Double: EndsPerInch = StyleSpec.MeanWarpCount: End Property
-' Linear Density in Dtex or g / 10000 m
-Public Property Let Dtex() As Double: Dtex_ = value: End Property
-Public Property Get Dtex() As Double: Dtex = Dtex_: End Property
-' S Wrapping
-Public Property Let IsSWrapped(value As Boolean): IsSWrapped_ = value: End Property
-Public Property Get IsSWrapped() As Boolean: IsSWrapped = IsSWrapped_: End Property
+Public Property Get ISpec_MaterialId() As String: ISpec_MaterialId = Me.MaterialNumber: End Property
+Public Property Get ISpec_ParentSpec() As ISpec: Set ISpec_ParentSpec = Me.StyleSpec: End Property
+Public Property Let ISpec_JsonText(value As String) As String: JsonText_ = value: End Property
+Public Property Get ISpec_JsonText() As String: ISpec_JsonText = JsonText_: End Property
 '------------
 ' PROPERTIES
 '------------
@@ -271,6 +173,11 @@ Public Sub ISpec_JsonToObject(jsonText As String)
     Me.SetProperties
 End Sub
 
+Public Sub ISpec_ObjectToJson()
+' Convert this object to a json string
+    
+End Sub
+
 Public Sub ISpec_SetDefaultProperties()
 ' Bases property values on theoretical calcualtions
     Style = StyleSpec.Style
@@ -311,6 +218,7 @@ End Sub
 
 Public Sub SetProperties()
     Set ISpec_Properties = CreateObject("Scripting.Dictionary")
+    ISpec_JsonText = JsonConverter.ConvertToJson(ISpec_Properties)
 End Sub
 
 Public Sub IPrint_SetPrettyProperties()

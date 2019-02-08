@@ -36,6 +36,15 @@ Function CreateWarpingSpecification() As WarpingSpecification
     Set CreateWarpingSpecification = spec
 End Function
 
+Function CreateDefaultWarpingSpecification(materialID As String, _
+         description As String) As WarpingSpecification
+' Creates a warping specification and sets properties to default
+    Dim spec: Set spec = CreateWarpingSpecification
+    With spec
+        .MaterialNumber = materialID
+        .MaterialDescription = description
+    End With
+
 Function CreateStyleSpecification() As StyleSpecification
 ' Creates a style specification object
     Dim Style: Set Style = New StyleSpecification
