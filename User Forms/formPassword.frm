@@ -13,27 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Option Explicit
 
-'---------------------------------
-'***TO-DO******TO-DO******TO-DO***
-'---------------------------------
 '---------------------------------
 'NOTES: The form needs to be
 're-designed
@@ -50,6 +31,3 @@ Private Sub cmdEnter_Click()
     Open_Config txtPassword.value
     
 End Sub
-'---------------------------------
-'***TO-DO******TO-DO******TO-DO***
-'---------------------------------

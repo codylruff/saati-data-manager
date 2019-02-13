@@ -13,23 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Option Explicit
 
 Private Sub cmdConfig_Click()
@@ -48,7 +31,7 @@ End Sub
 Private Sub cmdWarping_Click()
 
     Unload Me
-    Warping.GoToMenu
+    SpecManager.GoToWarpingMenu
 
 End Sub
 

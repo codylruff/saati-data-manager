@@ -11,8 +11,14 @@ Option Explicit
 Public Sub GoToMain()
 'Opens the main menu form.
     Application.Visible = False
-    Utility.UnloadAllForms
+    Utils.UnloadAllForms
     formMainMenu.Show
+End Sub
+
+Public Sub GoToWarpingMenu()
+    Application.Visible = False
+    Utils.UnloadAllForms
+    formWarpingMainMenu.Show
 End Sub
 
 Public Sub ExportAll()

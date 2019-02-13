@@ -827,7 +827,7 @@ Private Sub json_BufferAppend(ByRef json_Buffer As String, _
     ' Buffer: "abcdef    "
     '
     ' Approach based on cStringBuilder from vbAccelerator
-    ' http://www.vbaccelerator.com/home/VB/Code/Techniques/RunTime_Debug_Tracing/VB6_Tracer_Utility_zip_cStringBuilder_cls.asp
+    ' http://www.vbaccelerator.com/home/VB/Code/Techniques/RunTime_Debug_Tracing/VB6_Tracer_Utils_zip_cStringBuilder_cls.asp
     '
     ' and clsStringAppend from Philip Swannell
     ' https://github.com/VBA-tools/VBA-JSON/pull/82

@@ -33,14 +33,14 @@ Public Property Get FormId() As MSForms.UserForm: Set FormId = FormId_: End Prop
 '----------
 ' METHODS
 '----------
-Public Sub PrintObject(iprint_ As IPrint)
+Public Sub PrintObject(spec As Specification)
 ' Print object to console
     Dim key As Variant
     ' Clear the console
     FormId.txtConsole.Text = vbNullString
-    For Each key In iprint_.PrettyProperties
+    For Each key In spec.PrettyProperties
         PrintLine key, _
-                  iprint_.PrettyProperties(key)
+                  spec.PrettyProperties(key)
     Next key
 End Sub
 Public Sub PrintLine(ParamArray var() As Variant)

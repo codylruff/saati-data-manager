@@ -1,5 +1,4 @@
 Attribute VB_Name = "SpecManager"
-
 '@Folder("Modules")
 ' CREATE-----------------------------
 Function CreateDefaultSpec(spec As ISpec, materialID As String, MaterialDescription As String) As ISpec
@@ -46,7 +45,7 @@ Sub PrintSpecToConsole(frm As UserForm, ByRef spec As ISpec)
         .Text = vbNullString
         
         For Each key In spec.Properties
-            .Text = .Text & Utility.GetLine(Utility.SplitCamelCase(key.value), _
+            .Text = .Text & Utils.GetLine(Utils.SplitCamelCase(key.value), _
                         spec.Properties(key.value))
         Next key
     End With
@@ -58,14 +57,14 @@ Sub DatabaseToWorksheet(db As IDatabase, path As String, tblName As String)
     Dim ws As Worksheet, record As DatabaseRecord
     Set record = DataAccess.Get(db, path, "SELECT * FROM " & tblName)
     ' Creates a sheet to store the database.
-    Utility.ToggleExcelGui False
-    Set ws = Sheets(Utility.CreateNewSheet(tblName & " " & Format(Now, "mm,dd,yyyy")))
+    Utils.ToggleExcelGui False
+    Set ws = Sheets(Utils.CreateNewSheet(tblName & " " & Format(Now, "mm,dd,yyyy")))
     ' Creates the headers
     ws.Range(Cells(1, record.columns), Cells(1, record.columns)).value = record.header
     ' Copies in the data
     ws.Range(Cells(record.rows, record.colmns), Cells(record.rows + 1, record.columns)).value = record.data
     ws.Range("A1").CurrentRegion.EntireColumn.AutoFit
-    Utility.ToggleExcelGui True
+    Utils.ToggleExcelGui True
 End Sub
 
 ' UPDATE------------------------------
