@@ -15,14 +15,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
-
-
-
-
-
-
-
-
 Option Explicit
 
 Private Sub cmdClear_Click()
@@ -30,14 +22,13 @@ Private Sub cmdClear_Click()
     ClearForm Me
 End Sub
 
-Private Sub cmdNext_Click()
-    Dim lng As Long
-    lng = Warping.Main(Me)
-End Sub
-
 Private Sub cmdOptions_Click()
     Unload Me
     GoToMain
+End Sub
+
+Private Sub cmdSearch_Click()
+
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)

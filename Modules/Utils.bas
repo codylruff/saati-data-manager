@@ -11,6 +11,16 @@ Sub ToggleExcelGui(b As Boolean)
     Application.DisplayAlerts = b
 End Sub
 
+Function ConvertToCamelCase(s As String) As String
+' Converts sentence case to Camel Case
+    With CreateObject("VBScript.RegExp")
+        .Pattern = "[^a-zA-Z]"
+        .Global = True
+        ConvertToCamelCase = Replace(StrConv(.Replace(s, " "), vbProperCase), " ", "")
+    End With
+End Function
+
+
 Function SplitCamelCase(sString As String, Optional sDelim As String = " ") As String
 ' Converts camel case to sentence case
 On Error GoTo Error_Handler

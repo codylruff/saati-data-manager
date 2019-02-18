@@ -676,7 +676,7 @@ Private Function json_IsUndefined(ByVal json_Value As Variant) As Boolean
     End Select
 End Function
 
-Private Function json_Encode(ByVal json_Text As Variant) As String
+Private Function json_Encode(ByVal json_text As Variant) As String
     ' Reference: http://www.ietf.org/rfc/rfc4627.txt
     ' Escape: ", \, /, backspace, form feed, line feed, carriage return, tab
     Dim json_Index As Long
@@ -686,8 +686,8 @@ Private Function json_Encode(ByVal json_Text As Variant) As String
     Dim json_BufferPosition As Long
     Dim json_BufferLength As Long
 
-    For json_Index = 1 To VBA.Len(json_Text)
-        json_Char = VBA.Mid$(json_Text, json_Index, 1)
+    For json_Index = 1 To VBA.Len(json_text)
+        json_Char = VBA.Mid$(json_text, json_Index, 1)
         json_AscCode = VBA.AscW(json_Char)
 
         ' When AscW returns a negative number, it returns the twos complement form of that number.

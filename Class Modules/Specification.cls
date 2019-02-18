@@ -8,34 +8,53 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-
+' Properties dictionary
 Public Properties As Dictionary
-Public PrettyProperties As Dictionary ' Properties in normal case instead of camel case.
 
-' Interface for version control
-' of standardized process
-' specifications
-Public Property Get MaterialId() As String: End Property ' sap code, style # etc...
-Public Property Get Revision() As String: End Property
+' FIELDS and PROPERTIES---
+Private SpecType_   As String
+Private Revision_   As String
+Private MaterialId_ As String
+' Revision
+Public Property Let Revision(value As String)
+    Revision_ = value
+End Property
+Public Property Get Revision() As String
+    Revision = Revision_
+End Property
+' SpecType
+Public Property Let SpecType(value As String)
+    SpecType_ = value
+End Property
+Public Property Get SpecType() As String
+    SpecType = SpecType_
+End Property
+Public Property Get MaterialId() As String
+' sap code, style # etc...
+    MaterialId = MaterialId_
+End Property
+Public Property Let MaterialId(value As String)
+    MaterialId_ = value
+End Property
+' METHODS---
 Public Sub JsonToObject(jsonText As String)
 ' Map json to the spec
     Dim key As Variant
     Set Properties = JsonConverter.ParseJson(jsonText)
-    For Each key In Properties
-        PrettyProperties.Add Key:= key, Item:= Properties.Item(key)
-    Next key
-End Sub 
+    MaterialId = Properties.Item("MaterialId")
+    SpecType = Properties.Item("SpecType")
+    Revision = Properties.Item("Revision")
+    
+End Sub
 Public Function ObjectToJson() As String
 ' Store spec Properties dictionary as json
     ObjectToJson = JsonConverter.ConvertToJson(Properties)
-End Sub 
+End Sub
 ' Constructor
 Private Sub Class_Initialize()
     Set Properties = New Dictionary
-    Set PrettyProperties = New Dictionary
 End Sub
 ' Deconstructor
 Private Sub Class_Terminate()
     Set Properties = Nothing
-    Set PrettyProperties = Nothing
 End Sub

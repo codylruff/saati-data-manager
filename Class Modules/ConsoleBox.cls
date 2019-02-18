@@ -24,10 +24,8 @@ Private OutputHistory_  As Collection
 '------------
 ' AUTO-PROPERTIES
 '------------
-' OutputHistory
 Public Property Set OutputHistory(value As Collection): Set OutputHistory_ = value: End Property
 Public Property Get OutputHistory() As Collection: Set OutputHistory = OutputHistory_: End Property
-' FormId
 Public Property Set FormId(value As MSForms.UserForm): Set FormId_ = value: End Property
 Public Property Get FormId() As MSForms.UserForm: Set FormId = FormId_: End Property
 '----------
@@ -38,11 +36,15 @@ Public Sub PrintObject(spec As Specification)
     Dim key As Variant
     ' Clear the console
     FormId.txtConsole.Text = vbNullString
-    For Each key In spec.PrettyProperties
-        PrintLine key, _
-                  spec.PrettyProperties(key)
+    For Each key In spec.Properties
+        If Not spec.Properties(key) = vbNullString Then
+            PrintLine Utils.SplitCamelCase(CStr(key)), spec.Properties(CStr(key))
+        Else
+            PrintLine Utils.SplitCamelCase(CStr(key)), "-"
+        End If
     Next key
 End Sub
+
 Public Sub PrintLine(ParamArray var() As Variant)
     Const Padding = 25
     Dim i As Integer
@@ -59,15 +61,11 @@ Public Sub PrintLine(ParamArray var() As Variant)
     OutputHistory.Add s
     FormId.txtConsole.Text = FormId.txtConsole.Text & s & vbNewLine
 End Sub
-'---------
-' EVENTS
-'---------
-' Constructor
+
 Private Sub Class_Initialize()
+' Constructor
     Set OutputHistory = New Collection
 End Sub
-' Deconstructor
-Private Sub Class_Terminate()
-End Sub
+
 
 
