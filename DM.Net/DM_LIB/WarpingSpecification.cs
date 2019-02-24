@@ -45,6 +45,7 @@ namespace DM_Lib
         public DateTime TimeStamp { get; set; }
         public bool IsDefault { get; set; }
         public string MaterialId { get; set; }
+        public string Revision { get; set; }
         public string SpecType {
             get
             {
@@ -57,7 +58,7 @@ namespace DM_Lib
 
         public WarpingSpecification()
         {
-
+			// Default Constructor
         }
 
         public WarpingSpecification(string materialId)
@@ -67,8 +68,8 @@ namespace DM_Lib
 
         public WarpingSpecification(string materialId, StyleSpecification styleSpec)
         {
-            // TODO: build spec from a material_id and a style spec only
             this.MaterialId = materialId;
+            this.StyleSpec = styleSpec;
             this.ParentSpec = styleSpec;
             this.SetDefaultProperties();
         }
@@ -76,7 +77,8 @@ namespace DM_Lib
         public override string ToString()
         {
             var builder = new StringBuilder();
-
+			
+            builder.AppendFormat("Revision : {0}\n", Revision);
             builder.AppendFormat("Material Number : {0}\n", MaterialNumber);
             builder.AppendFormat("Description : {0}\n", MaterialDescription);
             builder.AppendFormat("Final Width [cm] : {0}\n", FinalWidthCm);
@@ -137,20 +139,20 @@ namespace DM_Lib
 
         private void DefaultNumberOfEnds()
         {
-            float tmp = (float)Math.Round(FinalWidthCm * EndsPerInch / 2.54, 0);
-            if (tmp % 2 == 0)
+            float number_of_ends = (float)Math.Round(FinalWidthCm * EndsPerInch / 2.54, 0);
+            if (number_of_ends % 2 == 0)
             {
-                NumberOfEnds = tmp;
+                NumberOfEnds = number_of_ends;
             }
             else
             {
-                NumberOfEnds = tmp + 1;
+                NumberOfEnds = number_of_ends + 1;
             }
         }
 
         private void DefaultSWrap()
         {
-            if (Dtex >= 3000) { IsSWrapped = true; }
+			IsSWrapped |= Dtex >= 3000;
         }
 
         private void DefaultBeamWidth()

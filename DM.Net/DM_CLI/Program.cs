@@ -18,29 +18,22 @@ namespace DM_CLI
     class Program
     {
         public static SpecManager manager = new SpecManager();
-        static void Main(string[] args)
+        static void Main()
         {
             // Parse args
             try
             {
-                for(int i = 0; i < args.Length; i++)
-                {
-                    switch (args[i].ToLower())
-                    {
-                        case "-h":
-                            Usage();
-                            break;
-                        case "-config":
-                            break;
-                        default:
-                            StartViewer(args[i]);
-                            break;
-                    }
-                }
+            	Console.WriteLine("|--------------------------------------|");
+            	Console.WriteLine("|         SAATI Spec Manager           |");
+            	Console.WriteLine("|--------------------------------------|");
+            	Console.Write("Enter a material ID :");
+            	string input = Console.ReadLine();
+                StartViewer(input);       
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine("Error: {0}", ex.Message);
+                Console.ReadLine();
             }
             
         }
@@ -48,10 +41,12 @@ namespace DM_CLI
         public static void StartViewer(string material_id)
         {
             // Create a spec
-            Console.WriteLine("Specification for {0} :", material_id);
             Console.WriteLine("---------------------------------------");
-            int retVal = manager.LoadSpecification(material_id);
+            Console.WriteLine("Specifications for {0} :", material_id);
+            Console.WriteLine("---------------------------------------");
+            int retVal = manager.LoadStandard(material_id);
             if ( retVal == -1) NewMaterialDialogue(material_id);
+            manager.LoadSpecification(retVal == 0 ? material_id : manager.CorrectId);
             Console.WriteLine("---------------------------------------");
             manager.PrintSpecification();
             Console.WriteLine("---------------------------------------");

@@ -29,6 +29,7 @@ namespace DM_Lib
             get { return _defaultSpec; }
             set
             {
+            	_specsCollection.Add(value);
                 _defaultSpec = value;
                
             }

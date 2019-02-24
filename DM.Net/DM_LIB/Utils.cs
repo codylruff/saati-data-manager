@@ -3,7 +3,7 @@
  * User: CRuff
  * Date: 2/14/2019
  * Time: 11:11 AM
- * 
+ * DM_Lib.Utils
  * 
  */
 using System;
@@ -25,6 +25,17 @@ namespace DM_Lib
         public static string Right(string text, int charCount)
         {
             return text.Substring(0, charCount);
+        }
+        
+        public static string Mid(string text, int charStart, int charCount)
+        {	
+        	string new_text;
+        	try{
+        		new_text = text.Substring(charStart, charCount);
+        		return new_text;
+        	}catch{
+        		return text;
+        	}
         }
 
         public static DateTime ConvertToDateTime(string str)

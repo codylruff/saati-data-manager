@@ -46,11 +46,10 @@ Public Sub PrintObject(spec As Specification)
 End Sub
 
 Public Sub PrintLine(ParamArray var() As Variant)
-    Const Padding = 25
     Dim i As Integer
     Dim s As String
+    Const Padding = 25
     s = vbNullString
-    'If FormId.txtConsole = Nothing Then Exit Sub
     For i = LBound(var) To UBound(var)
          If (i + 1) Mod 2 = 0 Then
              s = s & var(i)

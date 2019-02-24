@@ -44,6 +44,7 @@ namespace DM_Lib
         public DateTime TimeStamp { get; set; }
         public bool IsDefault { get; set; }
         public string MaterialId { get; set; }
+        public string Revision { get; set; }
         public string SpecType
         {
             get
@@ -66,7 +67,8 @@ namespace DM_Lib
         public override string ToString()
         {
             var builder = new StringBuilder();
-     
+     		
+            builder.AppendFormat("Revision : {0}\n", Revision);
             builder.AppendFormat("Dtex : {0}\n", Dtex);
             builder.AppendFormat("Style : {0}\n", Style);
             builder.AppendFormat("Weave Type : {0}\n", WeaveType);

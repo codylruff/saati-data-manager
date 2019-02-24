@@ -15,4 +15,7 @@ Public Const ISPEC_SLITTER      As Long = 3 ' heat slitter spec identifier for i
 Public Const ISPEC_ULTRASONIC   As Long = 4 ' ultra sonic welder spec identifier for ispec factory
 
 ' COM SERVER ERROR DESCRIPTIONS:
-Public Const COM_EMPTY_SPEC     As Long = 1 ' DM.Net could not find a spec matching your query
+Public Const COM_PUSH_FAILURE      As Long = -1
+Public Const COM_PUSH_COMPLETE     As Long = 0
+Public Const COM_GET_FAILURE       As Long = 1 ' DM.Net could not find a spec matching your query
+

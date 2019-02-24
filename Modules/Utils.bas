@@ -16,10 +16,9 @@ Function ConvertToCamelCase(s As String) As String
     With CreateObject("VBScript.RegExp")
         .Pattern = "[^a-zA-Z]"
         .Global = True
-        ConvertToCamelCase = Replace(StrConv(.Replace(s, " "), vbProperCase), " ", "")
+        ConvertToCamelCase = replace(StrConv(.replace(s, " "), vbProperCase), " ", "")
     End With
 End Function
-
 
 Function SplitCamelCase(sString As String, Optional sDelim As String = " ") As String
 ' Converts camel case to sentence case
@@ -30,7 +29,7 @@ On Error GoTo Error_Handler
     With oRegEx
         .Pattern = "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))"
         .Global = True
-        SplitCamelCase = .Replace(sString, "$1" & sDelim)
+        SplitCamelCase = .replace(sString, "$1" & sDelim)
     End With
  
 Error_Handler_Exit:
@@ -129,3 +128,18 @@ Sub Insert(rng As Range, val)
     rng.value = val
 End Sub
 
+Function StringBuilder(ParamArray args() As Variant) As String
+    builder.AppendFormat("Warp Count : {0} ({1} to {2})\n", MeanWarpCount, MinWarpCount, MaxWarpCount)
+    builder.AppendFormat("Fill Count : {0} ({1} to {2})\n", MeanFillCount, MinFillCount, MaxFillCount)
+    builder.AppendFormat("Dry Weight : {0} ({1} to {2})\n", MeanDryWeight, MinDryWeight, MaxDryWeight)
+    builder.AppendFormat("Conditioned Weight : {0} ({1} to {2})\n", _
+        MeanConditionedWeight, MinConditionedWeight, MaxConditionedWeight)
+End Function
+
+Public Function printf(mask As String, ParamArray tokens()) As String
+    Dim i As Long
+    For i = 0 To UBound(tokens)
+        mask = replace$(mask, "{" & i & "}", tokens(i))
+    Next
+    printf = mask
+End Function
