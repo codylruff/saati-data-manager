@@ -28,9 +28,31 @@ Public Property Set OutputHistory(value As Collection): Set OutputHistory_ = val
 Public Property Get OutputHistory() As Collection: Set OutputHistory = OutputHistory_: End Property
 Public Property Set FormId(value As MSForms.UserForm): Set FormId_ = value: End Property
 Public Property Get FormId() As MSForms.UserForm: Set FormId = FormId_: End Property
+Public Property Get CurrentText() As String
+     CurrentText = FormId.txtConsole.Text
+End Property
 '----------
 ' METHODS
 '----------
+Public Sub PrintObjectToSheet(spec As Specification, sht As Worksheet)
+' Print object to specified worksheet starting in cell "A1"
+    Dim key As Variant
+    Dim i As Integer
+    With sht
+        i = 1
+        For Each key In spec.Properties
+            If Not spec.Properties(key) = vbNullString Then
+                .Range("A" & i).value = Utils.SplitCamelCase(CStr(key)) & " : "
+                .Range("B" & i).value = spec.Properties(CStr(key))
+            Else
+                .Range("A" & i).value = Utils.SplitCamelCase(CStr(key))
+                .Range("B" & i).value = "-"
+            End If
+            i = i + 1
+        Next key
+    End With
+End Sub
+
 Public Sub PrintObject(spec As Specification)
 ' Print object to console
     Dim key As Variant

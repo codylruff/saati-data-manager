@@ -11,13 +11,11 @@ Option Explicit
 Public Sub GoToMain()
 'Opens the main menu form.
     Application.Visible = False
-    Utils.UnloadAllForms
     formMainMenu.Show
 End Sub
 
 Public Sub GoToWarpingMenu()
     Application.Visible = False
-    Utils.UnloadAllForms
     formWarpingMainMenu.Show
 End Sub
 
@@ -187,3 +185,26 @@ Public Sub DB2W_tblStyleSpecs()
     DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblStyleSpecs"
 End Sub
 
+Public Sub ConsoleBoxToPdf()
+    Dim ws As Worksheet, initFileName As String, fileName As String
+    On Error GoTo SaveFileError
+    initFileName = PublicDir & "\" & App.current_spec.MaterialId & "_" & App.current_spec.Revision
+    fileName = Application.GetSaveAsFilename(InitialFileName:=initFileName, _
+                                     FileFilter:="PDF Files (*.pdf), *.pdf", _
+                                     Title:="Select Path and Filename to save")
+    Set ws = Sheets("SpecificationForm")
+    App.console.PrintObjectToSheet App.current_spec, ws
+    If fileName <> "False" Then
+        ws.ExportAsFixedFormat _
+            Type:=xlTypePDF, _
+            fileName:=fileName, _
+            Quality:=xlQualityStandard, _
+            IncludeDocProperties:=True, _
+            IgnorePrintAreas:=False, _
+            OpenAfterPublish:=True
+    End If
+    Exit Sub
+    
+SaveFileError:
+    MsgBox "Failed to save file contact admin"
+End Sub

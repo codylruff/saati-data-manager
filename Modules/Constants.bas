@@ -2,7 +2,7 @@ Attribute VB_Name = "Constants"
 Option Explicit
 '@Folder("Modules")
 
-Public Const PublicDir          As String = vbNullString
+Public Const PublicDir          As String = "S:\Data Manager"
 Public Const LocalDir           As String = "W:\App Development\Spec Manager"
 Public Const SQLITE_PATH        As String = "S:\Data Manager\SAATI_Spec_Manager.db3"
 Public Const GitBashExe         As String = "C:\Users\cruff\AppData\Local\Programs\Git\git-bash.exe"
@@ -19,3 +19,6 @@ Public Const COM_PUSH_FAILURE      As Long = -1
 Public Const COM_PUSH_COMPLETE     As Long = 0
 Public Const COM_GET_FAILURE       As Long = 1 ' DM.Net could not find a spec matching your query
 
+' SPEC MANAGER ERROR DESCRIPTIONS:
+Public Const SM_SEARCH_SUCCESS     As Long = 0
+Public Const SM_SEARCH_FAILURE     As Long = 1

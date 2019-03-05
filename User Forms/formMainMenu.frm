@@ -17,10 +17,6 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
-
 Option Explicit
 
 Private Sub cmdConfig_Click()
@@ -38,14 +34,22 @@ End Sub
 
 Private Sub cmdWarping_Click()
 
-    Unload Me
+    Me.Hide
     formWarpingSearch.Show
 
 End Sub
 
 Private Sub CommandButton3_Click()
-    Unload Me
+    Me.Hide
     formSpecConfig.Show
+End Sub
+
+Private Sub UserForm_Initialize()
+    Set App = New App
+End Sub
+
+Private Sub UserForm_Terminate()
+    Set App = Nothing
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)

@@ -13,84 +13,63 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Option Explicit
 
-Public console As ConsoleBox
+
+Option Explicit
 
 Private Sub cmdBack_Click()
     Unload Me
-    GoToMain
+    GuiCommands.GoToMain
+End Sub
+
+Private Sub cmdExportPdf_Click()
+    GuiCommands.ConsoleBoxToPdf
 End Sub
 
 Private Sub cmdSaveChanges_Click()
-    SpecManager.SaveSpecification current_spec
+    Dim RetVal As Long
+    RetVal = SpecManager.SaveSpecification(App.current_spec)
+    If RetVal <> COM_PUSH_COMPLETE Then
+        Debug.Print "COM Server returned: ", RetVal
+        MsgBox "New Specification Was Not Saved. Contact Admin."
+    Else
+        Debug.Print "COM Server returned: ", RetVal
+        MsgBox "New Specification Succesfully Saved."
+    End If
 End Sub
 
 Private Sub cmdSubmit_Click()
-    With spec
+' This executes a set property command
+' TODO: Change the name of this to cmdSetProperty
+    With App.current_spec
         .Properties.Item(Utils.ConvertToCamelCase(cboSelectProperty.value)) = txtPropertyValue
         .Revision = .Properties.Item("Revision")
     End With
-    console.PrintObject current_spec
+    SpecManager.PrintSpecification Me
 End Sub
 
 Private Sub cmdSearch_Click()
-    Dim key As Variant
-    Dim material_id As String
-    If (txtSAPcode.value <> "101") And (Mid(txtSAPcode.value, 5, 3) <> "101") Then
-        material_id = txtSAPcode.value
-    Else
-        material_id = SpecManager.MaterialInputValidation(txtSAPcode.value)
-    End If
-    Set standard = SpecManager.GetStandard(material_id)
-    standard.IsStandard = True
-    Set specs = SpecManager.GetSpec(material_id)
-    For Each key In specs
-        If specs.Item(key).IsLatest = True Then
-            Set current_spec = specs.Item(key)
-        End If
-    Next key
-    If current_spec Is Nothing Then
+    If SpecManager.ExecuteSearch(txtSAPcode.value) = SM_SEARCH_FAILURE Then
         MsgBox "Specification not found!", , "Null Spec Exception"
         Exit Sub
-    Else
-        Set console = Factory.CreateConsoleBox(Me)
-        console.PrintObject current_spec
-        PopulateCboSelectProperty
-        txtPropertyValue.value = vbNullString
     End If
+    SpecManager.PrintSpecification Me
+    PopulateCboSelectProperty
 End Sub
 
 Private Sub PopulateCboSelectProperty()
     Dim key As Variant
     With cboSelectProperty
-        For Each key In current_spec.Properties
+        For Each key In App.current_spec.Properties
           .AddItem Utils.SplitCamelCase(CStr(key))
         Next key
     End With
+    txtPropertyValue.value = vbNullString
 End Sub
 
 Private Sub cmdClear_Click()
 'Clears the form
     ClearForm Me
-End Sub
-
-Private Sub UserForm_Initialize()
-' Constructor
-    Set server = CreateObject("DM_LIB.DmComServer")
-    Set current_spec = New Specification
-    Set standard = New Specification
-    Set specs = CreateObject("Scripting.Dictionary")
-    Set console = New ConsoleBox
-End Sub
-
-Private Sub UserForm_Terminate()
-' Deconstructor
-    Set server = Nothing
-    Set current_spec = Nothing
-    Set standard = Nothing
-    Set specs = Nothing
-    Set console = Nothing
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)

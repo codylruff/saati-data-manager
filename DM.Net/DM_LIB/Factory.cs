@@ -11,9 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace DM_Lib
 {
@@ -61,13 +58,19 @@ namespace DM_Lib
             		spec.MaterialId = record.MaterialId;
             		spec.TimeStamp = record.TimeStamp;
             		return spec;
+            	case "generic":
+            		spec = JsonConvert.DeserializeObject<GenericSpecification>(record.JsonText);
+					spec.Revision = record.Revision;
+            		spec.MaterialId = record.MaterialId;
+            		spec.TimeStamp = record.TimeStamp;
+            		return spec;
 				default:
 					throw new NotImplementedException();
     		}
         }
         
 
-        public static ISpec CreateNewSpec(string material_id, string spec_type)
+        public static ISpec CreateNewSpec(string material_id, string spec_type, string json_text = null)
         {
             switch(spec_type)
             {
@@ -77,8 +80,15 @@ namespace DM_Lib
                 case "style":
             		return CreateDefaultStyleSpecification(material_id);
                 default:
-                    throw new NotImplementedException();
+                    return CreateGenericSpecification(material_id, json_text);
             }
+        }
+        
+        public static ISpec CreateGenericSpecification(string material_id, string json_text)
+        {
+        	var spec = new GenericSpecification(json_text);
+        	spec.MaterialId = material_id;
+        	return spec;
         }
 
         public static StyleSpecification CreateDefaultStyleSpecification(string material_id)

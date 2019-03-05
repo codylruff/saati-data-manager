@@ -21,6 +21,9 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
 Option Explicit
 
 Private Sub cmdClear_Click()
@@ -34,7 +37,11 @@ Private Sub cmdOptions_Click()
 End Sub
 
 Private Sub cmdSearch_Click()
-
+    If SpecManager.ExecuteSearch(txtSAPcode.value) <> SM_SEARCH_FAILURE Then
+        MsgBox "Specification not found!", , "Null Spec Exception"
+        Exit Sub
+    End If
+    SpecManager.PrintSpecification Me
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
