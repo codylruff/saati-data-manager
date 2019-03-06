@@ -26,7 +26,10 @@ End Function
 Public Function PushSpecJson(spec As Specification, Optional is_default As Boolean = False) As Long
 ' Sends a json string object to DM.NET for update
     PushSpecJson = App.server.PushSpecJson( _
-        spec.ObjectToJson, spec.SpecType, spec.MaterialId, is_default, spec.Revision)
+        spec.ObjectToJson, spec.SpecType, spec.MaterialId, _
+        IIf(is_default, spec.Revision + 1, spec.Revision + 0.1), _
+        is_default)
+        
 End Function
 
 Private Function DeserializeComPackage(json_text As String)

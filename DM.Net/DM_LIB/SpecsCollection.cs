@@ -62,5 +62,15 @@ namespace DM_Lib
             // Return the array object's IEnumerator.
             return _specsCollection.GetEnumerator();
         }
+        
+        public int Count()
+        {
+        	return _specsCollection.Count();
+        }
+        
+        public void Reset()
+        {
+        	_specsCollection = new List<ISpec>();
+        }
     }
 }

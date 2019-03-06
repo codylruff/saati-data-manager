@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="DmComServer.cs" />
     <Compile Include="DataAccess.cs" />
+    <Compile Include="FabricSpecification.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="GenericSpecification.cs" />
     <Compile Include="ISpec.cs" />

@@ -58,6 +58,12 @@ namespace DM_Lib
             		spec.MaterialId = record.MaterialId;
             		spec.TimeStamp = record.TimeStamp;
             		return spec;
+            	case "fabric":
+            		spec = JsonConvert.DeserializeObject<FabricSpecification>(record.JsonText);
+					spec.Revision = record.Revision;
+            		spec.MaterialId = record.MaterialId;
+            		spec.TimeStamp = record.TimeStamp;
+            		return spec;
             	case "generic":
             		spec = JsonConvert.DeserializeObject<GenericSpecification>(record.JsonText);
 					spec.Revision = record.Revision;
@@ -79,6 +85,9 @@ namespace DM_Lib
             			material_id, CreateStyleFromNumber(Utils.Mid(material_id, 5, 3)));
                 case "style":
             		return CreateDefaultStyleSpecification(material_id);
+            	case "fabric":
+            		return CreateDefaultFabricSpecification(
+            			material_id, CreateStyleFromNumber(Utils.Mid(material_id, 5, 3)));
                 default:
                     return CreateGenericSpecification(material_id, json_text);
             }
@@ -101,6 +110,14 @@ namespace DM_Lib
         	return CreateSpecFromRecord(DataAccess.SelectSingleRecord("standard_specifications", 
         	                                                          "Material_Id", material_id));
         }
+        
+        public static FabricSpecification CreateDefaultFabricSpecification(string material_id, ISpec style_spec)
+        {
+        	StyleSpecification style = (StyleSpecification)style_spec;
+        	var spec = JsonConvert.DeserializeObject<FabricSpecification>(JsonConvert.SerializeObject(style));
+        	spec.MaterialId = material_id;
+        	return spec;
+        }
 
         public static WarpingSpecification CreateDefaultWarpingSpecification(
                 string material_id, ISpec style_spec)
@@ -119,21 +136,28 @@ namespace DM_Lib
         public static List<SpecRecord> CreateListFromReader(SQLiteDataReader reader)
         {
             List<SpecRecord> records = new List<SpecRecord>();
-            Console.WriteLine(records.Count);
-            List<string> fields = new List<string>();
+            List<string> fields;
             while (reader.Read())
             {	
+            	fields = Factory.CreateStringList();
                 fields.Add((string)reader["Json_Text"]);
                 fields.Add((string)reader["Spec_Type"]);
                 fields.Add((string)reader["Material_Id"]);
                 fields.Add(reader.GetInt32(0).ToString());
                 fields.Add((string)reader["Revision"]);
+                Console.WriteLine((string)reader["Revision"]);
                 fields.Add((string)reader["Time_Stamp"]);
                 records.Add(Factory.CreateSpecRecordFromList(fields));
                 Console.WriteLine(records.Count);
+                fields = null;
             }
             
             return records;
+        }
+        
+        public static List<string> CreateStringList()
+        {
+        	return new List<string>();
         }
         
         public static void CreateSqliteDatabase(string db_name)

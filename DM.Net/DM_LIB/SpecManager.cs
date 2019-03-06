@@ -27,23 +27,30 @@ namespace DM_Lib
             PopulateMaterialsList();
         }
 
-        public void CreateNewMaterial(string material_id, string spec_type)
+        public ISpec CreateNewMaterial(string material_id, string spec_type)
         {
             var spec = Factory.CreateNewSpec(material_id, spec_type);
-            
+            Specs.Add(spec);
+            return spec;
         }
 
         public void PrintSpecification()
         {
             Console.WriteLine("Standard Specification : \n{0}", Specs.DefaultSpec.ToString());
             Console.WriteLine("Recent Specifications : \n");
+            int i = 1;
             foreach(ISpec spec in Specs)
             {
             	if(spec != Specs.DefaultSpec){
-                Console.WriteLine("{0} \n{1}", spec.TimeStamp.ToString(), spec.ToString());
-                Console.WriteLine(" - Next Spec - ");
-                Console.ReadLine();
+            		
+                	Console.WriteLine("{0} \n{1}", spec.TimeStamp.ToString(), spec.ToString());
+                	
+                	if(i != Specs.Count()){
+                		Console.WriteLine(" - Next Spec - ");
+		                Console.ReadLine();
+                	}   
             	}
+            	i++;
             }
         }
         
@@ -52,7 +59,6 @@ namespace DM_Lib
         	
         	if((material_id != "101") && (Utils.Mid(material_id, 5, 3) != "101"))
         	{
-        		Console.WriteLine("Debug");
         		Specs.DefaultSpec = GetDefaultSpec(material_id);
         	}else{
         		Console.WriteLine(material_id);
@@ -65,11 +71,14 @@ namespace DM_Lib
         
         public void LoadSpecification(string material_id)
         {
-            
+        	ISpec spec;
             List<SpecRecord> records = DataAccess.GetSpecRecords(material_id, "modified_specifications");
+            Console.WriteLine(records.Count());
             foreach (var record in records)
             {
-                Specs.Add(Factory.CreateSpecFromRecord(record));
+                spec = Factory.CreateSpecFromRecord(record);
+                Console.WriteLine(spec.Revision);
+                Specs.Add(spec);
             }
 
         }
@@ -100,6 +109,7 @@ namespace DM_Lib
             MaterialsList = new List<string>();
             MaterialsList.Add("warping");
             MaterialsList.Add("style");
+            MaterialsList.Add("fabric");
         }
         
         private string Handle101EdgeCase(string material_id)

@@ -13,9 +13,21 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 Option Explicit
+
+Private material_id As String
+
+Private Sub UserForm_Initialize()
+    material_id = InputBox("Enter a Material :", "Material Search")
+    If SpecManager.ExecuteSearch(material_id) = SM_SEARCH_FAILURE Then
+        MsgBox "Specification not found!", , "Null Spec Exception"
+        Exit Sub
+    End If
+    SpecManager.PrintSpecification Me
+    PopulateCboSelectProperty
+    PopulateCboSelectRevision
+    cboSelectRevision.value = App.current_spec.Revision
+End Sub
 
 Private Sub cmdBack_Click()
     Unload Me
@@ -49,12 +61,17 @@ Private Sub cmdSubmit_Click()
 End Sub
 
 Private Sub cmdSearch_Click()
-    If SpecManager.ExecuteSearch(txtSAPcode.value) = SM_SEARCH_FAILURE Then
-        MsgBox "Specification not found!", , "Null Spec Exception"
-        Exit Sub
-    End If
+    Set App.current_spec = App.specs.Item(cboSelectRevision.value)
     SpecManager.PrintSpecification Me
-    PopulateCboSelectProperty
+End Sub
+
+Private Sub PopulateCboSelectRevision()
+    Dim rev As Variant
+    With cboSelectRevision
+        For Each rev In App.specs
+            .AddItem rev
+        Next rev
+    End With
 End Sub
 
 Private Sub PopulateCboSelectProperty()

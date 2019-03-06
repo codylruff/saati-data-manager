@@ -43,7 +43,7 @@ namespace DM_Lib
         public bool IsDefault { get; set; }
         public string MaterialId { get; set; }
         public string Revision { get; set; }
-        public string SpecType
+        public virtual string SpecType
         {
             get
             {
@@ -53,7 +53,12 @@ namespace DM_Lib
         
         [JsonIgnore]
         public ISpec ParentSpec { get; set; }
-
+		
+        public StyleSpecification()
+        {
+        	// Default constructor
+        }
+        
         public StyleSpecification(string style)
         {
             // There is an element type of specification

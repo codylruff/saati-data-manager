@@ -18,17 +18,15 @@ namespace DM_CLI
     class Program
     {
         public static SpecManager manager = new SpecManager();
-        static void Main()
+        static void Main(string[] args)
         {
             // Parse args
             try
             {
             	Console.WriteLine("|--------------------------------------|");
-            	Console.WriteLine("|         SAATI Spec Manager           |");
-            	Console.WriteLine("|--------------------------------------|");
-            	Console.Write("Enter a material ID :");
-            	string input = Console.ReadLine();
-                StartViewer(input);       
+        		Console.WriteLine("|         SAATI Spec Manager           |");
+        		Console.WriteLine("|--------------------------------------|");
+            	MaterialInputDialog();
             }
             catch (Exception ex)
             {
@@ -37,6 +35,13 @@ namespace DM_CLI
             }
             
         }
+        
+        public static void MaterialInputDialog()
+        {
+        	Console.Write("Enter a material ID :");
+        	string input = Console.ReadLine();
+            StartViewer(input);    
+        }
 
         public static void StartViewer(string material_id)
         {
@@ -44,18 +49,41 @@ namespace DM_CLI
             Console.WriteLine("---------------------------------------");
             Console.WriteLine("Specifications for {0} :", material_id);
             Console.WriteLine("---------------------------------------");
-            int retVal = manager.LoadStandard(material_id);
-            if ( retVal == -1) NewMaterialDialogue(material_id);
-            manager.LoadSpecification(retVal == 0 ? material_id : manager.CorrectId);
-            Console.WriteLine("---------------------------------------");
-            manager.PrintSpecification();
-            Console.WriteLine("---------------------------------------");
-            Console.WriteLine("Press enter to exit . . .");
-            Console.ReadLine();
+            try
+            {
+            	
+            	int retVal = manager.LoadStandard(material_id);
+            	Console.WriteLine(retVal);
+            	if ( retVal == -1) NewMaterialDialogue(material_id);
+            	manager.LoadSpecification(retVal == 0 ? material_id : manager.CorrectId);
+            	
+            }catch
+            {
+            	NewMaterialDialogue(material_id);            
+            }
+            finally
+            {
+            	
+            	Console.WriteLine("---------------------------------------");
+	            manager.PrintSpecification();
+	            Console.WriteLine("---------------------------------------");
+	            
+	            Console.WriteLine("Would you like to see another specification? (y/n)");
+	            if(Console.ReadLine().ToString().ToLower() == "y")
+	            {
+	            	manager.Specs.Reset();
+	            	MaterialInputDialog();
+	            }else
+	            {
+	            	Console.WriteLine("Press enter to exit . . .");
+	            	Console.ReadLine();
+	            }
+            }
         }
 
         public static void NewMaterialDialogue(string material_id)
         {
+        	ISpec spec;
             Console.WriteLine("Material : {0}, Does not exist. Would you like to create it? (y/n)", material_id);
 
             if (Console.ReadLine().ToLower() == "y")
@@ -64,7 +92,18 @@ namespace DM_CLI
                 PrintMaterialTypes();
                 Console.Write("Material Type : ");
                 string spec_type = Console.ReadLine().ToLower();
-                manager.CreateNewMaterial(material_id, spec_type);
+                Console.WriteLine("---------------------------------------");
+                spec = manager.CreateNewMaterial(material_id, spec_type);
+                Console.WriteLine(spec.ToString());
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("Would you like to safe this specification? (y/n)");
+                
+                if (Console.ReadLine().ToLower() == "y")
+                {
+                	spec.ToString();
+                	manager.CommitSpecificationRecord(Factory.CreateRecordFromSpec(spec), "standard_specifications");
+                	Console.WriteLine("Specification has been saved.");
+                }
             }
             else
             {
