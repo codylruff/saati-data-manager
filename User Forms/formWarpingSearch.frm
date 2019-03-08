@@ -14,6 +14,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 Option Explicit
 
 Private Sub UserForm_Initialize()
@@ -30,6 +31,10 @@ Private Sub PopulateCboSelectRevision()
             .AddItem rev
         Next rev
     End With
+End Sub
+
+Private Sub cmdSubmit_Click()
+    App.Warp
 End Sub
 
 Private Sub cmdClear_Click()

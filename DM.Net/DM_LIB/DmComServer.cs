@@ -54,6 +54,18 @@ namespace DM_Lib
 			}
 			return 0;
 		}
+		
+		public long PushSpecTemplate(string json_text, string spec_type, string revision)
+		{
+			try{
+				var template = new SpecTemplate(json_text, spec_type, revision);
+				
+			}
+			catch{
+				return -1;
+			}
+			return 0;
+		}
 	}
 
 	[ComVisible(false)]

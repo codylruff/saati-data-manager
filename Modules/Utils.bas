@@ -23,8 +23,7 @@ End Function
 Function SplitCamelCase(sString As String, Optional sDelim As String = " ") As String
 ' Converts camel case to sentence case
 On Error GoTo Error_Handler
-    Dim oRegEx          As Object
- 
+    Dim oRegEx As Object
     Set oRegEx = CreateObject("vbscript.regexp")
     With oRegEx
         .Pattern = "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))"

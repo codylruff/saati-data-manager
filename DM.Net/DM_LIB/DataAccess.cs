@@ -49,6 +49,11 @@ namespace DM_Lib
                 throw new System.ArgumentException("Must pass either a SpecRecord OR ISpec object");
             }
         }
+        
+        public static void PushSpecTemplate(SpecTemplate template)
+        {
+        	
+        }
 
         public static SQLiteDataReader ExecuteSqlSelect(string sql)
         {

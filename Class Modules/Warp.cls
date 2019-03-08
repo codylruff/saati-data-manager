@@ -27,7 +27,6 @@ Private Specification_          As Specification
 Private NumberOfBobbins_        As Double
 Private PackageWeightlbs_       As Double
 Private WarpLengthYds_          As Double
-
 '----------------
 ' AUTO-PROPERTIES
 '----------------

@@ -82,6 +82,11 @@ namespace DM_Lib
             }
 
         }
+        
+        public void CommitTemplate(SpecTemplate template)
+        {
+        	DataAccess.PushSpecTemplate(template);
+        }
 
         public void CommitSpecificationRecord(SpecRecord record, string table_name)
         {

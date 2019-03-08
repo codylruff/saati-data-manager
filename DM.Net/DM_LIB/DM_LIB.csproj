@@ -70,6 +70,7 @@
     <Compile Include="SpecManager.cs" />
     <Compile Include="SpecRecord.cs" />
     <Compile Include="SpecsCollection.cs" />
+    <Compile Include="SpecTemplate.cs" />
     <Compile Include="StyleSpecification.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WarpingSpecification.cs" />

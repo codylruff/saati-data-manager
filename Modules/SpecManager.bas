@@ -72,6 +72,10 @@ Function SaveStandardSpecification(spec As Specification) As Long
     SaveStandardSpecification = ComService.PushSpecJson(spec, True)
 End Function
 
+Function SaveSpecTemplate(template As SpecTemplate) As Long
+    SaveSpecTemplate = ComService.PushSpecTemplate(template)
+End Function
+
 Private Function MaterialInputValidation(material_id As String)
 ' Ensures that the material id input by the user is parseable.
 ' TODO: This function is awful need to refactor unsure how due to the

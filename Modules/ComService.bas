@@ -22,6 +22,16 @@ NullSpecException:
     GetSpecJson = vbNullString
 End Function
 
+Private Function GetSpecTemplate(spec_type As String) As String
+' Calls to the COM server for an object representing a custom spec template.
+    On Error GoTo NullTemplateException
+    GetSpecTemplate = App.server.GetSpecTemplate(spec_type)
+    Exit Function
+
+NullTemplateException:
+    GetSpecTemplate = vbNullString
+End Function
+
 Public Function PushSpecJson(spec As Specification, Optional is_default As Boolean = False) As Long
 ' Sends a json string object to DM.NET for update
     PushSpecJson = App.server.PushSpecJson( _
@@ -31,7 +41,9 @@ Public Function PushSpecJson(spec As Specification, Optional is_default As Boole
         
 End Function
 
-Private Function DeserializeComPackage(json_text As String)
-' Takes the json data transmitted from the com App.server and un-packs it
-' return ???
+Private Function PushSpecTemplate(template As SpecTemplate) As Long
+' Sends a json string representing a specification template to be stored in the database
+    PushSpecTemplate = App.server.PushSpecTemplate( _
+        template.PropertiesJson, template.SpecType, template.Revision + 1)
+
 End Function
