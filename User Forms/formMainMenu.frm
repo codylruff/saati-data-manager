@@ -13,34 +13,20 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
 Option Explicit
 
 Private Sub cmdConfig_Click()
-    
     Unload Me
     ConfigControl
-    
 End Sub
 
 Private Sub cmdExit_Click()
-
     ExitApp
-
 End Sub
 
 Private Sub cmdWarping_Click()
-
     Me.Hide
     formWarpingSearch.Show
-
 End Sub
 
 Private Sub CommandButton3_Click()
@@ -57,9 +43,7 @@ Private Sub UserForm_Terminate()
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-    
     If CloseMode = 0 Then
         Cancel = True
     End If
-
 End Sub

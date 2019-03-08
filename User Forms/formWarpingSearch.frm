@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} formWarpingSearch 
    Caption         =   "Specification Search"
-   ClientHeight    =   9270
+   ClientHeight    =   10245
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9390
@@ -14,21 +14,23 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Option Explicit
+
+Private Sub UserForm_Initialize()
+    SpecManager.MaterialInput
+    SpecManager.PrintSpecification Me
+    PopulateCboSelectRevision
+    cboSelectRevision.value = App.current_spec.Revision
+End Sub
+
+Private Sub PopulateCboSelectRevision()
+    Dim rev As Variant
+    With cboSelectRevision
+        For Each rev In App.specs
+            .AddItem rev
+        Next rev
+    End With
+End Sub
 
 Private Sub cmdClear_Click()
 'Clears the form
@@ -40,11 +42,8 @@ Private Sub cmdOptions_Click()
     GoToMain
 End Sub
 
-Private Sub cmdSearch_Click()
-    If SpecManager.ExecuteSearch(txtSAPcode.value) <> SM_SEARCH_FAILURE Then
-        MsgBox "Specification not found!", , "Null Spec Exception"
-        Exit Sub
-    End If
+Private Sub cmdRefresh_Click()
+    Set App.current_spec = App.specs.Item(cboSelectRevision.value)
     SpecManager.PrintSpecification Me
 End Sub
 

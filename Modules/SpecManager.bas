@@ -2,13 +2,23 @@ Attribute VB_Name = "SpecManager"
 '// This object allows information to persist throughout the Application lifecycle
 Public App As App
 
+Sub MaterialInput()
+' Takes user input for material search
+    If SpecManager.ExecuteSearch(InputBox("Enter a Material :", _
+                            "Material Search")) = SM_SEARCH_FAILURE Then
+        MsgBox "Specification not found!", , "Null Spec Exception"
+        Exit Sub
+    End If
+End Sub
+
+
 Function ExecuteSearch(material_id As String) As Long
 ' Manages the search procedure
     Set App.standard = SpecManager.GetStandard(material_id)
     Set App.specs = SpecManager.GetSpec(material_id)
     Set App.current_spec = GetLatestSpec(App.specs)
     ' Return 0/1 on success/failure
-    InitializeSearch = IIf(App.current_spec Is Nothing, SM_SEARCH_SUCCESS, SM_SEARCH_FAILURE)
+    ExecuteSearch = IIf(App.current_spec Is Nothing, SM_SEARCH_FAILURE, SM_SEARCH_SUCCESS)
 End Function
 
 Function GetStandard(material_id As String) As Specification
@@ -26,7 +36,8 @@ Function GetSpec(material_id As String) As Object
     Dim rev As String
     Dim key As Variant
     
-    Set json_dict = JsonConverter.ParseJson(ComService.GetSpecJson(MaterialInputValidation(material_id)))
+    Set json_dict = JsonConverter.ParseJson(ComService.GetSpecJson( _
+                    MaterialInputValidation(material_id)))
     Set specs_dict = New Dictionary
     
     If json_dict Is Nothing Then
@@ -53,8 +64,8 @@ Sub PrintSpecification(frm As MSForms.UserForm)
 End Sub
 
 Function SaveSpecification(spec As Specification) As Long
-    SaveSpecification = IIf(ComService.PushSpecJson(spec, False) = _
-            COM_PUSH_COMPLETE, COM_PUSH_COMPLETE, COM_PUSH_FAILURE)
+    SaveSpecification = IIf(ComService.PushSpecJson(spec, False) = COM_PUSH_COMPLETE, _
+                            COM_PUSH_COMPLETE, COM_PUSH_FAILURE)
 End Function
 
 Function SaveStandardSpecification(spec As Specification) As Long

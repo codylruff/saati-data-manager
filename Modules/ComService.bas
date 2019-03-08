@@ -2,7 +2,7 @@ Attribute VB_Name = "ComService"
 Option Explicit
 
 Public Function GetStandardJson(material_id As String) As String
-    
+' Calls to the COM Server for a specification standard in json ie rev X.0
     On Error GoTo NullSpecException
     GetStandardJson = App.server.GetStandardJson(material_id)
     Exit Function
@@ -14,7 +14,6 @@ End Function
 Public Function GetSpecJson(material_id As String) As String
 ' Calls to the DM.NET COM App.server for an object returned as a json string
 ' This json string will need to be unpacked to build the spec object
-    Set App.server = CreateObject("DM_LIB.DmComServer")
     On Error GoTo NullSpecException
     GetSpecJson = App.server.GetSpecJson(material_id)
     Exit Function

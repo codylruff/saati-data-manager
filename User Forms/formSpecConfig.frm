@@ -15,14 +15,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private material_id As String
-
 Private Sub UserForm_Initialize()
-    material_id = InputBox("Enter a Material :", "Material Search")
-    If SpecManager.ExecuteSearch(material_id) = SM_SEARCH_FAILURE Then
-        MsgBox "Specification not found!", , "Null Spec Exception"
-        Exit Sub
-    End If
+    SpecManager.MaterialInput
     SpecManager.PrintSpecification Me
     PopulateCboSelectProperty
     PopulateCboSelectRevision
@@ -39,13 +33,12 @@ Private Sub cmdExportPdf_Click()
 End Sub
 
 Private Sub cmdSaveChanges_Click()
-    Dim RetVal As Long
-    RetVal = SpecManager.SaveSpecification(App.current_spec)
-    If RetVal <> COM_PUSH_COMPLETE Then
-        Debug.Print "COM Server returned: ", RetVal
+' Calls method to save a new specification incremented the revision by +0.1)
+    If SpecManager.SaveSpecification(App.current_spec) <> COM_PUSH_COMPLETE Then
+        Debug.Print "COM Server returned: ", COM_PUSH_FAILURE
         MsgBox "New Specification Was Not Saved. Contact Admin."
     Else
-        Debug.Print "COM Server returned: ", RetVal
+        Debug.Print "COM Server returned: ", COM_PUSH_COMPLETE
         MsgBox "New Specification Succesfully Saved."
     End If
 End Sub
@@ -54,7 +47,8 @@ Private Sub cmdSubmit_Click()
 ' This executes a set property command
 ' TODO: Change the name of this to cmdSetProperty
     With App.current_spec
-        .Properties.Item(Utils.ConvertToCamelCase(cboSelectProperty.value)) = txtPropertyValue
+        .Properties.Item(Utils.ConvertToCamelCase( _
+                cboSelectProperty.value)) = txtPropertyValue
         .Revision = .Properties.Item("Revision")
     End With
     SpecManager.PrintSpecification Me
@@ -75,11 +69,11 @@ Private Sub PopulateCboSelectRevision()
 End Sub
 
 Private Sub PopulateCboSelectProperty()
-    Dim key As Variant
+    Dim prop As Variant
     With cboSelectProperty
-        For Each key In App.current_spec.Properties
-          .AddItem Utils.SplitCamelCase(CStr(key))
-        Next key
+        For Each prop In App.current_spec.Properties
+          .AddItem Utils.SplitCamelCase(CStr(prop))
+        Next prop
     End With
     txtPropertyValue.value = vbNullString
 End Sub
