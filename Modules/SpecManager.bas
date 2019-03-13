@@ -23,12 +23,12 @@ Function MaterialInput() As String
                  Exit Function
             Else
                 ret_val = SpecManager.ExecuteSearch(inpt)
-                If ret_val Then
+                If ret_val = SM_SEARCH_FAILURE Then
                    MsgBox "Specification not found!", , "Null Spec Exception"
                 End If
             End If
         Loop
-        
+        MaterialInput = inpt
 End Function
 
 Function ExecuteSearch(material_id As String) As Long
@@ -54,8 +54,9 @@ Function GetStandard(material_id As String) As Specification
         Set GetStandard = Factory.CreateSpecFromJson( _
             spec:=spec_, _
             json_text:=json)
+    Else
+        Set GetStandard = Nothing
     End If
-    Set GetStandard = Nothing
 End Function
 
 Function GetSpec(material_id As String) As Object
