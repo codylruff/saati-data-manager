@@ -37,18 +37,18 @@ End Property
 Public Sub PrintObjectToSheet(spec As Specification, sht As Worksheet)
 ' Print object to specified worksheet starting in cell "A1"
     Dim key As Variant
-    Dim i As Integer
+    Dim I As Integer
     With sht
-        i = 1
+        I = 1
         For Each key In spec.Properties
             If Not spec.Properties(key) = vbNullString Then
-                .Range("A" & i).value = Utils.SplitCamelCase(CStr(key)) & " : "
-                .Range("B" & i).value = spec.Properties(CStr(key))
+                .Range("A" & I).value = Utils.SplitCamelCase(CStr(key)) & " : "
+                .Range("B" & I).value = spec.Properties(CStr(key))
             Else
-                .Range("A" & i).value = Utils.SplitCamelCase(CStr(key))
-                .Range("B" & i).value = "-"
+                .Range("A" & I).value = Utils.SplitCamelCase(CStr(key))
+                .Range("B" & I).value = "-"
             End If
-            i = i + 1
+            I = I + 1
         Next key
     End With
 End Sub
@@ -68,19 +68,19 @@ Public Sub PrintObject(spec As Specification)
 End Sub
 
 Public Sub PrintLine(ParamArray var() As Variant)
-    Dim i As Integer
+    Dim I As Integer
     Dim s As String
     Const Padding = 25
     s = vbNullString
-    For i = LBound(var) To UBound(var)
-         If (i + 1) Mod 2 = 0 Then
-             s = s & var(i)
+    For I = LBound(var) To UBound(var)
+         If (I + 1) Mod 2 = 0 Then
+             s = s & var(I)
          Else
-             s = s & Left$(var(i) & ":" & Space(Padding), Padding)
+             s = s & Left$(var(I) & ":" & Space(Padding), Padding)
          End If
     Next
     OutputHistory.Add s
-    FormId.txtConsole.Text = FormId.txtConsole.Text & s & vbNewLine
+    Me.FormId.txtConsole.Text = FormId.txtConsole.Text & s & vbNewLine
 End Sub
 
 Private Sub Class_Initialize()

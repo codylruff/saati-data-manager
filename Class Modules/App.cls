@@ -15,7 +15,7 @@ Public current_spec As Specification
 Public specs As Object
 Public console As ConsoleBox
 Public current_template As SpecTemplate
-Public Warp As Warp
+Public warp_order As Warp
 
 Private Sub Class_Initialize()
     Set server = CreateObject("DM_LIB.DmComServer")
@@ -24,7 +24,7 @@ Private Sub Class_Initialize()
     Set specs = CreateObject("Scripting.Dictionary")
     Set console = New ConsoleBox
     Set current_template = New SpecTemplate
-    Set Warp = New Warp
+    Set warp_order = New Warp
 End Sub
 
 Private Sub Class_Terminate()
@@ -34,7 +34,7 @@ Private Sub Class_Terminate()
     Set specs = Nothing
     Set console = Nothing
     Set current_template = Nothing
-    Set Warp = Nothing
+    Set warp_order = Nothing
 End Sub
 
 

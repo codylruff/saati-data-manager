@@ -18,10 +18,16 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub UserForm_Initialize()
-    SpecManager.MaterialInput
-    SpecManager.PrintSpecification Me
-    PopulateCboSelectRevision
-    cboSelectRevision.value = App.current_spec.Revision
+    Dim ret_val As String
+    Set App = New App
+    ret_val = SpecManager.MaterialInput
+    If ret_val = vbNullString Then
+        GuiCommands.UnloadAllForms
+    Else
+        SpecManager.PrintSpecification Me
+        PopulateCboSelectRevision
+        cboSelectRevision.value = App.current_spec.Revision
+    End If
 End Sub
 
 Private Sub PopulateCboSelectRevision()
@@ -34,7 +40,7 @@ Private Sub PopulateCboSelectRevision()
 End Sub
 
 Private Sub cmdSubmit_Click()
-    App.Warp
+    'App.warp_order
 End Sub
 
 Private Sub cmdClear_Click()
@@ -58,4 +64,6 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     End If
 End Sub
 
-
+Private Sub UserForm_Terminate()
+    Set App = Nothing
+End Sub

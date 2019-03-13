@@ -2,32 +2,60 @@ Attribute VB_Name = "SpecManager"
 '// This object allows information to persist throughout the Application lifecycle
 Public App As App
 
-Sub MaterialInput()
-' Takes user input for material search
-    If SpecManager.ExecuteSearch(InputBox("Enter a Material :", _
-                            "Material Search")) = SM_SEARCH_FAILURE Then
-        MsgBox "Specification not found!", , "Null Spec Exception"
-        Exit Sub
+Function TemplateInput() As String
+    Dim template_name As String
+    template_name = InputBox("Enter a template name :", "Custom Template Name")
+    If template_name = vbNullString Then
+        MsgBox "Must Enter a template name."
     End If
-End Sub
+    TemplateInput = template_name
+End Function
 
+Function MaterialInput() As String
+' Takes user input for material search
+    Dim ret_val As Long
+    Dim inpt As String
+    ret_val = SM_SEARCH_FAILURE
+        Do While ret_val = SM_SEARCH_FAILURE
+            inpt = InputBox("Enter a Material :", "Material Search", "Search Materials")
+            If inpt = vbNullString Then
+                 MaterialInput = inpt
+                 Exit Function
+            Else
+                ret_val = SpecManager.ExecuteSearch(inpt)
+                If ret_val Then
+                   MsgBox "Specification not found!", , "Null Spec Exception"
+                End If
+            End If
+        Loop
+        
+End Function
 
 Function ExecuteSearch(material_id As String) As Long
 ' Manages the search procedure
     Set App.standard = SpecManager.GetStandard(material_id)
-    Set App.specs = SpecManager.GetSpec(material_id)
-    Set App.current_spec = GetLatestSpec(App.specs)
-    ' Return 0/1 on success/failure
-    ExecuteSearch = IIf(App.current_spec Is Nothing, SM_SEARCH_FAILURE, SM_SEARCH_SUCCESS)
+    If App.standard Is Nothing Then
+        ExecuteSearch = SM_SEARCH_FAILURE
+    Else
+        Set App.specs = SpecManager.GetSpec(material_id)
+        Set App.current_spec = GetLatestSpec(App.specs)
+        ' Return 0/1 on success/failure
+        ExecuteSearch = SM_SEARCH_SUCCESS
+    End If
 End Function
 
 Function GetStandard(material_id As String) As Specification
     Dim spec_ As Specification
+    Dim json As String
     Set spec_ = Factory.CreateSpecification()
     spec_.IsStandard = True
-    Set GetStandard = Factory.CreateSpecFromJson( _
-        spec:=spec_, _
-        json_text:=ComService.GetStandardJson(MaterialInputValidation(material_id)))
+    json = ComService.GetStandardJson(MaterialInputValidation(material_id))
+    If json <> vbNullString Then
+        Set GetStandard = Factory.CreateSpecFromJson( _
+            spec:=spec_, _
+            json_text:=json)
+    End If
+    Set GetStandard = Nothing
 End Function
 
 Function GetSpec(material_id As String) As Object

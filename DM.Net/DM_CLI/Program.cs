@@ -26,7 +26,12 @@ namespace DM_CLI
             	Console.WriteLine("|--------------------------------------|");
         		Console.WriteLine("|         SAATI Spec Manager           |");
         		Console.WriteLine("|--------------------------------------|");
-            	MaterialInputDialog();
+        		Console.WriteLine("Enter --spec or --template");
+        		if(Console.ReadLine() == "--spec")
+            		MaterialInputDialog();
+        		else
+        			TemplateInputDialog();
+        		
             }
             catch (Exception ex)
             {
@@ -36,11 +41,36 @@ namespace DM_CLI
             
         }
         
+        public static void TemplateInputDialog()
+        {
+        	Console.WriteLine("Enter a template name :");
+        	string input = Console.ReadLine();
+        	StartTemplateCreator(input);
+        }
+        
         public static void MaterialInputDialog()
         {
         	Console.Write("Enter a material ID :");
         	string input = Console.ReadLine();
             StartViewer(input);    
+        }
+        
+        public static void StartTemplateCreator(string template_name)
+        {
+        	// Create a template
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine("New Template : " + template_name );
+            Console.WriteLine("---------------------------------------");
+            try {
+            	const string test_json = "{TestProp1:'',TestProp2:'',TestProp3:''}";
+            	var template = new SpecTemplate(test_json, template_name, "1");
+            	Console.WriteLine(template.JsonText);
+            	manager.CommitTemplate(template);
+            	
+            } catch (Exception ex) {
+            	
+            	throw ex;
+            }
         }
 
         public static void StartViewer(string material_id)

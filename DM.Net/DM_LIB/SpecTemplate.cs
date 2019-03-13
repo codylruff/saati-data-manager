@@ -18,6 +18,7 @@ namespace DM_Lib
 		public string JsonText { get; set; }
 		public string SpecType { get; set; }
 		public string Revision { get; set; }
+		public string MaterialId {get{return "";}}
 		
 		public SpecTemplate(string json_text, string spec_type, string revision)
 		{

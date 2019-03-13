@@ -16,15 +16,17 @@ using System.Globalization;
 
 namespace DM_Lib
 {
-    public class SpecRecord
+	public class SpecRecord : IRecord
     {
-        public string JsonText { get; private set; }
-        public string SpecType { get; private set; }
-        public DateTime TimeStamp { get; private set; }
-        public string TimeStampString { get; private set; }
-        public string MaterialId { get; private set; }
-        public int Id { get; private set; }
+        public string JsonText { get; set; }
+        public string SpecType { get; set; }
+        public string TimeStamp { get; set; }
+        public string TimeStampString { get; set; }
+        public string MaterialId { get; set; }
+        public int Id { get; set; }
         public string Revision { get; set; }
+        public List<string> ColumnNames { get; set; }
+        public List<dynamic> Data { get; set; }
 
         public SpecRecord()
         {
@@ -57,19 +59,34 @@ namespace DM_Lib
         {
             JsonText = json_text;
             SpecType = spec.SpecType;
-            TimeStamp = DateTime.Now;
+            TimeStamp = DateTime.Now.ToString();
             MaterialId = spec.MaterialId;
             Revision = spec.Revision;
+        }
+        
+        public SpecRecord(SpecTemplate template, string json_text)
+        {
+            JsonText = json_text;
+            SpecType = template.SpecType;
+            TimeStamp = DateTime.Now.ToString();
+            MaterialId = template.MaterialId;
+            Revision = template.Revision;
         }
         
         public SpecRecord(string json_text, string spec_type, string material_id, string revision)
         {
         	JsonText = json_text;
         	SpecType = spec_type;
-            TimeStamp = DateTime.Now;
+        	TimeStamp = DateTime.Now.ToString();
             TimeStampString = TimeStamp.ToString();
             MaterialId = material_id;
             Revision = revision;
+        }
+
+        public SpecRecord(List<string> columns, List<dynamic> data) 
+        {
+            this.ColumnNames = columns;
+            this.Data = data;
         }
     }
 }

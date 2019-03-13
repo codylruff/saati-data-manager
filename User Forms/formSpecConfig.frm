@@ -14,14 +14,22 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 Option Explicit
 
 Private Sub UserForm_Initialize()
-    SpecManager.MaterialInput
-    SpecManager.PrintSpecification Me
-    PopulateCboSelectProperty
-    PopulateCboSelectRevision
-    cboSelectRevision.value = App.current_spec.Revision
+    Dim ret_val As String
+    Set App = New App
+    ret_val = SpecManager.MaterialInput
+    If ret_val = vbNullString Then
+        GuiCommands.UnloadAllForms
+    Else
+        SpecManager.PrintSpecification Me
+        PopulateCboSelectProperty
+        PopulateCboSelectRevision
+        cboSelectRevision.value = App.current_spec.Revision
+    End If
 End Sub
 
 Private Sub cmdBack_Click()
@@ -91,4 +99,6 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     End If
 End Sub
 
-
+Private Sub UserForm_Terminate()
+    Set App = Nothing
+End Sub

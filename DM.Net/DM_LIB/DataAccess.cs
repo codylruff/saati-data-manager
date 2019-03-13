@@ -52,7 +52,8 @@ namespace DM_Lib
         
         public static void PushSpecTemplate(SpecTemplate template)
         {
-        	
+        	SpecRecord record = Factory.CreateRecordFromTemplate(template);
+            ExecuteSqlInsert(SqlInsertBuilder("template_specifications", record));
         }
 
         public static SQLiteDataReader ExecuteSqlSelect(string sql)
@@ -72,7 +73,6 @@ namespace DM_Lib
             dbConnection.Close();
         }
 
-
         private static string SqlSelectBuilder(string table_name, 
                                                string field_name, dynamic field_value, int limit = 0)
         {
@@ -83,10 +83,12 @@ namespace DM_Lib
 
         private static string SqlInsertBuilder(string table_name, SpecRecord record)
         {
+            
             var sql = new StringBuilder();
             string insert = "INSERT INTO " + table_name + "(Material_Id, Time_Stamp, Spec_Type, Json_Text, Revision)";
             sql.AppendFormat("{0} VALUES ('{1}', '{2}', '{3}', '{4}', '{5}')",
                              insert, record.MaterialId, record.TimeStampString, record.SpecType, record.JsonText, record.Revision);
+            Console.WriteLine(sql.ToString());
             return sql.ToString();
         }
     }

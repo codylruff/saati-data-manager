@@ -21,23 +21,32 @@ namespace DM_Lib
 	{
 		public string GetStandardJson(string material_id)
 		{
-			var manager = new SpecManager();
-			manager.LoadStandard(material_id);
-			return manager.SerializeSpec(manager.Specs.DefaultSpec);
+			try{
+				var manager = new SpecManager();
+				manager.LoadStandard(material_id);
+				return manager.SerializeSpec(manager.Specs.DefaultSpec);
+			}catch
+			{
+				return "";
+			}
 		}
 		
 		public string GetSpecJson(string material_id)
 		{
 			Dictionary<string,string> json_dict = new Dictionary<string,string>();
-			
-			var manager = new SpecManager();
-			manager.LoadSpecification(material_id);
-			foreach(ISpec spec in manager.Specs)
+			try{
+				var manager = new SpecManager();
+				manager.LoadSpecification(material_id);
+				foreach(ISpec spec in manager.Specs)
+				{
+					json_dict.Add(spec.Revision, manager.SerializeSpec(spec));
+				}
+				
+				return JsonConvert.SerializeObject(json_dict);
+			}catch
 			{
-				json_dict.Add(spec.Revision, manager.SerializeSpec(spec));
+				return "";
 			}
-			
-			return JsonConvert.SerializeObject(json_dict);
 		}
 		
 		public long PushSpecJson(string json_text, 
@@ -58,8 +67,9 @@ namespace DM_Lib
 		public long PushSpecTemplate(string json_text, string spec_type, string revision)
 		{
 			try{
+				var manager = new SpecManager();
 				var template = new SpecTemplate(json_text, spec_type, revision);
-				
+				manager.CommitTemplate(template);
 			}
 			catch{
 				return -1;

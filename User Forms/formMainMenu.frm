@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} formMainMenu 
    Caption         =   "Data Manager Main Menu"
-   ClientHeight    =   3600
+   ClientHeight    =   3450
    ClientLeft      =   45
    ClientTop       =   405
    ClientWidth     =   6300
@@ -14,6 +14,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
+
+
+
 Option Explicit
 
 Private Sub cmdConfig_Click()
@@ -21,26 +26,26 @@ Private Sub cmdConfig_Click()
     ConfigControl
 End Sub
 
+Private Sub cmdCreateTemplate_Click()
+    On Error Resume Next
+    Unload Me
+    formCreateGeneric.Show
+End Sub
+
 Private Sub cmdExit_Click()
     ExitApp
 End Sub
 
 Private Sub cmdWarping_Click()
-    Me.Hide
+    On Error Resume Next
+    Unload Me
     formWarpingSearch.Show
 End Sub
 
 Private Sub CommandButton3_Click()
-    Me.Hide
+    On Error Resume Next
+    Unload Me
     formSpecConfig.Show
-End Sub
-
-Private Sub UserForm_Initialize()
-    Set App = New App
-End Sub
-
-Private Sub UserForm_Terminate()
-    Set App = Nothing
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)

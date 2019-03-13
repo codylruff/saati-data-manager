@@ -14,6 +14,15 @@ Public Sub GoToMain()
     formMainMenu.Show
 End Sub
 
+Sub UnloadAllForms()
+    Dim objLoop As Object
+
+    For Each objLoop In VBA.UserForms
+        If TypeOf objLoop Is UserForm Then Unload objLoop
+    Next objLoop
+    GoToMain
+End Sub
+
 Public Sub GoToWarpingMenu()
     Application.Visible = False
     formWarpingMainMenu.Show
@@ -177,12 +186,12 @@ End Sub
 
 Public Sub DB2W_tblWarpingSpecs()
 ' Dumps warping specs to a new worksheet
-    DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblWarpingSpecs"
+    
 End Sub
 
 Public Sub DB2W_tblStyleSpecs()
 ' Dumps style specs to a new worksheet
-    DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblStyleSpecs"
+    
 End Sub
 
 Public Sub ConsoleBoxToPdf()

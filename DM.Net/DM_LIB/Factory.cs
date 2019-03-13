@@ -29,6 +29,12 @@ namespace DM_Lib
             return record;
         }
 
+        public static SpecRecord CreateRecordFromTemplate(SpecTemplate template)
+        {
+            var record = new SpecRecord(template, template.JsonText);
+            return record;
+        }
+
         public static SpecRecord CreateSpecRecordFromReader(SQLiteDataReader reader)
         {
             var record = new SpecRecord(reader);
@@ -50,25 +56,25 @@ namespace DM_Lib
             		spec = JsonConvert.DeserializeObject<WarpingSpecification>(record.JsonText);
             		spec.Revision = record.Revision;
             		spec.MaterialId = record.MaterialId;
-            		spec.TimeStamp = record.TimeStamp;
+            		spec.TimeStamp = Convert.ToDateTime(record.TimeStamp);
             		return spec;
 				case "style":
 					spec = JsonConvert.DeserializeObject<StyleSpecification>(record.JsonText);
 					spec.Revision = record.Revision;
             		spec.MaterialId = record.MaterialId;
-            		spec.TimeStamp = record.TimeStamp;
+            		spec.TimeStamp = Convert.ToDateTime(record.TimeStamp);
             		return spec;
             	case "fabric":
             		spec = JsonConvert.DeserializeObject<FabricSpecification>(record.JsonText);
 					spec.Revision = record.Revision;
             		spec.MaterialId = record.MaterialId;
-            		spec.TimeStamp = record.TimeStamp;
+            		spec.TimeStamp = Convert.ToDateTime(record.TimeStamp);
             		return spec;
             	case "generic":
             		spec = JsonConvert.DeserializeObject<GenericSpecification>(record.JsonText);
 					spec.Revision = record.Revision;
             		spec.MaterialId = record.MaterialId;
-            		spec.TimeStamp = record.TimeStamp;
+            		spec.TimeStamp = Convert.ToDateTime(record.TimeStamp);
             		return spec;
 				default:
 					throw new NotImplementedException();
