@@ -15,12 +15,9 @@ Option Explicit
 Public Property Get MaterialId() As String: End Property ' sap code, style # etc...
 Public Property Get Properties() As Dictionary: End Property ' Must contain MaterialId
 Public Property Get SpecType() As String: End Property
-Public Property Get ParentSpec() As ISpec: End Property
-Public Property Let JsonText(value As String): End Property
-Public Property Get JsonText() As String: End Property ' If = vbNullString -> ObjectToJson()
+    Public Property Get Template() As SpecTemplate: End Property
 Public Sub JsonToObject(jsonText As String): End Sub ' Map json to the spec
 Public Function ObjectToJson(): As String End Sub ' Store spec Properties dictionary as json
-Public Sub SetDefaultProperties(): End Sub ' Use create "standard" specification
 '-----------------------------------------------
 ' Table 1: "standard_specifications"
 '-----------------------------------------------
