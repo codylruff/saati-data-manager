@@ -9,7 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+Public current_user As String
 Public server As Object
+Public Logger As Logger
 Public standard As Specification
 Public current_spec As Specification
 Public specs As Object
@@ -19,16 +21,20 @@ Public warp_order As Warp
 
 Private Sub Class_Initialize()
     Set server = CreateObject("DM_LIB.DmComServer")
+    Set Logger = New Logger
+    Logger.Log "--------- Application Started ----------"
     Set current_spec = New Specification
     Set standard = New Specification
     Set specs = CreateObject("Scripting.Dictionary")
     Set console = New ConsoleBox
     Set current_template = New SpecTemplate
     Set warp_order = New Warp
+    current_user = VBA.Environ("Username")
 End Sub
 
 Private Sub Class_Terminate()
     Set server = Nothing
+    Set Logger = Nothing
     Set current_spec = Nothing
     Set standard = Nothing
     Set specs = Nothing

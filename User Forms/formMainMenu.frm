@@ -14,12 +14,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
-
-
-
-
-
 Option Explicit
 
 Private Sub cmdConfig_Click()
@@ -28,8 +22,10 @@ Private Sub cmdConfig_Click()
 End Sub
 
 Private Sub cmdCreateTemplate_Click()
+    SpecManager.StartSpecManager
     On Error Resume Next
     Unload Me
+
     formCreateGeneric.Show
 End Sub
 
@@ -38,14 +34,18 @@ Private Sub cmdExit_Click()
 End Sub
 
 Private Sub cmdWarping_Click()
+    SpecManager.StartSpecManager
     On Error Resume Next
     Unload Me
+
     formWarpingSearch.Show
 End Sub
 
 Private Sub CommandButton3_Click()
+    SpecManager.StartSpecManager
     On Error Resume Next
     Unload Me
+
     formSpecConfig.Show
 End Sub
 

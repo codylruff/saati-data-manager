@@ -9,7 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 ' Properties dictionary
-Public Properties As Dictionary
+Public Properties   As Dictionary
+Public Tolerances   As Dictionary
 ' FIELDS and PROPERTIES---
 Private SpecType_   As String
 Private Revision_   As String
@@ -26,25 +27,39 @@ Public Property Let SpecType(value As String): SpecType_ = value: End Property
 Public Property Get SpecType() As String: SpecType = SpecType_: End Property
 Public Property Get MaterialId() As String: MaterialId = MaterialId_: End Property
 Public Property Let MaterialId(value As String): MaterialId_ = value: End Property
+
 ' METHODS---
-Public Sub JsonToObject(jsonText As String)
+Public Sub AddProperty(property As String, tolerance As Variant)
+' Adds a property to the list of properties
+    Me.Properties.Add property, vbNullString
+    Me.Tolerances.Add property, tolerance
+End Sub
+
+Public Sub JsonToObject(properties_json As String, tolerances_json As String)
 ' Map json to the spec
-    Dim key As Variant
-    Set Properties = JsonConverter.ParseJson(jsonText)
+    Set Properties = JsonConverter.ParseJson(properties_json)
+    Set Tolerances = JsonConverter.ParseJson(tolerances_json)
     MaterialId = Properties.Item("MaterialId")
     SpecType = Properties.Item("SpecType")
     Revision = Properties.Item("Revision")
 End Sub
-Public Function ObjectToJson() As String
+
+Public Function PropertiesJson() As String
 ' Store spec Properties dictionary as json
-    ObjectToJson = JsonConverter.ConvertToJson(Properties)
+    PropertiesJson = JsonConverter.ConvertToJson(Properties)
+End Function
+
+Public Function TolerancesJson() As String
+    TolerancesJson = JsonConverter.ConvertToJson(Me.Tolerances)
 End Function
 
 ' Constructor
 Private Sub Class_Initialize()
     Set Properties = New Dictionary
+    Set Tolerances = New Dictionary
 End Sub
 ' Deconstructor
 Private Sub Class_Terminate()
     Set Properties = Nothing
+    Set Tolerances = Nothing
 End Sub

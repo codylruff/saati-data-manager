@@ -13,32 +13,34 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 Option Explicit
 
 Private Sub UserForm_Initialize()
     Dim ret_val As String
-    Set App = New App
+    manager.Logger.Log "--------- " & Me.Name & " ----------"
     ret_val = SpecManager.MaterialInput
     If ret_val = vbNullString Then
         GuiCommands.UnloadAllForms
     Else
         SpecManager.PrintSpecification Me
         PopulateCboSelectRevision
-        cboSelectRevision.value = App.current_spec.Revision
+        cboSelectRevision.value = manager.current_spec.Revision
     End If
 End Sub
 
 Private Sub PopulateCboSelectRevision()
     Dim rev As Variant
     With cboSelectRevision
-        For Each rev In App.specs
+        For Each rev In manager.specs
             .AddItem rev
         Next rev
     End With
 End Sub
 
 Private Sub cmdSubmit_Click()
-    'App.warp_order
+    'manager.warp_order
 End Sub
 
 Private Sub cmdClear_Click()
@@ -52,7 +54,7 @@ Private Sub cmdOptions_Click()
 End Sub
 
 Private Sub cmdRefresh_Click()
-    Set App.current_spec = App.specs.Item(cboSelectRevision.value)
+    Set manager.current_spec = manager.specs.Item(cboSelectRevision.value)
     SpecManager.PrintSpecification Me
 End Sub
 
@@ -63,5 +65,5 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 End Sub
 
 Private Sub UserForm_Terminate()
-    Set App = Nothing
+    Set manager = Nothing
 End Sub

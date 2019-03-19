@@ -174,7 +174,7 @@ Public Sub ClearForm(frm)
     For Each ctl In frm.Controls
         Select Case VBA.TypeName(ctl)
             Case "TextBox"
-                ctl.Text = vbNullString
+                ctl.text = vbNullString
             Case "CheckBox", "OptionButton", "ToggleButton"
                 ctl.value = False
             Case "ComboBox", "ListBox"
@@ -197,12 +197,12 @@ End Sub
 Public Sub ConsoleBoxToPdf()
     Dim ws As Worksheet, initFileName As String, fileName As String
     On Error GoTo SaveFileError
-    initFileName = PublicDir & "\" & App.current_spec.MaterialId & "_" & App.current_spec.Revision
+    initFileName = PublicDir & "\" & manager.current_spec.MaterialId & "_" & manager.current_spec.Revision
     fileName = Application.GetSaveAsFilename(InitialFileName:=initFileName, _
                                      FileFilter:="PDF Files (*.pdf), *.pdf", _
                                      Title:="Select Path and Filename to save")
     Set ws = Sheets("SpecificationForm")
-    App.console.PrintObjectToSheet App.current_spec, ws
+    manager.console.PrintObjectToSheet manager.current_spec, ws
     If fileName <> "False" Then
         ws.ExportAsFixedFormat _
             Type:=xlTypePDF, _

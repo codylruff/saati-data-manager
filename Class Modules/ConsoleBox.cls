@@ -29,7 +29,7 @@ Public Property Get OutputHistory() As Collection: Set OutputHistory = OutputHis
 Public Property Set FormId(value As MSForms.UserForm): Set FormId_ = value: End Property
 Public Property Get FormId() As MSForms.UserForm: Set FormId = FormId_: End Property
 Public Property Get CurrentText() As String
-     CurrentText = FormId.txtConsole.Text
+     CurrentText = FormId.txtConsole.text
 End Property
 '----------
 ' METHODS
@@ -37,18 +37,18 @@ End Property
 Public Sub PrintObjectToSheet(spec As Specification, sht As Worksheet)
 ' Print object to specified worksheet starting in cell "A1"
     Dim key As Variant
-    Dim I As Integer
+    Dim i As Integer
     With sht
-        I = 1
+        i = 1
         For Each key In spec.Properties
             If Not spec.Properties(key) = vbNullString Then
-                .Range("A" & I).value = Utils.SplitCamelCase(CStr(key)) & " : "
-                .Range("B" & I).value = spec.Properties(CStr(key))
+                .Range("A" & i).value = Utils.SplitCamelCase(CStr(key)) & " : "
+                .Range("B" & i).value = spec.Properties(CStr(key))
             Else
-                .Range("A" & I).value = Utils.SplitCamelCase(CStr(key))
-                .Range("B" & I).value = "-"
+                .Range("A" & i).value = Utils.SplitCamelCase(CStr(key))
+                .Range("B" & i).value = "-"
             End If
-            I = I + 1
+            i = i + 1
         Next key
     End With
 End Sub
@@ -57,7 +57,7 @@ Public Sub PrintObject(spec As Specification)
 ' Print object to console
     Dim key As Variant
     ' Clear the console
-    FormId.txtConsole.Text = vbNullString
+    FormId.txtConsole.text = vbNullString
     For Each key In spec.Properties
         If Not spec.Properties(key) = vbNullString Then
             PrintLine Utils.SplitCamelCase(CStr(key)), spec.Properties(CStr(key))
@@ -68,19 +68,19 @@ Public Sub PrintObject(spec As Specification)
 End Sub
 
 Public Sub PrintLine(ParamArray var() As Variant)
-    Dim I As Integer
+    Dim i As Integer
     Dim s As String
     Const Padding = 25
     s = vbNullString
-    For I = LBound(var) To UBound(var)
-         If (I + 1) Mod 2 = 0 Then
-             s = s & var(I)
+    For i = LBound(var) To UBound(var)
+         If (i + 1) Mod 2 = 0 Then
+             s = s & var(i)
          Else
-             s = s & Left$(var(I) & ":" & Space(Padding), Padding)
+             s = s & Left$(var(i) & ":" & Space(Padding), Padding)
          End If
     Next
     OutputHistory.Add s
-    Me.FormId.txtConsole.Text = FormId.txtConsole.Text & s & vbNewLine
+    Me.FormId.txtConsole.text = FormId.txtConsole.text & s & vbNewLine
 End Sub
 
 Private Sub Class_Initialize()

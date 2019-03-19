@@ -11,7 +11,7 @@ Option Explicit
 '----------------
 'CLASS VARIABLES
 '----------------
-Public Properties         As Collection
+Public Properties         As Dictionary
 Private SpecType_         As String
 Private Revision_         As String
 '----------------
@@ -24,12 +24,24 @@ Public Property Get SpecType() As String: SpecType = SpecType_: End Property
 '--METHODS--'
 Public Sub AddProperty(property As String)
 ' Adds a property to the list of properties
-    If Properties Is Nothing Then
-        Set Properties = New Collection
-    End If
-    Me.Properties.Add property
+    Me.Properties.Add property, vbNullString
 End Sub
 
 Public Function PropertiesJson() As String
     PropertiesJson = JsonConverter.ConvertToJson(Me.Properties)
 End Function
+
+Public Sub JsonToObject(properties_json As String)
+    Set Properties = JsonConverter.ParseJson(properties_json)
+    Revision = Me.Properties.Item("Revision")
+    SpecType = Me.Properties.Item("Spec_Type")
+End Sub
+
+' Constructor
+Private Sub Class_Initialize()
+    Set Properties = New Dictionary
+End Sub
+' Deconstructor
+Private Sub Class_Terminate()
+    Set Properties = Nothing
+End Sub

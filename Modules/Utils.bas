@@ -47,15 +47,15 @@ End Function
 
 Function GetLine(ParamArray var() As Variant) As String
     Const Padding = 25
-    Dim I As Integer
+    Dim i As Integer
     Dim s As String
     s = vbNullString
     'If FormId.txtConsole = Nothing Then Exit Sub
-    For I = LBound(var) To UBound(var)
-         If (I + 1) Mod 2 = 0 Then
-             s = s & var(I)
+    For i = LBound(var) To UBound(var)
+         If (i + 1) Mod 2 = 0 Then
+             s = s & var(i)
          Else
-             s = s & Left$(var(I) & ":" & Space(Padding), Padding)
+             s = s & Left$(var(i) & ":" & Space(Padding), Padding)
          End If
     Next
     GetLine = s & vbNewLine
@@ -63,13 +63,13 @@ End Function
 
 Function CreateNewSheet(shtName As String) As String
 ' Creates a new worksheet with the given name
-    Dim exists As Boolean, I As Integer
+    Dim exists As Boolean, i As Integer
     With ThisWorkbook
-        For I = 1 To Worksheets.count
-            If Worksheets(I).Name = shtName Then
+        For i = 1 To Worksheets.count
+            If Worksheets(i).Name = shtName Then
                 exists = True
             End If
-        Next I
+        Next i
         If exists = True Then
             .Sheets(shtName).Delete
         End If
@@ -104,9 +104,9 @@ End Function
 
 Sub UnloadAllForms(Optional dummyVariable As Byte)
 'Unloads all open user forms
-    Dim I As Long
-    For I = VBA.UserForms.count - 1 To 0 Step -1
-        Unload VBA.UserForms(I)
+    Dim i As Long
+    For i = VBA.UserForms.count - 1 To 0 Step -1
+        Unload VBA.UserForms(i)
     Next
 End Sub
 
@@ -128,9 +128,9 @@ Sub Insert(rng As Range, val)
 End Sub
 
 Public Function printf(mask As String, ParamArray tokens()) As String
-    Dim I As Long
-    For I = 0 To UBound(tokens)
-        mask = replace$(mask, "{" & I & "}", tokens(I))
+    Dim i As Long
+    For i = 0 To UBound(tokens)
+        mask = replace$(mask, "{" & i & "}", tokens(i))
     Next
     printf = mask
 End Function

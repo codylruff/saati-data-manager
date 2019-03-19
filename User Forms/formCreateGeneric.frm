@@ -14,9 +14,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
-
-
 Option Explicit
 
 Private template_name As String
@@ -27,11 +24,11 @@ Private Sub cmdBack_Click()
 End Sub
 
 Private Sub UserForm_Initialize()
-    Set App = New App
+    manager.Logger.Log "--------- " & Me.Name & " ----------"
     template_name = SpecManager.TemplateInput
     If template_name <> vbNullString Then
-      Set App.current_template = Factory.CreateSpecTemplate(template_name)
-      Set App.console = Factory.CreateConsoleBox(Me)
+      Set manager.current_template = Factory.CreateSpecTemplate(template_name)
+      Set manager.console = Factory.CreateConsoleBox(Me)
       lblInstructions.Caption = " Instructions :" & vbNewLine & _
             " Create the template parameters one at a time," & _
             " selecting a parameter type (text, number, True/False)," & _
@@ -44,21 +41,21 @@ Private Sub UserForm_Initialize()
 End Sub
 
 Private Sub cmdAddProperty_Click()
-   App.console.PrintLine Me.txtPropertyName
-   App.current_template.AddProperty Utils.ConvertToCamelCase(Me.txtPropertyName)
+   manager.console.PrintLine Me.txtPropertyName
+   manager.current_template.AddProperty Utils.ConvertToCamelCase(Me.txtPropertyName)
 End Sub
 
 Private Sub cmdSubmitTemplate_Click()
-   App.current_template.Revision = 0
-   If SpecManager.SaveSpecTemplate(App.current_template) <> COM_PUSH_COMPLETE Then
-      Debug.Print "COM Server returned: ", COM_PUSH_FAILURE
+   manager.current_template.Revision = 0
+   If SpecManager.SaveSpecTemplate(manager.current_template) <> COM_PUSH_COMPLETE Then
+      manager.Logger.Log "COM Server returned: ", COM_PUSH_FAILURE
         MsgBox "New Template Was Not Saved. Contact Admin."
     Else
-        Debug.Print "COM Server returned: ", COM_PUSH_COMPLETE
+        manager.Logger.Log "COM Server returned: ", COM_PUSH_COMPLETE
         MsgBox "New Template Succesfully Created."
     End If
 End Sub
 
 Private Sub UserForm_Terminate()
-    Set App = Nothing
+    Set manager = Nothing
 End Sub

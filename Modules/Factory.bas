@@ -4,6 +4,10 @@ Function CreateSpecification() As Specification
     Set CreateSpecification = New Specification
 End Function
 
+Function CreateTemplate() As SpecTemplate
+    Set CreateTemplate = New SpecTemplate
+End Function
+
 Function CreateSpecTemplate(spec_type As String) As SpecTemplate
     Dim template As SpecTemplate
     Set template = New SpecTemplate
@@ -11,10 +15,14 @@ Function CreateSpecTemplate(spec_type As String) As SpecTemplate
     Set CreateSpecTemplate = template
 End Function
 
+Function CreateTemplateFromJson(template As SpecTemplate, json_text As String) As SpecTemplate
+    template.JsonToObject json_text
+End Function
+
 Function CreateSpecFromJson(spec As Specification, json_text As String) As Specification
     spec.JsonToObject json_text
-    Debug.Print spec.Revision
-    Debug.Print json_text
+    manager.Logger.Log spec.Revision
+    manager.Logger.Log json_text
     Set CreateSpecFromJson = spec
 End Function
 
@@ -28,10 +36,10 @@ End Function
 Function CreateWarp(frm As UserForm) As Warp
 ' Create warp object based on current_specification
     Dim w As Warp
-    If App.current_spec.SpecType = "warp" Then
+    If manager.current_spec.SpecType = "warp" Then
         Set w = New Warp
         With w
-            .Specification = App.current_spec
+            .Specification = manager.current_spec
             .NumberOfBobbins = frm.txtNumberOfBobbins
             .PackageWeightlbs = frm.txtPakageWeightlbs
             .WarpLengthYds = frm.txtWarpLength

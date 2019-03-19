@@ -1,6 +1,13 @@
 Attribute VB_Name = "SpecManager"
 '// This object allows information to persist throughout the Application lifecycle
-Public App As App
+Public manager As App
+
+Public Sub StartSpecManager()
+    If Not manager Is Nothing Then
+        Set manager = Nothing
+    End If
+    Set manager = New App
+End Sub
 
 Function TemplateInput() As String
     Dim template_name As String
@@ -33,21 +40,37 @@ End Function
 
 Function ExecuteSearch(material_id As String) As Long
 ' Manages the search procedure
-    Set App.standard = SpecManager.GetStandard(material_id)
-    If App.standard Is Nothing Then
+    Set manager.standard = SpecManager.GetStandard(material_id)
+    If manager.standard Is Nothing Then
         ExecuteSearch = SM_SEARCH_FAILURE
     Else
-        Set App.specs = SpecManager.GetSpec(material_id)
-        Set App.current_spec = GetLatestSpec(App.specs)
+        Set manager.specs = SpecManager.GetSpec(material_id)
+        Set manager.current_spec = GetLatestSpec(manager.specs)
         ' Return 0/1 on success/failure
         ExecuteSearch = SM_SEARCH_SUCCESS
     End If
+End Function
+
+Function GetTemplate(template_name As String) As SpecTemplate
+    Dim template As SpecTemplate
+    Dim json As String
+    Set template = Factory.CreateTemplate(template_name)
+    json = ComService.GetSpecTemplate(template.SpecType)
+    If json <> vbNullString Then
+        Set GetTemplate = Factory.CreateTemplateFromJson( _
+            template:=template, _
+            json_text:=json)
+    Else
+        Set GetTemplate = Nothing
+    End If
+
 End Function
 
 Function GetStandard(material_id As String) As Specification
     Dim spec_ As Specification
     Dim json As String
     Set spec_ = Factory.CreateSpecification()
+    ' TODO: Apply template to spec object
     spec_.IsStandard = True
     json = ComService.GetStandardJson(MaterialInputValidation(material_id))
     If json <> vbNullString Then
@@ -73,9 +96,9 @@ Function GetSpec(material_id As String) As Object
         Set GetSpec = Nothing
         Exit Function
     Else
-        specs_dict.Add App.standard.Revision, App.standard
-        Set spec = App.standard
-        rev = App.standard.Revision
+        specs_dict.Add manager.standard.Revision, manager.standard
+        Set spec = manager.standard
+        rev = manager.standard.Revision
         For Each key In json_dict
             Set spec = Factory.CreateSpecFromJson(Factory.CreateSpecification, json_dict.Item(key))
             specs_dict.Add spec.Revision, spec
@@ -88,8 +111,8 @@ Function GetSpec(material_id As String) As Object
 End Function
 
 Sub PrintSpecification(frm As MSForms.UserForm)
-    Set App.console = Factory.CreateConsoleBox(frm)
-    App.console.PrintObject App.current_spec
+    Set manager.console = Factory.CreateConsoleBox(frm)
+    manager.console.PrintObject manager.current_spec
 End Sub
 
 Function SaveSpecification(spec As Specification) As Long
@@ -129,9 +152,9 @@ End Function
 
 Function GetLatestSpec(specs As Object) As Specification
     Dim key As Variant
-    For Each key In App.specs
-        If App.specs.Item(key).IsLatest = True Then
-            Set GetLatestSpec = App.specs.Item(key)
+    For Each key In manager.specs
+        If manager.specs.Item(key).IsLatest = True Then
+            Set GetLatestSpec = manager.specs.Item(key)
         End If
     Next key
 End Function
