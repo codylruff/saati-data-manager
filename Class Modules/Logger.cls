@@ -10,16 +10,17 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public fso As FileSystemObject ' Declare a FileSystemObject.
-Set fso = New FileSystemObject ' Create a FileSystemObject.
-Dim stream As TextStream ' Declare a TextStream.
+Public stream As TextStream ' Declare a TextStream.
 
-Set stream = fso.CreateTextFile("C:\output.txt", True)
-stream.WriteLine "abc"
-stream.WriteLine "def"
+Public Sub Log(text As String)
+    stream.WriteLine text
+End Sub
+
 stream.Close
 
 public sub class_initialize()
     Set fso = New FileSystemObject
+    Set stream = fso.CreateTextFile(LocalDir, True)
 end sub
   
   
