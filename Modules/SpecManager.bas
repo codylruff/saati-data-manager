@@ -1,75 +1,167 @@
 Attribute VB_Name = "SpecManager"
+'// This object allows information to persist throughout the Application lifecycle
+Public manager As App
 
-'@Folder("Modules")
-' CREATE-----------------------------
-Function CreateDefaultSpec(spec As ISpec, materialID As String, MaterialDescription As String) As ISpec
-' Maps properties onto an ISpec object by parsing a material code and description,
-' then performing various calculations to determine any calcuable baseline properties.
-    ' TODO: Implement function
-    Set CreateDefaultSpec = spec
-End Function
-
-Sub AddNewSpec(spec As ISpec, IsDefault As Boolean)
-' Add a new spec to the database
-    DataAccess.PushRecord(spec, IsDefault)
+Public Sub StartSpecManager()
+    Set manager = New App
 End Sub
 
-' READ-------------------------------
-Function GetSpecJson(materialID As String, IsDefault As Boolean) As String
-' Gets json text stored in a database that represents an ISpec Object
-    Dim record As DatabaseRecord
-    Set record = DataAccess.GetSpec(materialId, IsDefault)
-    ' set the record objects fields dictionary in order access fields by name
-    With record
-        .SetDictionary
-        GetSpecJson = .Fields.Item("Json_Text")
-    End With
+Public Sub StopSpecManager()
+    Set manager = Nothing
+End Sub
+
+Function TemplateInput() As String
+    Dim template_name As String
+    template_name = InputBox("Enter a template name :", "Custom Template Name")
+    If template_name = vbNullString Then
+        MsgBox "Must Enter a template name."
+    End If
+    TemplateInput = template_name
 End Function
 
-Function GetISpec(ByRef spec As ISpec, ByVal materialId As String) As ISpec
-' Copy a specification object from the database
-    ' check db tables 1 and 2 to get the most recent spec
-    If IsDefault Then 
-        Set GetISpec = spec.JsonToObject(GetSpecJson(materialID, _
-                        "standard_specifications"))
+Sub MaterialInput(material_id As String)
+' Takes user input for material search
+    Dim ret_val As Long
+    If material_id = vbNullString Then Exit Sub
+    If SpecManager.ExecuteSearch(material_id) = SM_SEARCH_FAILURE Then
+        MsgBox "Specification not found!", , "Null Spec Exception"
+        Exit Sub
+    End If
+End Sub
+
+Function ExecuteSearch(material_id As String) As Long
+' Manages the search procedure
+    Set manager.standard = SpecManager.GetStandard(material_id)
+    If manager.standard Is Nothing Then
+        ExecuteSearch = SM_SEARCH_FAILURE
     Else
-        Set GetISpec = spec.JsonToObject(GetSpecJson(materialId, _
-                        "modified_specifications"))
-    End if
-End Sub
+        Set manager.specs = SpecManager.GetSpec(material_id)
+        Set manager.current_spec = GetLatestSpec(manager.specs)
+        ' Return 0/1 on success/failure
+        ExecuteSearch = SM_SEARCH_SUCCESS
+    End If
+End Function
 
-Sub PrintSpecToConsole(frm As UserForm, ByRef spec As ISpec)
-' Print object to console
+Function GetTemplate(template_name As String) As SpecTemplate
+    Dim template As SpecTemplate
+    Dim json As String
+    Set template = Factory.CreateTemplate(template_name)
+    json = ComService.GetSpecTemplate(template.SpecType)
+    If json <> vbNullString Then
+        Set GetTemplate = Factory.CreateTemplateFromJson( _
+            template:=template, _
+            json_text:=json)
+    Else
+        Set GetTemplate = Nothing
+    End If
+
+End Function
+
+Function GetStandard(material_id As String) As Specification
+    Dim spec As Specification
+    Dim json_coll As Collection
+    Dim json_dict As Dictionary
+    Set spec = Factory.CreateSpecification()
+    ' TODO: Apply template to spec object
+    spec.IsStandard = True
+    Set json_coll = Main.GetSpecJson(MaterialInputValidation(material_id), True)
+    If json_coll Is Nothing Then
+        Set GetStandard = Nothing
+        Exit Function
+    Else
+        For Each json_dict In json_coll
+            Set spec = Factory.CreateSpecification
+                With spec
+                    spec.MaterialId = json_dict.Item("Material_Id")
+                    spec.SpecType = json_dict.Item("Spec_Type")
+                    spec.Revision = json_dict.Item("Revision")
+                End With
+            Set spec = Factory.CreateSpecFromJson(spec, json_dict.Item("Properties_Json"), json_dict.Item("Tolerances_Json"))
+        Next json_dict
+        Set GetStandard = spec
+    End If
+End Function
+
+Function GetSpec(material_id As String) As Object
+    Dim json_coll As Collection
+    Dim json_dict, specs_dict As Dictionary
+    Dim spec As Specification
+    Dim rev As String
     Dim key As Variant
-    With frm.txtConsole
-        ' Clear the console
-        .Text = vbNullString
-        
-        For Each key In spec.Properties
-            .Text = .Text & Utility.GetLine(Utility.SplitCamelCase(key.value), _
-                        spec.Properties(key.value))
-        Next key
-    End With
+    Set json_coll = Main.GetSpecJson(MaterialInputValidation(material_id), False)
+    Set specs_dict = New Dictionary
+    
+    If json_coll Is Nothing Then
+        Set GetSpec = Nothing
+        Exit Function
+    Else
+        specs_dict.Add manager.standard.Revision, manager.standard
+        Logger.Log manager.standard.Revision
+        Set spec = manager.standard
+        rev = manager.standard.Revision
+        For Each json_dict In json_coll
+                Set spec = Factory.CreateSpecification
+                With spec
+                    spec.MaterialId = json_dict.Item("Material_Id")
+                    spec.SpecType = json_dict.Item("Spec_Type")
+                    spec.Revision = json_dict.Item("Revision")
+                End With
+                Set spec = Factory.CreateSpecFromJson(spec, json_dict.Item("Properties_Json"), json_dict.Item("Tolerances_Json"))
+                Logger.Log spec.MaterialId & " : " & spec.Revision
+                specs_dict.Add spec.Revision, spec
+                rev = spec.Revision
+        Next json_dict
+        specs_dict.Item(rev).IsLatest = True
+        Set GetSpec = specs_dict
+    End If
+
+End Function
+
+Sub PrintSpecification(frm As MSForms.UserForm)
+    Set manager.console = Factory.CreateConsoleBox(frm)
+    manager.console.PrintObject manager.current_spec
 End Sub
 
-' TODO: This function is broken!!!
-Sub DatabaseToWorksheet(db As IDatabase, path As String, tblName As String)
-' Copies a database table into a worksheet
-    Dim ws As Worksheet, record As DatabaseRecord
-    Set record = DataAccess.Get(db, path, "SELECT * FROM " & tblName)
-    ' Creates a sheet to store the database.
-    Utility.ToggleExcelGui False
-    Set ws = Sheets(Utility.CreateNewSheet(tblName & " " & Format(Now, "mm,dd,yyyy")))
-    ' Creates the headers
-    ws.Range(Cells(1, record.columns), Cells(1, record.columns)).value = record.header
-    ' Copies in the data
-    ws.Range(Cells(record.rows, record.colmns), Cells(record.rows + 1, record.columns)).value = record.data
-    ws.Range("A1").CurrentRegion.EntireColumn.AutoFit
-    Utility.ToggleExcelGui True
-End Sub
+Function SaveSpecification(spec As Specification) As Long
+    SaveSpecification = IIf(ComService.PushSpecJson(spec, False) = COM_PUSH_COMPLETE, _
+                            COM_PUSH_COMPLETE, COM_PUSH_FAILURE)
+End Function
 
-' UPDATE------------------------------
+Function SaveStandardSpecification(spec As Specification) As Long
+    SaveStandardSpecification = ComService.PushSpecJson(spec, True)
+End Function
 
+Function SaveSpecTemplate(template As SpecTemplate) As Long
+    SaveSpecTemplate = ComService.PushSpecTemplate(template)
+End Function
 
-' DELETE
+Private Function MaterialInputValidation(material_id As String)
+' Ensures that the material id input by the user is parseable.
+' TODO: This function is awful need to refactor unsure how due to the
+'       ridiculous lack of uniqueness in the database.
+'       "The style 101 problem"
+    If (material_id <> "101") And (Mid(material_id, 5, 3) <> "101") Then
+        MaterialInputValidation = material_id
+        Exit Function
+    End If
+    If Len(material_id) >= 5 Then
+        MaterialInputValidation = Mid(material_id, 5, 3) & Mid(material_id, 2, 2)
+    Else
+        Dim question As Integer
+        question = MsgBox("Click Yes for Style 101 Kevlar or No for Hyosung.", vbYesNo + vbQuestion, "Style 101 has two version")
+        If question = vbYes Then
+            MaterialInputValidation = "101" & "KE"
+        Else
+            MaterialInputValidation = "101" & "HY"
+        End If
+    End If
+End Function
 
+Function GetLatestSpec(specs As Object) As Specification
+    Dim key As Variant
+    For Each key In manager.specs
+        If manager.specs.Item(key).IsLatest = True Then
+            Set GetLatestSpec = manager.specs.Item(key)
+        End If
+    Next key
+End Function

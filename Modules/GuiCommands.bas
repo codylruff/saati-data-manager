@@ -11,8 +11,21 @@ Option Explicit
 Public Sub GoToMain()
 'Opens the main menu form.
     Application.Visible = False
-    Utility.UnloadAllForms
     formMainMenu.Show
+End Sub
+
+Sub UnloadAllForms()
+    Dim objLoop As Object
+
+    For Each objLoop In VBA.UserForms
+        If TypeOf objLoop Is UserForm Then Unload objLoop
+    Next objLoop
+    GoToMain
+End Sub
+
+Public Sub GoToWarpingMenu()
+    Application.Visible = False
+    formWarpingMainMenu.Show
 End Sub
 
 Public Sub ExportAll()
@@ -33,6 +46,8 @@ Public Sub ExportAll()
 
     lngNumberOfTasks = 4
     lngCounter = 0
+
+    Logger.ClearBuffer
 
     Call modProgress.ShowProgress( _
         lngCounter, _
@@ -92,16 +107,18 @@ Public Sub ExportAll()
             Call VBComponent.Export(path)
             
             If Err.Number <> 0 Then
-                Debug.Print "Failed to export " & VBComponent.Name & " to " & path
+                Logger.Log "Failed to export " & VBComponent.Name & " to " & path
             Else
                 count = count + 1
-                Debug.Print "Exported " & Left$(VBComponent.Name & ":" & Space(Padding), Padding) & path
+                Logger.Log "Exported " & Left$(VBComponent.Name & ":" & Space(Padding), Padding) & path
             End If
 
             On Error GoTo 0
         End If
 
     Next
+    
+    Logger.SaveLog "export"
     
     lngCounter = lngCounter + 1
     Call modProgress.ShowProgress( _
@@ -161,7 +178,7 @@ Public Sub ClearForm(frm)
     For Each ctl In frm.Controls
         Select Case VBA.TypeName(ctl)
             Case "TextBox"
-                ctl.Text = vbNullString
+                ctl.text = vbNullString
             Case "CheckBox", "OptionButton", "ToggleButton"
                 ctl.value = False
             Case "ComboBox", "ListBox"
@@ -173,11 +190,34 @@ End Sub
 
 Public Sub DB2W_tblWarpingSpecs()
 ' Dumps warping specs to a new worksheet
-    DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblWarpingSpecs"
+    
 End Sub
 
 Public Sub DB2W_tblStyleSpecs()
 ' Dumps style specs to a new worksheet
-    DataAccess.DatabaseToWorksheet Factory.CreateSQLiteDatabase, SQLITE_PATH, "tblStyleSpecs"
+    
 End Sub
 
+Public Sub ConsoleBoxToPdf()
+    Dim ws As Worksheet, initFileName As String, fileName As String
+    On Error GoTo SaveFileError
+    initFileName = PublicDir & "\" & manager.current_spec.MaterialId & "_" & manager.current_spec.Revision
+    fileName = Application.GetSaveAsFilename(InitialFileName:=initFileName, _
+                                     FileFilter:="PDF Files (*.pdf), *.pdf", _
+                                     Title:="Select Path and Filename to save")
+    Set ws = Sheets("SpecificationForm")
+    manager.console.PrintObjectToSheet manager.current_spec, ws
+    If fileName <> "False" Then
+        ws.ExportAsFixedFormat _
+            Type:=xlTypePDF, _
+            fileName:=fileName, _
+            Quality:=xlQualityStandard, _
+            IncludeDocProperties:=True, _
+            IgnorePrintAreas:=False, _
+            OpenAfterPublish:=True
+    End If
+    Exit Sub
+    
+SaveFileError:
+    MsgBox "Failed to save file contact admin"
+End Sub

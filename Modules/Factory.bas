@@ -1,11 +1,59 @@
 Attribute VB_Name = "Factory"
-Option Explicit
-'@Folder("Modules")
-'----------------------------
-' Object factory functions
-' serve as pseduo class
-' constructors.
-'----------------------------
+
+Function CreateDictionary() As Dictionary
+    Set CreateDictionary = New Dictionary
+End Function
+
+Function CreateSpecification() As Specification
+    Set CreateSpecification = New Specification
+End Function
+
+Function CreateTemplate() As SpecTemplate
+    Set CreateTemplate = New SpecTemplate
+End Function
+
+Function CreateSpecTemplate(spec_type As String) As SpecTemplate
+    Dim template As SpecTemplate
+    Set template = New SpecTemplate
+    template.SpecType = spec_type
+    Set CreateSpecTemplate = template
+End Function
+
+Function CreateTemplateFromJson(template As SpecTemplate, json_text As String) As SpecTemplate
+    template.JsonToObject json_text
+End Function
+
+Function CreateSpecFromJson(spec As Specification, properties_json As String, tolerances_json As String) As Specification
+    spec.JsonToObject properties_json, tolerances_json
+    Set CreateSpecFromJson = spec
+End Function
+
+Function CreateConsoleBox(frm As UserForm) As ConsoleBox
+    Dim obj As ConsoleBox
+    Set obj = New ConsoleBox
+    Set obj.FormId = frm
+    Set CreateConsoleBox = obj
+End Function
+
+Function CreateWarp(frm As UserForm) As Warp
+' Create warp object based on current_specification
+    Dim w As Warp
+    If manager.current_spec.SpecType = "warp" Then
+        Set w = New Warp
+        With w
+            .Specification = manager.current_spec
+            .NumberOfBobbins = frm.txtNumberOfBobbins
+            .PackageWeightlbs = frm.txtPakageWeightlbs
+            .WarpLengthYds = frm.txtWarpLength
+        End With
+        Set CreateWarp = w
+    Else
+        MsgBox "Material has no valid warping specification."
+        Exit Function
+    End If
+
+End Function
+
 Function CreateDatabaseRecord() As DatabaseRecord
 ' Creates a database record object
     Dim record: Set record = New DatabaseRecord
@@ -17,61 +65,3 @@ Function CreateSQLiteDatabase() As SQLiteDatabase
     Dim sqlite: Set sqlite = New SQLiteDatabase
     Set CreateSQLiteDatabase = sqlite
 End Function
-
-Function CreateConsoleBox() As ConsoleBox
-' Creates a console box object
-    Dim Console: Set Console = New ConsoleBox
-    Set CreateConsoleBox = Console
-End Function
-
-Function CreateWarp() As Warp
-' Creates a warp object
-    Dim w: Set w = New Warp
-    Set CreateWarp = w
-End Function
-
-Function CreateWarpingSpecification() As WarpingSpecification
-' Creates a Warping Specification object
-    Dim spec: Set spec = New WarpingSpecification
-    Set CreateWarpingSpecification = spec
-End Function
-
-Function CreateDefaultWarpingSpecification(materialID As String, _
-         description As String) As WarpingSpecification
-' Creates a warping specification and sets properties to default
-    Dim spec: Set spec = CreateWarpingSpecification
-    With spec
-        .MaterialNumber = materialID
-        .MaterialDescription = description
-    End With
-
-Function CreateStyleSpecification() As StyleSpecification
-' Creates a style specification object
-    Dim Style: Set Style = New StyleSpecification
-    Set CreateStyleSpecification = Style
-End Function
-
-Function CreateSlitterSpecification() As SlitterSpecification
-    Dim spec: Set spec = New SlitterSpecification
-    Set CreateSlitterSpecification = spec
-End Function
-
-Function CreateUltraSonicSpecification() As UltraSonicSpecification
-    Dim spec: Set spec = New UltraSonicSpecification
-    Set CreateUltraSonicSpecification = spec
-End Function
-
-Function CreateISpec(specType As Long) As ISpec
-' Gets and returns a certain type of ISpec object
-    Select Case specType
-        Case ISPEC_WARPING
-            Set CreateISpec = CreateWarpingSpecification
-        Case ISPEC_STYLE
-            Set CreateISpec = CreateStyleSpecification
-        Case ISPEC_SLITTER
-            Set CreateISpec = CreateSlitterSpecification
-        Case ISPEC_ULTRASONIC
-            Set CreateISpec = CreateUltraSonicSpecification
-    End Select
-End Function
-

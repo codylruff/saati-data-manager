@@ -4,44 +4,43 @@ Option Explicit
 '===================================
 'DESCRIPTION: Data Access Module
 '===================================
-Private Function GetTableName(IsDefault As Boolean) As String
-    GetTableName = Iif(IsDefault, "standard_specifications", "modified_specifications")
+Private Function GetTableName(IsStandard As Boolean) As String
+    GetTableName = IIf(IsStandard, "standard_specifications", "modified_specifications")
 End Function
     
-Function GetSpec(ByRef materialId As String, IsDefault As Boolean) As DatabaseRecord
+Function GetSpec(ByRef MaterialId As String, IsStandard As Boolean) As DatabaseRecord
 ' Get a record(s) from the database
 
     Dim SQLstmt As String
     ' build the sql query
-    SQLstmt = "SELECT Json_Text FROM " & GetTableName(IsDefault) & _
-              " WHERE Material_Id= '" & materialID & "'" '&
-              " AND Id= (" & _
-              " SELECT max(Id) FROM " & GetTableName(IsDefault) & ")"
-    Set GetRecords = ExecuteSQLSelect( _
-                     Factory.CreateSQLiteDatabase, SQLITE_PATH, sqlstmt)
+    SQLstmt = "SELECT * FROM " & GetTableName(IsStandard) & _
+              " WHERE Material_Id= '" & MaterialId & "'"
+    Set GetSpec = ExecuteSQLSelect( _
+                     Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt)
 End Function
 
-Function PushSpec(ByRef spec As ISpec, IsDefault As Boolean)
+Function PushSpec(ByRef spec As Specification, IsStandard As Boolean)
 ' Push a new records
-    Dim sqlstmt As String
+    Dim SQLstmt As String
     Dim tblName As String
     
     ' Create SQL statement from objects
-    sqlstmt = "INSERT INTO " & tblName & " " & _
-              "(Material_Id, Time_Stamp, Json_Text, Spec_Type) " & vbNewLine & _
+    SQLstmt = "INSERT INTO " & tblName & " " & _
+              "(Material_Id, Time_Stamp, Properties_Json, Tolerances_Json, Spec_Type) " & vbNewLine & _
               "VALUES ('" & spec.MaterialId & "', " & _
-                      "'" & Now() & "', " & _
-                      "'" & spec.ObjectToJson & ", " & _ 
+                      "'" & CStr(Now()) & "', " & _
+                      "'" & spec.PropertiesJson & ", " & _
+                      "'" & spec.TolerancesJson & ", " & _
                       "'" & spec.SpecType & "')"
-    ExecuteSQL Factory.CreateSQLiteDatabase, SQLITE_PATH, sqlstmt
+    ExecuteSQL Factory.CreateSQLiteDatabase, SQLITE_PATH, SQLstmt
 End Function
 
-Private Function ExecuteSQLSelect(db As IDatabase, path As String, & _
+Private Function ExecuteSQLSelect(db As IDatabase, path As String, _
                                                    SQLstmt As String) As DatabaseRecord
 ' Returns an table like array
     Dim record: Set record = New DatabaseRecord
-    Debug.Print "-----------------------------------"
-    Debug.Print SQLstmt
+    Logger.Log "-----------------------------------"
+    Logger.Log SQLstmt
     db.openDb path
     db.selectQry SQLstmt
     record.data = db.data
@@ -51,16 +50,15 @@ End Function
 
 Private Sub ExecuteSQL(db As IDatabase, path As String, SQLstmt As String)
 ' Performs update or insert querys returns error on select.
-    Debug.Print "-----------------------------------"
-    Debug.Print SQLstmt
+    Logger.Log "-----------------------------------"
+    Logger.Log SQLstmt
     If Left(SQLstmt, 6) = "SELECT" Then
-        Debug.Print ("Use ExecuteSQLite3Select() for SELECT query")
+        Logger.Log ("Use ExecuteSQLSelect() for SELECT query")
         Exit Sub
     Else
         db.openDb (path)
         db.execute (SQLstmt)
     End If
 End Sub
-
 
 

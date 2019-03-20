@@ -8,10 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-'@Folder("Classes")
+
 Private m_header    As Variant
 Private m_data      As Variant
 Public Fields       As Dictionary
+Public records      As Collection
 
 Public Property Get header() As Variant: header = m_header: End Property
 Public Property Let header(ByVal value As Variant): m_header = value: End Property
@@ -45,19 +46,24 @@ Private Function NumberOfArrayDimensions() As Integer
 End Function
 
 Public Function SetDictionary()
-' Sets Fields dictionary to a representation of this object
+' Returns a dictionary representation of this object
     Dim dict: Set dict = New Dictionary
+    Dim coll: Set coll = New Collection
     Dim i, j As Long
     If Me.rows = 1 Then
+        Set dict = Factory.CreateDictionary()
         For i = LBound(Me.data) To Me.columns
             dict.Add key:=Me.header(1, i), Item:=Me.data(1, i)
         Next i
     Else
         For i = LBound(Me.data) To Me.columns
+            Set dict = Factory.CreateDictionary()
             For j = LBound(Me.data) To Me.rows
+            Logger.Log "Column " & j & " : " & header(1, j) & ", Row " & i & " : " & data(i, j)
                 dict.Add key:=Me.header(1, j), Item:=Me.data(i, j)
             Next j
+            coll.Add dict
         Next i
     End If
-    Set Fields = dict
+    Set records = coll
 End Function

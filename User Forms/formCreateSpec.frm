@@ -1,32 +1,45 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} formSpecConfig 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} formCreateSpec 
    Caption         =   "Specification Control"
-   ClientHeight    =   11865
+   ClientHeight    =   10545
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9810
-   OleObjectBlob   =   "formSpecConfig.frx":0000
+   ClientWidth     =   9735
+   OleObjectBlob   =   "formCreateSpec.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "formSpecConfig"
+Attribute VB_Name = "formCreateSpec"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Option Explicit
 
 Private Sub UserForm_Initialize()
-    Dim ret_val As String
-    Logger.Log "--------- Start " & Me.Name & " ----------"
-End Sub
-
-Private Sub cmdMaterialSearch_Click()
-    SpecManager.MaterialInput txtMaterialId
-    SpecManager.PrintSpecification Me
-    PopulateCboSelectProperty
-    PopulateCboSelectRevision
-    cboSelectRevision.value = manager.current_spec.Revision
+    Logger.Log "--------- " & Me.Name & " ----------"
+    PopulateCboSelectSpecType
 End Sub
 
 Private Sub cmdBack_Click()
@@ -65,12 +78,12 @@ Private Sub cmdSearch_Click()
     SpecManager.PrintSpecification Me
 End Sub
 
-Private Sub PopulateCboSelectRevision()
-    Dim rev As Variant
+Private Sub PopulateCboSelectSpecType()
+' TODO: This should pull from a database or textfile or something.
     With cboSelectRevision
-        For Each rev In manager.specs
-            .AddItem rev
-        Next rev
+        .AddItem "warping"
+        .AddItem "style"
+        .AddItem "fabric"
     End With
 End Sub
 
@@ -97,5 +110,5 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 End Sub
 
 Private Sub UserForm_Terminate()
-    Logger.Log "--------- End " & Me.Name & " ----------"
+    Set manager = Nothing
 End Sub

@@ -175,7 +175,7 @@ Public Function ParseJson(ByVal JsonString As String) As Object
     json_Index = 1
 
     ' Remove vbCr, vbLf, and vbTab from json_String
-    JsonString = VBA.Replace(VBA.Replace(VBA.Replace(JsonString, VBA.vbCr, vbNullString), VBA.vbLf, vbNullString), VBA.vbTab, vbNullString)
+    JsonString = VBA.replace(VBA.replace(VBA.replace(JsonString, VBA.vbCr, vbNullString), VBA.vbLf, vbNullString), VBA.vbTab, vbNullString)
 
     json_SkipSpaces JsonString, json_Index
     Select Case VBA.Mid$(JsonString, json_Index, 1)
@@ -188,7 +188,6 @@ Public Function ParseJson(ByVal JsonString As String) As Object
         Err.Raise 10001, "JSONConverter", json_ParseErrorMessage(JsonString, json_Index, "Expecting '{' or '['")
     End Select
 End Function
-
 ''
 ' Convert object (Dictionary/Collection/Array) to JSON
 '
@@ -445,7 +444,7 @@ Public Function ConvertToJson(ByVal JsonValue As Variant, Optional ByVal Whitesp
         ConvertToJson = json_BufferToString(json_Buffer, json_BufferPosition)
     Case VBA.vbInteger, VBA.vbLong, VBA.vbSingle, VBA.vbDouble, VBA.vbCurrency, VBA.vbDecimal
         ' Number (use decimals for numbers)
-        ConvertToJson = VBA.Replace(JsonValue, ",", ".")
+        ConvertToJson = VBA.replace(JsonValue, ",", ".")
     Case Else
         ' vbEmpty, vbError, vbDataObject, vbByte, vbUserDefinedType
         ' Use VBA's built-in to-string
@@ -676,7 +675,7 @@ Private Function json_IsUndefined(ByVal json_Value As Variant) As Boolean
     End Select
 End Function
 
-Private Function json_Encode(ByVal json_Text As Variant) As String
+Private Function json_Encode(ByVal json_text As Variant) As String
     ' Reference: http://www.ietf.org/rfc/rfc4627.txt
     ' Escape: ", \, /, backspace, form feed, line feed, carriage return, tab
     Dim json_Index As Long
@@ -686,8 +685,8 @@ Private Function json_Encode(ByVal json_Text As Variant) As String
     Dim json_BufferPosition As Long
     Dim json_BufferLength As Long
 
-    For json_Index = 1 To VBA.Len(json_Text)
-        json_Char = VBA.Mid$(json_Text, json_Index, 1)
+    For json_Index = 1 To VBA.Len(json_text)
+        json_Char = VBA.Mid$(json_text, json_Index, 1)
         json_AscCode = VBA.AscW(json_Char)
 
         ' When AscW returns a negative number, it returns the twos complement form of that number.
@@ -827,7 +826,7 @@ Private Sub json_BufferAppend(ByRef json_Buffer As String, _
     ' Buffer: "abcdef    "
     '
     ' Approach based on cStringBuilder from vbAccelerator
-    ' http://www.vbaccelerator.com/home/VB/Code/Techniques/RunTime_Debug_Tracing/VB6_Tracer_Utility_zip_cStringBuilder_cls.asp
+    ' http://www.vbaccelerator.com/home/VB/Code/Techniques/RunTime_Debug_Tracing/VB6_Tracer_Utils_zip_cStringBuilder_cls.asp
     '
     ' and clsStringAppend from Philip Swannell
     ' https://github.com/VBA-tools/VBA-JSON/pull/82
@@ -967,7 +966,7 @@ Public Function ParseIso(utc_IsoString As String) As Date
 
     If UBound(utc_Parts) > 0 Then
         If VBA.InStr(utc_Parts(1), "Z") Then
-            utc_TimeParts = VBA.Split(VBA.Replace(utc_Parts(1), "Z", vbNullString), ":")
+            utc_TimeParts = VBA.Split(VBA.replace(utc_Parts(1), "Z", vbNullString), ":")
         Else
             utc_OffsetIndex = VBA.InStr(1, utc_Parts(1), "+")
             If utc_OffsetIndex = 0 Then

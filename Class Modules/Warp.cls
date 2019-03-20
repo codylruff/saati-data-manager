@@ -23,11 +23,10 @@ Const MinimumPackageLengthyds = 10936
 '----------------
 'CLASS VARIABLES
 '----------------
-Private Specification_          As WarpingSpecification
+Private Specification_          As Specification
 Private NumberOfBobbins_        As Double
 Private PackageWeightlbs_       As Double
 Private WarpLengthYds_          As Double
-
 '----------------
 ' AUTO-PROPERTIES
 '----------------
@@ -41,8 +40,8 @@ Public Property Get PackageWeightlbs() As Double: PackageWeightlbs = PackageWeig
 Public Property Let NumberOfBobbins(value As Double): NumberOfBobbins_ = value: End Property
 Public Property Get NumberOfBobbins() As Double: NumberOfBobbins = NumberOfBobbins_: End Property
 ' Specification
-Public Property Set Specification(value As WarpingSpecification): Set Specification_ = value: End Property
-Public Property Get Specification() As WarpingSpecification: Set Specification = Specification_: End Property
+Public Property Set Specification(value As Specification): Set Specification_ = value: End Property
+Public Property Get Specification() As Specification: Set Specification = Specification_: End Property
 '----------------
 ' PROPERTIES
 '----------------
@@ -57,14 +56,14 @@ Public Property Get ResidualLengthYds() As Double
 End Property
 ' PackageLengthYds
 Public Property Get PackageLengthYds() As Double
-    With Me.Specification
+    With Me.Specification.Properties
         ' 454 g / lb and 0.9144 m / yd
-        PackageLengthYds = PackageWeightlbs / (.Dtex / 10000 / 454 * 0.9144)
+        PackageLengthYds = PackageWeightlbs / (.Item("Dtex") / 10000 / 454 * 0.9144)
     End With
 End Property
 ' NumberOfSections
 Public Property Get NumberOfSections() As Double
-    With Me.Specification
-        NumberOfSections = .EndsPerInch * .FinalWidthCm / 2.54 / NumberOfBobbins
+    With Me.Specification.Properties
+        NumberOfSections = .Item("EndsPerInch") * .Item("FinalWidthCm") / 2.54 / NumberOfBobbins
     End With
 End Property
